@@ -2,6 +2,8 @@
 
 为中文界面设计和实现前端的 Agent Skill。可用于轨道测控等指挥大屏、场馆公共信息屏、品牌官网、业务平台、App、微信小程序与 H5。提供按场景读取的设计指南，以及 24 个可以操作、切换视口和标注的独立 HTML 样页。
 
+[GitHub Skills 正式版](https://github.com/fruge365/forma-frontend-design-studio/releases/tag/v11.0.0) · [skills.sh](https://www.skills.sh/fruge365/forma-frontend-design-studio/forma-ui-ux-design) · [Agent Skill Hub](https://agentskillhub.dev/u/fruge365/sk/forma-ui-ux-design) · [在线样页](https://fruge365.github.io/forma-frontend-design-studio/)
+
 ![轨道测控大厅：卫星轨迹、地面站和过站窗口](docs/images/orbital.png)
 
 ## 安装
@@ -12,7 +14,7 @@
 gh skill install fruge365/forma-frontend-design-studio forma-ui-ux-design@v11.0.0 --agent codex
 ```
 
-使用 Skills CLI 时可按技能名安装，按提示选择目标 agent。
+使用 Vercel Skills CLI 时，可按技能名安装并选择目标 agent。Skills CLI 1.7.6 需要 Node.js 22.20 或更高版本。只运行下方的本地评审台时，Node.js 20 即可。
 
 ```sh
 npx skills add fruge365/forma-frontend-design-studio --skill forma-ui-ux-design
