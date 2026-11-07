@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#103cad">
+<title>晒图室 · 叠层矮架装配图</title>
+<style>
+:root{--blue:#123eaf;--deep:#102e86;--ink:#f2fbff;--soft:#c9e4ff;--rule:rgba(198,231,255,.5);--grid:rgba(166,219,252,.095);--mark:#ffe574;--mono:"IBM Plex Mono",Consolas,"Courier New",monospace;--sans:"Source Sans 3","Microsoft YaHei","PingFang SC",sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--blue);color:var(--ink);font-family:var(--sans);font-size:15px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--mark);outline-offset:-4px}
+button:hover{background-color:#18358f}
+.mast{display:flex;justify-content:space-between;align-items:center;padding:0 clamp(16px,3vw,60px);height:68px;border-bottom:1px solid var(--rule);background:#1238a1}
+.identity,.mast-info,.logo{display:flex;align-items:center}
+.logo{gap:12px;font-weight:750;font-size:24px;letter-spacing:.08em;white-space:nowrap}
+.logomark{position:relative;display:block;width:32px;height:30px;transform:skewY(-13deg)}
+.logomark:before,.logomark:after{content:"";position:absolute;width:22px;height:16px;border:2px solid #fff;border-right:0}
+.logomark:before{inset:0 auto auto 8px}.logomark:after{inset:10px auto auto 0}
+.crumb{font-size:13px;color:var(--soft);border-left:1px solid var(--rule);margin-left:22px;padding-left:22px}
+.mast-info{gap:12px;font-size:13px;color:var(--soft)}
+.mast-info:before{content:"";width:8px;height:8px;border:1px solid var(--soft)}
+.shell{max-width:1820px;margin:0 auto;padding:clamp(15px,2.1vw,38px) clamp(14px,3vw,58px) 24px}
+.sheet{display:grid;grid-template-columns:minmax(0,1fr) clamp(280px,24vw,390px);grid-template-areas:"plot parts" "title title";border:1px solid var(--rule);background:var(--blue)}
+.titleblock{grid-area:title;display:grid;grid-template-columns:minmax(230px,1.3fr) minmax(220px,1.05fr) minmax(140px,.65fr) auto;background:#12379b;border-top:1px solid var(--rule)}
+.titleblock>div{padding:18px clamp(15px,2vw,34px);display:flex;flex-direction:column;justify-content:center}
+.titleblock>div+div{border-left:1px solid var(--rule)}
+.titleblock h1{font-size:clamp(32px,3.35vw,54px);font-weight:600;margin:0;line-height:1.15;letter-spacing:.04em}
+.titleblock small,.label{font-size:12px;color:var(--soft);margin-bottom:7px;letter-spacing:.08em}
+.spec{font:clamp(17px,1.45vw,24px)/1.45 var(--mono);white-space:nowrap}.spec span{font-size:13px;color:var(--soft)}
+.material{font-size:clamp(15px,1.2vw,19px);line-height:1.6}.sheet-id{font:600 clamp(28px,2.7vw,45px)/1 var(--mono);letter-spacing:-.09em}
+.plot{grid-area:plot;min-width:0;background-color:#1749bc;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(rgba(176,220,255,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(176,220,255,.11) 1px,transparent 1px);background-size:20px 20px,20px 20px,100px 100px,100px 100px;display:flex;flex-direction:column}
+.plotbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px 0}
+.plotbar h2,.parts h2,.part-detail h3{margin:0;font-size:17px;letter-spacing:.08em;font-weight:650}
+.plotbar h2{display:flex;align-items:center;gap:9px}
+.cross{width:14px;height:14px;position:relative;display:inline-block}.cross:before,.cross:after{content:"";background:#c7e9ff;position:absolute}.cross:before{width:14px;height:1px;top:6px}.cross:after{width:1px;height:14px;left:6px}
+.switch{display:flex;border:1px solid #aac9fa;background:#143ca2}
+.switch button{border:0;background:transparent;padding:8px 15px;font-size:13px;line-height:1.2}
+.switch button+button{border-left:1px solid #aac9fa}
+.switch button[aria-pressed=true]{color:#143278;background:#e6f4ff;font-weight:700}
+.switch button:hover:not([aria-pressed=true]){background:#19317d}
+.drawing{position:relative;flex:1;min-height:425px;aspect-ratio:1.65}
+.drawing canvas,.detail-drawing{width:100%;height:100%;display:block}
+.drawing canvas{position:absolute;inset:0}
+.plotfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 22px 15px;color:var(--soft);font-size:12px}
+.key{display:flex;align-items:center;gap:8px}.key i{display:block;background:var(--mark);width:16px;height:2px}
+.parts{grid-area:parts;border-left:1px solid var(--rule);display:flex;flex-direction:column;min-width:0;background:#133da8}
+.parts-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:22px 20px 15px}
+.parts-head p{font-size:12px;margin:0;color:var(--soft)}
+.row{display:grid;grid-template-columns:34px 1fr auto;align-items:start;gap:9px;width:100%;background:none;border:0;border-top:1px solid rgba(196,224,255,.29);padding:14px 20px;text-align:left;position:relative}
+.row[aria-pressed=true]{background:rgba(7,32,112,.32)}
+.row[aria-pressed=true]:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--mark)}
+.code{font:14px/1.4 var(--mono);border:1px solid var(--rule);text-align:center;padding:1px}
+.row[aria-pressed=true] .code{background:var(--mark);border-color:var(--mark);color:#172f69}
+.row strong,.row .dims{display:block}.row strong{font-size:15px;line-height:1.5;font-weight:600}.row .dims,.qty{font:12px/1.5 var(--mono);color:var(--soft)}.row .dims{margin-top:2px}
+.qty{font-size:13px;margin-top:2px}
+.part-detail{border-top:1px solid var(--rule);padding:21px 20px 18px;flex:1}
+.part-detail .detailhead{display:flex;align-items:center;gap:10px}
+.bullet{width:9px;height:9px;background:var(--mark);display:block}
+.mini{height:clamp(104px,8vw,150px);margin:10px 0 9px;background:rgba(14,40,128,.19)}
+.part-detail p{font-size:14px;color:var(--ink);margin:8px 0 0;line-height:1.65}
+.foot{display:flex;gap:12px;justify-content:space-between;color:var(--soft);font-size:12px;margin-top:12px}
+@media(min-width:1100px) and (max-height:900px){.drawing{min-height:395px;max-height:calc(100vh - 310px)}}
+@media(max-width:900px){.sheet{grid-template-columns:minmax(0,1fr) 250px}.plotbar{padding:14px 14px 0}.plotfoot{padding-inline:14px}.row,.part-detail,.parts-head{padding-inline:14px}.drawing{aspect-ratio:1.25}.titleblock{grid-template-columns:1.25fr 1.15fr .8fr auto}.titleblock>div{padding:14px 12px}.titleblock .spec{font-size:16px}}
+@media(max-width:720px){.mast{height:50px}.logo{font-size:21px}.logomark{scale:.84;transform-origin:left center;margin-right:-4px}.crumb{margin-left:12px;padding-left:12px;font-size:12px}.mast-info{font-size:11px}.shell{padding:12px 10px 17px}.sheet{grid-template-columns:1fr;grid-template-areas:"title" "plot" "parts"}.titleblock{border:0;border-bottom:1px solid var(--rule);grid-template-columns:1.1fr 1fr}.titleblock>div{padding:11px 12px}.titleblock>div:nth-child(3),.titleblock>div:nth-child(4){display:none}.titleblock small{margin-bottom:3px;font-size:10px}.titleblock h1{font-size:26px}.titleblock .spec{font-size:clamp(13px,3.6vw,18px)}.spec span{font-size:10px}.drawing{min-height:0;height:clamp(242px,69vw,410px);flex:none;aspect-ratio:auto}.plotbar h2{font-size:14px}.switch button{padding:9px 12px}.plotfoot{font-size:10px;padding-bottom:12px}.parts{border-left:0;border-top:1px solid var(--rule)}.parts-head{padding:12px 13px}.parts-list{display:grid;grid-template-columns:1fr 1fr}.parts-list .row:nth-child(even){border-left:1px solid rgba(196,224,255,.29)}.row{grid-template-columns:26px 1fr;align-items:start;gap:6px;padding:10px 8px}.row .qty{display:none}.row .dims{font-size:10px}.row strong{font-size:14px}.code{font-size:12px}.part-detail{padding:14px}.part-detail h3{font-size:15px}.mini{height:100px}.foot{line-height:1.55;align-items:start;font-size:10px}}
+@media(max-width:360px){.mast-info:before{display:none}.plotbar{padding:10px 8px 0}.plotbar h2{font-size:13px;gap:5px}.switch button{padding:8px 10px}.row{padding-inline:6px}.foot{gap:6px}}
+</style>
+</head>
+<body data-review-context="exploded">
+<header class="mast">
+  <div class="identity"><div class="logo"><i class="logomark" aria-hidden="true"></i>晒图室</div><span class="crumb">家具装配图册</span></div>
+  <span class="mast-info">F–02 / 修订 B</span>
+</header>
+<main class="shell">
+  <div class="sheet">
+    <header class="titleblock">
+      <div><small>开放式收纳家具</small><h1>叠层矮架</h1></div>
+      <div><span class="label">成品外廓 · 宽 × 深 × 高</span><strong class="spec">960 × 360 × 440 <span>mm</span></strong></div>
+      <div><span class="label">主材 / 板厚</span><span class="material">桦木多层板 · 18 mm</span></div>
+      <div><span class="label">图号</span><strong class="sheet-id">F–02</strong></div>
+    </header>
+    <section class="plot" aria-labelledby="view-title">
+      <div class="plotbar"><h2 id="view-title"><i class="cross" aria-hidden="true"></i><span id="view-name">装配分解图</span></h2>
+        <div class="switch" role="group" aria-label="查看装配方式"><button id="exploded" type="button" aria-pressed="true">分解图</button><button id="assembled" type="button" aria-pressed="false">合拢图</button></div>
+      </div>
+      <div class="drawing"><canvas id="assembly" role="img" aria-label="叠层矮架轴测装配图"></canvas></div>
+      <div class="plotfoot"><span class="key"><i></i><span id="selected-key"></span></span><span>轴测示意 · 尺寸单位 mm</span></div>
+    </section>
+    <aside class="parts" aria-labelledby="parts-title">
+      <header class="parts-head"><h2 id="parts-title">部件明细</h2><p>板件 4 种 / 5 件</p></header>
+      <div class="parts-list" id="parts-list" role="group" aria-label="选择图中部件"></div>
+      <section class="part-detail" aria-labelledby="part-name">
+        <div class="detailhead"><i class="bullet" aria-hidden="true"></i><h3 id="part-name"></h3></div>
+        <div class="mini"><canvas class="detail-drawing" id="detail" role="img" aria-label="选中部件的投影视图"></canvas></div>
+        <p id="assembly-note"></p>
+      </section>
+    </aside>
+  </div>
+  <footer class="foot"><span>家具装配示例 · 非加工下料图</span><span>图幅内尺寸以标注为准</span></footer>
+  <p id="announce" role="status" aria-live="polite" style="position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden;margin:0"></p>
+</main>
+<script>
+'use strict';
+const parts=[
+  {id:'A1',name:'面板',size:[960,360,18],quantity:1,note:'侧板和中隔板就位后，沿定位线放下面板，核对两端与侧板外缘齐平。'},
+  {id:'B1',name:'侧板',size:[422,360,18],quantity:2,note:'左右各一件，带孔的一面朝内。先对准下层搁板的端面，再连成两侧支架。'},
+  {id:'C1',name:'搁板',size:[924,336,18],quantity:1,note:'搁板装在两块侧板之间；底边离地 52 mm，前后各留 12 mm。'},
+  {id:'D1',name:'中隔板',size:[352,336,18],quantity:1,note:'中隔板落在搁板上，顶部承托面板。安装时让前缘与搁板前缘对齐。'}
+];
+const $=id=>document.getElementById(id);
+const model={selected:'A1',mode:'exploded'};
+const list=$('parts-list'),plot=$('assembly'),detail=$('detail');
+const mono='Consolas, "Courier New", monospace';
+const colors={line:'#e0f4ff',faint:'#96c6f4',mark:'#ffe574',deep:'#102e86',face:'#1749bc',front:'#1742ad',side:'#123aa2',dim:'#a4cff8'};
+const paths=[];
+for(const part of parts){
+  const button=document.createElement('button');
+  button.type='button';button.className='row';button.dataset.part=part.id;
+  button.dataset.reviewId='blueprint-part-'+part.id;
+  button.setAttribute('aria-label',part.id+' '+part.name+'，'+part.quantity+'件');
+  button.innerHTML='<span class="code"></span><span><strong></strong><span class="dims"></span></span><span class="qty"></span>';
+  button.querySelector('.code').textContent=part.id;
+  button.querySelector('strong').textContent=part.name;
+  button.querySelector('.dims').textContent=part.size.join(' × ');
+  button.querySelector('.qty').textContent='× '+part.quantity;
+  button.onclick=()=>select(part.id);list.append(button);
+}
+function select(id){
+  if(!parts.some(p=>p.id===id))return;
+  model.selected=id;update(true);
+}
+function changeMode(mode){model.mode=mode;update(true);}
+$('exploded').onclick=()=>changeMode('exploded');$('assembled').onclick=()=>changeMode('assembled');
+function fit(canvas){
+  const r=canvas.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,2);
+  const w=Math.round(r.width*d),h=Math.round(r.height*d);
+  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+  const ctx=canvas.getContext('2d');
+  ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,r.width,r.height);
+  return {ctx,w:r.width,h:r.height};
+}
+function poly(ctx,points,fill,stroke,width=1){
+  const path=new Path2D();
+  points.forEach(([x,y],i)=>i?path.lineTo(x,y):path.moveTo(x,y));path.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill(path);}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke(path);}
+  return path;
+}
+function line(ctx,pts,color,width=1,dash=[]){
+  ctx.beginPath();pts.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));
+  ctx.lineWidth=width;ctx.strokeStyle=color;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([]);
+}
+function letter(ctx,value,p,size,color,align='center'){
+  ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='middle';ctx.font='600 '+size+'px '+mono;
+  ctx.fillText(value,p[0],p[1]);
+}
+function dim(ctx,p1,p2,label,offset,textSize){
+  const len=Math.hypot(p2[0]-p1[0],p2[1]-p1[1]);
+  if(len<1)return;
+  const dx=(p2[0]-p1[0])/len,dy=(p2[1]-p1[1])/len,nx=-dy,ny=dx;
+  const at=(p,d)=>[p[0]+nx*d,p[1]+ny*d],s=at(p1,offset),e=at(p2,offset);
+  line(ctx,[at(p1,3*Math.sign(offset)),at(p1,offset+4*Math.sign(offset))],colors.dim,.8);
+  line(ctx,[at(p2,3*Math.sign(offset)),at(p2,offset+4*Math.sign(offset))],colors.dim,.8);
+  line(ctx,[s,e],colors.dim,.85);
+  for(const p of [s,e])line(ctx,[[p[0]-2,p[1]+4],[p[0]+2,p[1]-4]],colors.line,1);
+  ctx.save();ctx.translate((s[0]+e[0])/2,(s[1]+e[1])/2);let a=Math.atan2(dy,dx);if(a>Math.PI/2)a-=Math.PI;if(a < -Math.PI/2)a+=Math.PI;ctx.rotate(a);
+  const tw=String(label).length*textSize*.68+8;
+  ctx.fillStyle=colors.face;ctx.fillRect(-tw/2,-textSize*.65,tw,textSize*1.3);
+  letter(ctx,label,[0,0],textSize,colors.line);
+  ctx.restore();
+}
+function draw(){
+  const {ctx,w,h}=fit(plot);if(w<10||h<10)return;
+  const compact=w<560,expanded=model.mode==='exploded';
+  const scale=Math.min((w-(compact?57:145))/1275,(h-(compact?52:58))/805);
+  const origin=[w*.22,h*.55];
+  const project=(x,y,z)=>[origin[0]+(.98*x-.50*y)*scale,origin[1]+(.17*x+.40*y-.78*z)*scale];
+  // Centre on the assembled envelope and the explosion allowance for both views.
+  origin[0]=w/2-(.98*480-.5*180)*scale;origin[1]=h/2-(.17*480+.40*180-.78*270)*scale;
+  paths.length=0;
+  const pt=(a)=>project(...a);
+  function body(id,box){
+    const [x,y,z,sx,sy,sz]=box,X=x+sx,Y=y+sy,Z=z+sz;
+    const v=(a,b,c)=>project(a,b,c);
+    const pick=id===model.selected,stroke=pick?colors.mark:colors.line;
+    const front=[v(x,Y,z),v(X,Y,z),v(X,Y,Z),v(x,Y,Z)],right=[v(X,y,z),v(X,Y,z),v(X,Y,Z),v(X,y,Z)],top=[v(x,y,Z),v(X,y,Z),v(X,Y,Z),v(x,Y,Z)];
+    const main=id==='B1'||id==='D1'?right:top;
+    for(const [shape,fill] of [[front,colors.front],[right,colors.side],[top,colors.face]]){
+      const path=poly(ctx,shape,pick && shape===main?'#234fab':fill,stroke,pick?1.45:1.22);
+      paths.push({path,id});
+      if(pick&&shape===main){
+        ctx.save();ctx.clip(path);
+        const x0=Math.min(...shape.map(p=>p[0])),x1=Math.max(...shape.map(p=>p[0]));
+        const y0=Math.min(...shape.map(p=>p[1])),y1=Math.max(...shape.map(p=>p[1]));
+        for(let i=x0-(y1-y0);i<x1;i+=compact?7:11)line(ctx,[[i,y0],[i+y1-y0,y1]],'rgba(255,229,116,.42)',.75);
+        ctx.restore();ctx.strokeStyle=stroke;ctx.lineWidth=1.5;ctx.stroke(path);
+      }
+    }
+    // The thin layered edges indicate the 18 mm plywood boards.
+    if(id==='A1'||id==='C1')line(ctx,[v(x,Y,z+.42*sz),v(X,Y,z+.42*sz),v(X,y,z+.42*sz)],pick?'#f7db7c':colors.faint,.65);
+    if((id==='B1'||id==='D1')&&expanded){
+      for(const rate of [.16,.84]){
+        const q=v(x+sx/2,y+sy*rate,Z);
+        ctx.beginPath();ctx.ellipse(q[0],q[1],Math.max(1.6,scale*4),Math.max(.9,scale*1.9),.18,0,2*Math.PI);ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();
+      }
+    }
+  }
+  const gap=expanded?80:0,lift=expanded?124:0;
+  if(expanded){
+    for(const x of [9,534,951])for(const y of [55,304]){
+      const shiftedX=x===9?x-gap:x===951?x+gap:x;
+      const baseZ=x===534?452:422;
+      line(ctx,[project(shiftedX,y,baseZ),project(shiftedX,y,baseZ+42),project(x,y,baseZ+42),project(x,y,422+lift)],colors.faint,.85,[4,4]);
+    }
+    for(const x of [18,942])for(const y of [38,318]){
+      const adj=x<500?-gap:gap;
+      line(ctx,[project(x+adj,y,61),project(x,y,61)],colors.faint,.9,[4,4]);
+    }
+  }
+  body('B1',[-gap,0,0,18,360,422]);
+  body('C1',[18,12,52,924,336,18]);
+  body('D1',[525,12,70+(expanded?30:0),18,336,352]);
+  body('B1',[942+gap,0,0,18,360,422]);
+  body('A1',[0,0,422+lift,960,360,18]);
+  const fs=compact?10:13;
+  dim(ctx,project(0,360,0),project(960,360,0),'960',compact?16:27,fs);
+  dim(ctx,project(960+gap,360,0),project(960+gap,0,0),'360',compact?14:21,fs);
+  if(!expanded)dim(ctx,project(960,0,0),project(960,0,440),'440',compact?14:22,fs);
+  const labels=[
+    ['A1',[125,22,440+lift],-1,-1],
+    ['B1',[960+gap,165,294],1,-1],
+    ['C1',[120,348,65],-1,1],
+    ['D1',[543,118,250+(expanded?30:0)],1,1]
+  ];
+  for(const [id,point,sign,up] of labels){
+    if(!expanded&&id==='D1')continue;
+    const a=pt(point),selected=id===model.selected,col=selected?colors.mark:colors.line;
+    const delta=(compact?10:21)*up;
+    const elbow=[a[0]+sign*(compact?15:37),a[1]+delta];
+    const bw=compact?22:29,bh=compact?16:21;
+    const nx=elbow[0]+sign*(compact?14:28)-(sign<0?bw:0);
+    const x=Math.max(3,Math.min(w-bw-3,nx)),y=Math.max(2,Math.min(h-bh-2,elbow[1]-bh/2));
+    const end=[sign>0?x:x+bw,y+bh/2];
+    elbow[0]=sign>0?Math.min(elbow[0],end[0]):Math.max(elbow[0],end[0]);
+    line(ctx,[a,elbow,end],col,selected?1.2:.9);
+    ctx.beginPath();ctx.arc(a[0],a[1],selected?2.3:1.8,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
+    ctx.fillStyle=selected?colors.mark:colors.deep;ctx.fillRect(x,y,bw,bh);ctx.strokeStyle=col;ctx.lineWidth=1;ctx.strokeRect(x,y,bw,bh);
+    letter(ctx,id,[x+bw/2,y+bh/2+.5],compact?10:13,selected?colors.deep:colors.line);
+  }
+  if(!compact){
+    const x=22,y=h-30;
+    line(ctx,[[x,y],[x+25,y+4]],colors.dim);line(ctx,[[x,y],[x-9,y+7]],colors.dim);line(ctx,[[x,y],[x,y-21]],colors.dim);
+    letter(ctx,'X',[x+34,y+4],10,colors.faint);letter(ctx,'Z',[x,y-29],10,colors.faint);
+  }
+}
+function drawDetail(){
+  const {ctx,w,h}=fit(detail);if(w<10||h<10)return;
+  const {size:[a,b,t]}=parts.find(p=>p.id===model.selected);
+  const l=Math.min(w*.62,h*1.9),d=l*b/a;
+  const useScale=Math.min(1,(h*.48)/d),rw=l*useScale,rh=d*useScale;
+  const x=(w-rw)/2-4,y=(h-rh)/2+1;
+  ctx.strokeStyle=colors.line;ctx.fillStyle='#2049af';ctx.lineWidth=1.35;
+  ctx.fillRect(x,y,rw,rh);ctx.strokeRect(x,y,rw,rh);
+  dim(ctx,[x,y],[x+rw,y],String(a),-12,10);
+  dim(ctx,[x+rw,y],[x+rw,y+rh],String(b),-14,10);
+  letter(ctx,'t '+t,[x,y+rh+12],10,colors.mark,'left');
+}
+plot.addEventListener('click',e=>{
+  if(document.body.dataset.formaMode==='annotate')return;
+  // Canvas paths are authored in CSS pixels. Test in an identity context on HiDPI displays.
+  const r=plot.getBoundingClientRect(),ctx=plot.getContext('2d');ctx.save();ctx.resetTransform();
+  const hit=[...paths].reverse().find(s=>ctx.isPointInPath(s.path,e.clientX-r.left,e.clientY-r.top));
+  ctx.restore();if(hit)select(hit.id);
+});
+function update(announce){
+  const part=parts.find(p=>p.id===model.selected),exploded=model.mode==='exploded';
+  document.body.dataset.reviewContext=model.mode;
+  for(const b of list.querySelectorAll('button'))b.setAttribute('aria-pressed',String(b.dataset.part===part.id));
+  $('exploded').setAttribute('aria-pressed',String(exploded));$('assembled').setAttribute('aria-pressed',String(!exploded));
+  $('view-name').textContent=exploded?'装配分解图':'成品轴测图';
+  $('selected-key').textContent='选中 '+part.id+' / '+part.name;
+  $('part-name').textContent=part.id+' / '+part.name+'投影';
+  $('part-name').dataset.reviewId='blueprint-detail-'+part.id;
+  $('assembly-note').textContent=part.note;
+  plot.dataset.reviewId='blueprint-assembly-'+model.mode+'-'+part.id;
+  plot.setAttribute('aria-label',$('view-name').textContent+'。选中'+part.name+'，尺寸'+part.size.join('乘')+'毫米，可通过部件明细选择其他构件。');
+  detail.setAttribute('aria-label',part.name+'的长宽分别为'+part.size[0]+'和'+part.size[1]+'毫米，板厚18毫米。');
+  if(announce)$('announce').textContent=$('view-name').textContent+'，选中'+part.name+'。'+part.note;
+  draw();drawDetail();
+}
+const resize=new ResizeObserver(()=>{draw();drawDetail();});resize.observe(plot);resize.observe(detail);update(false);
+</script>
+</body>
+</html>

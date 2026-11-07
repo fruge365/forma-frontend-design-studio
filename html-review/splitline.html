@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#fa452d">
+<title>折返 · 城市夜跑邀请赛</title>
+<style>
+:root {
+  color-scheme:dark; --rubber:#141414; --track:#fa452d; --chalk:#fff8ed;
+  --muted:#bcb9af; --line:#44433e; --screen: min(1500px, 100%);
+  --body:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+  --number:"Barlow Condensed","Bahnschrift","Arial Narrow",Arial,sans-serif;
+  --display:"Archivo Black","Impact","Arial Black",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--rubber);color:var(--chalk);font:16px/1.5 var(--body)}
+button{font:inherit;color:inherit}
+button:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.mast,.hero-inner,.results,.credit{width:var(--screen);margin:auto;padding-inline:clamp(18px,4.5vw,76px)}
+.mast{min-height:62px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand,.meet,.brand-text,.hero-meta,.race-filter,.leader,.group-tabs,.split-tabs,.track-caption{display:flex;align-items:center}
+.brand{gap:11px}
+.brand-mark{display:block;position:relative;width:35px;height:26px;transform:skewX(-15deg)}
+.brand-mark:before{content:"";box-sizing:border-box;position:absolute;right:0;top:2px;width:26px;height:20px;border:5px solid var(--track);border-left:0;border-radius:0 10px 10px 0}
+.brand-mark:after{content:"";position:absolute;left:0;top:13px;width:13px;height:13px;background:var(--track);clip-path:polygon(0 50%,100% 0,100% 100%)}
+.brand-text{gap:12px}.brand-text strong{font-size:23px;letter-spacing:.05em}.brand-text span{font:700 13px/1 var(--number);letter-spacing:.12em}
+.meet{gap:16px;font-size:12px;font-weight:600;color:#d3cfc4}.meet time{font:600 14px var(--number);letter-spacing:.04em}
+.meet span{border-left:1px solid #57534e;padding-left:16px}
+.hero{background:var(--track);color:var(--rubber)}
+.hero-inner{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;min-height:clamp(340px,28.5vw,455px)}
+.hero-data{padding:28px 0 26px;position:relative;z-index:1}
+.hero-meta{gap:10px;font-weight:700;font-size:clamp(13px,1.1vw,17px)}
+.hero-meta:before{content:"";display:block;width:34px;height:5px;background:var(--rubber);transform:skew(-25deg)}
+h1,h2,p,figure{margin:0}
+h1{font-size:clamp(36px,4.6vw,76px);font-weight:950;line-height:1.12;letter-spacing:-.075em;margin:9px 0 15px}
+.timing-cap{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:750}
+.timing-cap span+span:before{content:"/";margin-right:9px;opacity:.65}
+.clock{font:italic clamp(92px,8.7vw,148px)/.98 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.025em;color:var(--chalk);white-space:nowrap;margin:5px 0 9px}
+.clock small{font-size:.65em;letter-spacing:-.025em}
+.leader{gap:12px;font-weight:750;font-size:clamp(16px,1.38vw,23px)}
+.lane-tag{display:inline-flex;align-items:center;font:800 .82em/1 var(--number);color:var(--chalk);background:var(--rubber);padding:7px 8px 5px;transform:skewX(-8deg)}
+.leader .club{border-left:1px solid #93301c;padding-left:12px;font-size:.8em;font-weight:600}
+.track-figure{position:relative;align-self:stretch;display:flex;flex-direction:column;justify-content:center;margin-right:calc(-1 * clamp(6px,1.7vw,27px));padding-bottom:14px}
+.track-figure canvas{display:block;width:100%;height:auto;aspect-ratio:640/340}
+.track-caption{justify-content:flex-end;gap:8px;font-size:12px;line-height:1.4;font-weight:700}
+.track-key{width:18px;height:6px;background:var(--chalk);border:1px solid var(--rubber);transform:skew(-20deg)}
+.results{padding-block:26px 12px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:2px solid var(--chalk);padding-bottom:13px}
+h2{font-size:clamp(24px,2.1vw,36px);letter-spacing:-.05em;line-height:1.25}
+.race-filter{flex-wrap:wrap;justify-content:flex-end;gap:clamp(14px,2.5vw,40px)}
+.group-tabs,.split-tabs{gap:3px}.group-tabs button,.split-tabs button{min-height:38px;cursor:pointer}
+.group-tabs button{border:0;background:transparent;color:#bfbdb3;padding:4px 10px;font-size:14px;font-weight:650}
+.group-tabs button[aria-pressed=true]{color:var(--chalk);text-decoration:underline;text-decoration-color:var(--track);text-underline-offset:7px;text-decoration-thickness:3px}
+.split-tabs{border:1px solid #76746d;padding:2px;gap:1px}
+.split-tabs button{border:0;background:transparent;min-height:32px;padding:3px 12px;font:650 15px var(--number)}
+.split-tabs button[aria-pressed=true]{background:var(--chalk);color:var(--rubber)}
+.split-tabs button:hover:not([aria-pressed=true]),.group-tabs button:hover:not([aria-pressed=true]){background:#33312c}
+table{width:100%;border-collapse:collapse;text-align:left;font-variant-numeric:tabular-nums}
+th{color:var(--muted);font:500 12px var(--body);padding:11px 0 8px;text-align:left}
+td{border-top:1px solid var(--line);padding:10px 0}
+td.rank{font:italic 32px/1 var(--display);color:#d6d2c6;letter-spacing:.015em}
+td.runner{font-size:clamp(17px,1.3vw,22px);font-weight:750}
+.run-lane,.gap-cell,.result-time{font-family:var(--number)}
+.run-lane,.club-cell,.gap-cell{color:#c8c6bb}
+.run-lane{font-size:17px}.club-cell{font-size:14px}
+.result-time{font-size:clamp(22px,2vw,32px);font-weight:750;line-height:1.1}
+td:last-child,th:last-child{text-align:right;padding-right:4px}
+.lead-row .rank,.lead-row .result-time{color:#ff725b}
+.credit{display:flex;justify-content:space-between;gap:14px;padding-bottom:18px;color:#aca99e;font-size:11px}
+.sr-only{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap}
+@media(min-width:1550px){td{padding-block:16px}.results{padding-top:35px}.section-head{padding-bottom:20px}}
+@media(max-width:820px){.mast{min-height:51px}.hero-inner{grid-template-columns:1.1fr 1fr;min-height:310px}.clock{font-size:clamp(74px,11.6vw,96px)}.hero-data{padding-block:21px}.section-head{align-items:flex-start}.race-filter{gap:8px}.results{padding-top:20px}.group-tabs button{padding-inline:8px}.split-tabs button{padding-inline:8px}}
+@media(max-width:600px){
+  .mast,.hero-inner,.results,.credit{padding-inline:18px}
+  .mast{min-height:47px}.brand-mark{transform:skewX(-15deg) scale(.83);transform-origin:left center;margin-right:-5px}.brand-text strong{font-size:18px}.brand-text span{display:none}.meet{gap:8px;font-size:10px}.meet time{font-size:12px}.meet span{padding-left:8px}
+  .hero-inner{grid-template-columns:1fr;min-height:0}.hero-data{padding-top:19px;padding-bottom:7px}.hero-meta{font-size:12px}.hero-meta:before{width:22px;height:4px}
+  h1{font-size:38px;margin:6px 0 10px}.clock{font-size:clamp(76px,19vw,109px);margin:3px 0 6px}.timing-cap{font-size:12px}.leader{gap:8px;font-size:17px}
+  .track-figure{align-self:auto;justify-self:end;width:76%;padding:0 0 10px;margin:-12px 0 0}
+  .track-caption{font-size:10px;gap:5px}.track-key{width:13px;height:4px}
+  .section-head{display:block;padding-bottom:10px}.results{padding-block:18px 10px}.race-filter{justify-content:space-between;gap:8px;margin-top:10px}.group-tabs button,.split-tabs button{min-height:38px}.group-tabs button{font-size:13px;padding-inline:6px}.split-tabs button{font-size:13px;padding-inline:7px}
+  .club-col,.club-cell{display:none}.run-lane{font-size:14px}.result-time{font-size:20px}td.rank{font-size:24px}td.runner{font-size:16px}td{padding:10px 0}th{font-size:10px}.gap-cell{font-size:13px}.credit{font-size:10px;flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span><div class="brand-text"><strong>折返</strong><span lang="en">SPLITLINE</span></div></div>
+  <p class="meet"><time datetime="2026-10-24">2026.10.24</time><span>东堤田径场</span></p>
+</header>
+<main>
+  <section class="hero" aria-labelledby="event-title">
+    <div class="hero-inner">
+      <div class="hero-data">
+        <p class="hero-meta">城市夜跑邀请赛</p>
+        <h1 id="event-title">夜场 400 米</h1>
+        <p class="timing-cap"><span id="group-label">公开组</span><span id="point-label">终点</span><span>首位成绩</span></p>
+        <p class="clock" id="clock" aria-label="首位成绩"></p>
+        <p class="leader" id="leader"></p>
+      </div>
+      <figure class="track-figure" aria-label="首位选手赛道示意">
+        <canvas id="track" width="640" height="340" aria-hidden="true"></canvas>
+        <figcaption class="track-caption"><i class="track-key" aria-hidden="true"></i><span id="track-caption"></span></figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="results" aria-labelledby="results-title">
+    <div class="section-head">
+      <h2 id="results-title">分段排名</h2>
+      <div class="race-filter">
+        <div class="group-tabs" role="group" aria-label="参赛组别">
+          <button type="button" data-group="open" aria-pressed="true">公开组</button>
+          <button type="button" data-group="youth" aria-pressed="false">青年组</button>
+        </div>
+        <div class="split-tabs" role="group" aria-label="累计计时点">
+          <button type="button" data-point="0" aria-pressed="false">100 m</button><button type="button" data-point="1" aria-pressed="false">200 m</button><button type="button" data-point="2" aria-pressed="true">400 m</button>
+        </div>
+      </div>
+    </div>
+    <table>
+      <caption class="sr-only" id="table-caption"></caption>
+      <thead><tr><th scope="col">名次</th><th scope="col">选手</th><th scope="col" class="club-col">俱乐部</th><th scope="col">赛道</th><th scope="col">累计用时</th><th scope="col">距首位</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </section>
+</main>
+<footer class="credit"><span>东堤田径场 · 电子计时回放</span><span>虚构赛事成绩 · 精度 0.01 秒</span></footer>
+<p class="sr-only" id="announce" role="status" aria-live="polite"></p>
+<script>
+'use strict';
+const groups={
+  open:{name:'公开组', entries:[
+    {lane:1,name:'秦 朗',club:'南线跑团',time:[1196,2437,4954]},
+    {lane:2,name:'赵 宁',club:'河岸田径社',time:[1171,2418,4911]},
+    {lane:3,name:'林 越',club:'风口跑团',time:[1184,2398,4872]},
+    {lane:4,name:'陆 扬',club:'东堤竞技',time:[1169,2425,4928]},
+    {lane:5,name:'程 放',club:'夜行俱乐部',time:[1204,2478,5026]}]},
+  youth:{name:'青年组',entries:[
+    {lane:1,name:'邵一帆',club:'东区体校',time:[1226,2488,5098]},
+    {lane:2,name:'周子墨',club:'南线青年队',time:[1206,2477,5034]},
+    {lane:3,name:'徐小川',club:'河岸青训',time:[1201,2496,5129]},
+    {lane:4,name:'魏 林',club:'东堤竞技',time:[1223,2463,5061]},
+    {lane:5,name:'许文嘉',club:'山谷跑团',time:[1248,2539,5178]}]}
+};
+const points=['100 米','200 米','终点'];
+const state={group:'open',point:2};
+const el=id=>document.getElementById(id);
+const pad=value=>String(value).padStart(2,'0');
+function timeString(value){
+  return pad(Math.floor(value/6000))+':'+pad(Math.floor(value/100)%60)+'.'+pad(value%100);
+}
+function chipText(parent,tag,cls,content){
+  const node=document.createElement(tag);node.className=cls;node.textContent=content;parent.append(node);return node;
+}
+// Five parallel lanes, numbered from the inside out. Each ring uses the same
+// straight lengths as the neighbouring rings and a larger turn radius.
+function stadium(ctx,r){
+  const half=122;
+  ctx.beginPath();ctx.moveTo(-half,-r);ctx.lineTo(half,-r);
+  ctx.arc(half,0,r,-Math.PI/2,Math.PI/2);
+  ctx.lineTo(-half,r);ctx.arc(-half,0,r,Math.PI/2,Math.PI*1.5);ctx.closePath();
+}
+function drawTrack(activeLane){
+  const canvas=el('track'),ctx=canvas.getContext('2d');
+  if(!ctx)return;
+  const ratio=Math.min(3,window.devicePixelRatio||1),bounds=canvas.getBoundingClientRect();
+  const width=Math.max(1,Math.round(bounds.width*ratio)),height=Math.max(1,Math.round(bounds.height*ratio));
+  if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
+  ctx.setTransform(width/640,0,0,height/340,0,0);ctx.clearRect(0,0,640,340);
+  ctx.save();ctx.translate(315,166);ctx.transform(1,-.25,.47,.89,0,0);
+  const inner=69, laneWidth=13,outer=inner+5*laneWidth;
+  ctx.fillStyle='#171717';stadium(ctx,outer);ctx.fill();
+  ctx.fillStyle='#fa452d';stadium(ctx,inner);ctx.fill();
+  for(let i=0;i<=5;i++){
+    stadium(ctx,inner+i*laneWidth);ctx.strokeStyle=i===0||i===5?'#141414':'#aa4b38';ctx.lineWidth=i===0||i===5?2:1.5;ctx.stroke();
+  }
+  stadium(ctx,inner+(activeLane-.5)*laneWidth);
+  ctx.strokeStyle='#fff8ed';ctx.lineWidth=laneWidth-2.5;ctx.stroke();
+  // Lanes on the back straight are individually legible and the diagonal
+  // transverse finish line is applied across all five on the near straight.
+  ctx.lineWidth=2.2;
+  for(let lane=1;lane<=5;lane++){
+    const cy=inner+(lane-.5)*laneWidth;
+    ctx.fillStyle=lane===activeLane?'#151515':'#fff8ed';
+    ctx.font='bold 10px Arial';ctx.textAlign='center';ctx.fillText(String(lane),-90,cy+3.6);
+    ctx.strokeStyle=lane===activeLane?'#141414':'#fa452d';
+    ctx.beginPath();ctx.moveTo(40,cy-laneWidth/2);ctx.lineTo(40,cy+laneWidth/2);ctx.stroke();
+  }
+  ctx.restore();
+  ctx.save();ctx.translate(315,166);ctx.transform(1,-.25,.47,.89,0,0);
+  ctx.textAlign='center';ctx.fillStyle='#141414';ctx.font='900 43px Impact,Arial';
+  ctx.fillText('400 M',0,14);ctx.restore();
+}
+function render(announce=false){
+  const group=groups[state.group],entries=[...group.entries].sort((a,b)=>a.time[state.point]-b.time[state.point]);
+  const first=entries[0],time=first.time[state.point],formatted=timeString(time);
+  const context=state.group+'-'+[100,200,400][state.point];
+  document.body.dataset.reviewContext=context;
+  el('group-label').textContent=group.name;el('point-label').textContent=points[state.point];
+  const clock=el('clock');clock.replaceChildren(document.createTextNode(formatted.slice(0,5)));
+  chipText(clock,'small','fraction',formatted.slice(5));
+  clock.setAttribute('aria-label',formatted+'，分秒百分秒');clock.dataset.reviewId='time-'+context;
+  const leader=el('leader');leader.replaceChildren();leader.dataset.reviewId='leader-'+context;
+  chipText(leader,'span','lane-tag',pad(first.lane)+' 道');chipText(leader,'span','name',first.name);chipText(leader,'span','club',first.club);
+  el('track-caption').textContent='首位选手赛道 · '+pad(first.lane)+' 道';drawTrack(first.lane);
+  el('table-caption').textContent=group.name+'，'+points[state.point]+'累计成绩，按用时排序';
+  const rows=entries.map((entry,index)=>{
+    const row=document.createElement('tr');row.className=index===0?'lead-row':'';
+    row.dataset.reviewId='finish-'+context+'-'+entry.lane;
+    chipText(row,'td','rank',pad(index+1));chipText(row,'td','runner',entry.name);
+    chipText(row,'td','club-cell',entry.club);chipText(row,'td','run-lane',pad(entry.lane));
+    chipText(row,'td','result-time',timeString(entry.time[state.point]));
+    chipText(row,'td','gap-cell',index===0?'领先':'+'+((entry.time[state.point]-time)/100).toFixed(2)+' s');
+    return row;
+  });
+  el('rows').replaceChildren(...rows);
+  document.querySelectorAll('[data-group]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.group===state.group)));
+  document.querySelectorAll('[data-point]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.point)===state.point)));
+  if(announce)el('announce').textContent=group.name+'，'+points[state.point]+'，'+first.name+'领先，用时'+formatted;
+}
+document.querySelectorAll('[data-group]').forEach(button=>button.addEventListener('click',()=>{state.group=button.dataset.group;render(true);}));
+document.querySelectorAll('[data-point]').forEach(button=>button.addEventListener('click',()=>{state.point=Number(button.dataset.point);render(true);}));
+const resize=new ResizeObserver(()=>{
+  const fastest=[...groups[state.group].entries].sort((a,b)=>a.time[state.point]-b.time[state.point])[0];
+  drawTrack(fastest.lane);
+});
+resize.observe(el('track'));render();
+</script>
+</body>
+</html>

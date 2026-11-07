@@ -38,6 +38,12 @@
 <button class="page-tab" data-page="departures" aria-pressed="false"><span class="num">24</span><span><strong>客运信息大屏</strong><span>渡口 · 船班与闸口</span></span><b class="count" id="count-departures">0</b></button>
 <button class="page-tab" data-page="bigscreen" aria-pressed="false"><span class="num">03</span><span><strong>能源监控大屏</strong><span>江湾能源运行中心</span></span><b class="count" id="count-bigscreen">0</b></button>
 </div>
+<div class="sample-group" data-sample-group="视觉风格"><h2>视觉风格</h2>
+<button class="page-tab" data-page="bloom" aria-pressed="false"><span class="num">25</span><span><strong>当季花束订阅</strong><span>花序 · 花艺画册</span></span><b class="count" id="count-bloom">0</b></button>
+<button class="page-tab" data-page="blueprint" aria-pressed="false"><span class="num">26</span><span><strong>模块家具装配</strong><span>晒图室 · 工程蓝晒</span></span><b class="count" id="count-blueprint">0</b></button>
+<button class="page-tab" data-page="splitline" aria-pressed="false"><span class="num">27</span><span><strong>夜跑分段计时</strong><span>折返 · 赛道成绩</span></span><b class="count" id="count-splitline">0</b></button>
+<button class="page-tab" data-page="sprout" aria-pressed="false"><span class="num">28</span><span><strong>专注计时器</strong><span>芽间 · 像素温室</span></span><b class="count" id="count-sprout">0</b></button>
+</div>
 <div class="sample-group" data-sample-group="浏览与选购"><h2>浏览与选购</h2>
 <button class="page-tab" data-page="website" aria-pressed="false"><span class="num">01</span><span><strong>品牌官网</strong><span>LUMA 空间音箱</span></span><b class="count" id="count-website">0</b></button>
 <button class="page-tab" data-page="culture" aria-pressed="false"><span class="num">04</span><span><strong>文化活动</strong><span>阅川 · 沿江阅读季</span></span><b class="count" id="count-culture">0</b></button>
@@ -74,6 +80,27 @@
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const pages={website:{title:'品牌官网',num:'01',file:'website.html',desc:'以空间音箱为主角。暖白与炭灰保持克制，用产品体量、中文大标题和段落节奏建立品牌感。',colors:['#f4f2ed','#d9d6ce','#252620','#aa4e34']},platform:{title:'系统平台',num:'02',file:'platform.html',desc:'围绕团队的日常任务组织信息。浅色工作区、明确的状态语义和适度密度，让搜索、筛选与新建保持直接。',colors:['#f6f7f9','#ffffff','#253139','#26746a']},bigscreen:{wall:true,title:'能源监控大屏',num:'03',file:'bigscreen.html',desc:'先看全局态势，再看趋势与站点。深色背景承托高对比数据，用固定颜色区分光伏、风能和外部电网。站点范围、单位和回放时间均可核对。',colors:['#0b141e','#101d29','#70c6b6','#d5aa68']}};
 Object.assign(pages, {
+  bloom:{
+    title:'当季花束订阅',num:'25',file:'bloom.html',
+    desc:'用整幅花艺摄影选花束，切换大小和配送频次，再核对保存的花单。',
+    colors:['#95153e','#ffd3de','#f3adb9','#e7eea7']
+  },
+  blueprint:{
+    title:'模块家具装配',num:'26',file:'blueprint.html',
+    desc:'在钴蓝图纸上选择不同部件，切换分解与合拢视图，核对尺寸和装配说明。',
+    colors:['#1749bc','#12379b','#e0f4ff','#ffe574'],steps:{exploded:'分解图',assembled:'合拢图'}
+  },
+  splitline:{
+    title:'夜跑分段计时',num:'27',file:'splitline.html',
+    desc:'按组别和计时点看领跑赛道、成绩与差距。示意跑道与成绩带读取同一份赛段数据。',
+    colors:['#fa452d','#141414','#fff8ed','#bcb9af'],
+    steps:{'open-100':'公开组 100m','open-200':'公开组 200m','open-400':'公开组 400m','youth-100':'青年组 100m','youth-200':'青年组 200m','youth-400':'青年组 400m'}
+  },
+  sprout:{
+    title:'专注计时器',num:'28',file:'sprout.html',
+    desc:'在像素温室选择一段专注时长，开始、暂停、继续；完成后窗台会多一朵花。',
+    colors:['#9ae5ce','#b9a2f1','#ff966d','#32284b']
+  },
   orbital:{
     title:'轨道测控大屏',num:'23',file:'orbital.html',wall:true,
     desc:'用极区轨迹、地面站和过站窗口核对当前航天器。切换快照，读出选中目标与窗口的变化。',

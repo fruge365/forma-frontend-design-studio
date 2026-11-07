@@ -10,7 +10,7 @@ const { createReviewServer, parsePort } = require('../serve-review.cjs');
 
 const root = path.resolve(__dirname, '..');
 const review = path.join(root, 'html-review');
-const samples = ['assets', 'atlas', 'bigscreen', 'cues', 'culture', 'departures', 'depot', 'editions', 'field-app', 'handover', 'intake', 'library', 'materials', 'mobility', 'orbital', 'platform', 'policy-diff', 'programme', 'proofroom', 'reader', 'repair-mini', 'scheduling', 'style-lab', 'website'];
+const samples = ['assets', 'atlas', 'bigscreen', 'bloom', 'blueprint', 'cues', 'culture', 'departures', 'depot', 'editions', 'field-app', 'handover', 'intake', 'library', 'materials', 'mobility', 'orbital', 'platform', 'policy-diff', 'programme', 'proofroom', 'reader', 'repair-mini', 'scheduling', 'splitline', 'sprout', 'style-lab', 'website'];
 const expected = ['index', ...samples].map(name => name + '.html').sort();
 let server;
 let port;

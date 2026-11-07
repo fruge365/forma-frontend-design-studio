@@ -2,12 +2,21 @@
 
 给 AI 编程助手使用的中文前端设计技能。告诉它谁会用这个页面、在哪种屏幕上用、最常做什么，它会据此选择布局、字阶、配色和交互，并在你的项目中实现。适用于指挥大屏、公共信息屏、品牌官网、业务系统、App 和微信小程序。
 
-[选择开发工具](#按平台安装和使用) · [更多界面风格](#更多界面风格) · [下载技能包](https://github.com/fruge365/forma-frontend-design-studio/releases/download/v11.0.0/forma-ui-ux-design-v11.0.0.zip)
+[选择开发工具](#按平台安装和使用) · [选一个视觉方向](#风格速览) · [大屏、官网与移动示例](#更多界面风格) · [下载技能包](https://github.com/fruge365/forma-frontend-design-studio/releases/download/v11.0.0/forma-ui-ux-design-v11.0.0.zip)
 
-| **深色指挥大屏 · 凌日** | **黄黑公共导视 · 渡口** |
+## 风格速览
+
+点击截图可打开页面。想在自己的项目中使用某种方向，可以把图下的设计描述与业务需求一起发给技能。
+
+| **花艺画册 · 花序** | **工程蓝晒 · 晒图室** |
 | --- | --- |
-| [![暗色地球轨迹图、航天器遥测和过站时间窗](docs/images/orbital.png)](https://fruge365.github.io/forma-frontend-design-studio/orbital.html) | [![高对比的离港时刻、登船闸口和方向箭头](docs/images/departures.png)](https://fruge365.github.io/forma-frontend-design-studio/departures.html) |
-| 值班员切换目标，在同一幅轨迹图上读出接收窗口。 | 旅客远看时间和闸口，走近后再读船次与延误信息。 |
+| [![花序以莓红色大标题配整幅桃粉花束摄影](docs/images/bloom.png)](https://fruge365.github.io/forma-frontend-design-studio/bloom.html) | [![钴蓝制图纸上用白色线稿分解家具，用亮黄指出选中的部件](docs/images/blueprint.png)](https://fruge365.github.io/forma-frontend-design-studio/blueprint.html) |
+| 用莓果红作底，让花材摄影占据半幅页面。品种、价格与花束尺寸排在另一侧，像一本可以订购的花册。 | 让整张屏幕成为蓝图，部件的爆炸视图占据中心。白线交代结构，亮黄标出正在装配的零件。 |
+
+| **赛道计时 · 折返** | **像素掌机 · 芽间** |
+| --- | --- |
+| [![朱红跑道、白色斜体分秒与近黑排名带](docs/images/splitline.png)](https://fruge365.github.io/forma-frontend-design-studio/splitline.html) | [![薄荷绿背景、淡紫掌机外壳和像素温室里的专注计时器](docs/images/sprout.png)](https://fruge365.github.io/forma-frontend-design-studio/sprout.html) |
+| 用斜体大数字做第一眼的焦点，跑道和近黑成绩带分层。切换计时点，领跑选手、赛道和成绩同步改变。 | 用薄荷绿、淡紫机身与杏橙按键做一台掌上计时器。像素花床记录完成的专注段数，手机上也能单手操作。 |
 
 ## 按平台安装和使用
 
@@ -160,28 +169,36 @@ npx skills add fruge365/forma-frontend-design-studio --skill forma-ui-ux-design 
 
 ## 更多界面风格
 
-点击桌面截图可打开对应页面。每组可以对照版式、字形与用色，再挑一个接近自己项目的方向。
-
-| **极简硬件官网 · LUMA 空间音箱** | **材质样册 · 物样** |
+| **深色指挥大屏 · 凌日** | **黄黑公共导视 · 渡口** |
 | --- | --- |
-| [![暖白背景上的织物音箱、留白和产品标题](docs/images/luma-website.png)](https://fruge365.github.io/forma-frontend-design-studio/website.html) | [![以石纹、木纹和织物纹理组织的材料目录](docs/images/materials.png)](https://fruge365.github.io/forma-frontend-design-studio/materials.html) |
-| 一个产品占据半幅页面，用轮廓和材质传达品牌。 | 同尺寸样片紧密排列，纹理差别成为浏览线索。 |
+| [![暗色地球轨迹图、航天器遥测和过站时间窗](docs/images/orbital.png)](https://fruge365.github.io/forma-frontend-design-studio/orbital.html) | [![高对比的离港时刻、登船闸口和方向箭头](docs/images/departures.png)](https://fruge365.github.io/forma-frontend-design-studio/departures.html) |
+| 值班员切换目标，在同一幅轨迹图上读出接收窗口。 | 旅客远看时间和闸口，走近后再读船次与延误信息。 |
 
-| **文化海报 · 声场室内乐周** | **城市图志 · 沿岸建筑漫步** |
+| **暖白极简 · LUMA 空间音箱** | **淡紫音乐海报 · 声场室内乐周** |
 | --- | --- |
-| [![淡紫海报、深色波形和双日演出表](docs/images/programme.png)](https://fruge365.github.io/forma-frontend-design-studio/programme.html) | [![暖纸色河岸地图、建筑编号和地点索引](docs/images/atlas.png)](https://fruge365.github.io/forma-frontend-design-studio/atlas.html) |
-| 大字、波形和日期构成海报，向下衔接演出日程。 | 地图、编号与立面线描并置，像一本街区步行手册。 |
-
-| **工业作业板 · 仓位** | **运营简报 · 潮汐调度** |
-| --- | --- |
-| [![深松绿仓库平面，荧光黄绿突出当前货位](docs/images/depot.png)](https://fruge365.github.io/forma-frontend-design-studio/depot.html) | [![藏蓝与橙色的单车调度页，趋势图和优先补车站点并排](docs/images/mobility-desktop.png)](https://fruge365.github.io/forma-frontend-design-studio/mobility.html) |
-| 排架、月台和巷道形成工作区，亮色指示当前货位。 | 趋势图与站点清单并排，让早班调度员从数据直接找到行动对象。 |
+| [![暖白背景上的织物音箱、留白和产品标题](docs/images/luma-website.png)](https://fruge365.github.io/forma-frontend-design-studio/website.html) | [![淡紫海报、深色波形和两天的演出日程](docs/images/programme.png)](https://fruge365.github.io/forma-frontend-design-studio/programme.html) |
+| 用留白与织物细节呈现产品的材质，适合主推单品的品牌官网。 | 用衬线大标题、波形和日期组织首屏，向下衔接演出日程。 |
 
 **移动服务 · 栖庭巡检 App 与园区报修小程序**
 
 同一品牌用两种信息密度服务不同用户。左侧给技师看下一项工单和班次，右侧给访客确认地点、选择问题并提交。[打开巡检 App 示例](https://fruge365.github.io/forma-frontend-design-studio/field-app.html) · [打开报修小程序示例](https://fruge365.github.io/forma-frontend-design-studio/repair-mini.html)
 
 ![两个手机界面并排，左为青绿的技师巡检班表，右为浅色的访客报修表单](docs/images/qiting-mobile.png)
+
+<details>
+<summary><strong>更多业务与内容案例</strong> · 材料选购、建筑导览、仓储、调度</summary>
+
+[样本材质目录](https://fruge365.github.io/forma-frontend-design-studio/materials.html) · [河岸建筑地图](https://fruge365.github.io/forma-frontend-design-studio/atlas.html) · [荧光绿仓储作业板](https://fruge365.github.io/forma-frontend-design-studio/depot.html) · [藏蓝运营简报](https://fruge365.github.io/forma-frontend-design-studio/mobility.html)
+
+| 材料样本馆 | 河岸建筑图志 |
+| --- | --- |
+| [![石纹、木纹和织物纹理样本排成目录](docs/images/materials.png)](https://fruge365.github.io/forma-frontend-design-studio/materials.html) | [![河岸示意图、编号与地点索引](docs/images/atlas.png)](https://fruge365.github.io/forma-frontend-design-studio/atlas.html) |
+
+| 库区作业板 | 早班调度简报 |
+| --- | --- |
+| [![仓库平面与高亮货位](docs/images/depot.png)](https://fruge365.github.io/forma-frontend-design-studio/depot.html) | [![调度趋势与优先补车站点](docs/images/mobility-desktop.png)](https://fruge365.github.io/forma-frontend-design-studio/mobility.html) |
+
+</details>
 
 ## 其他获取方式
 
