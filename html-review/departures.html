@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#161914">
+<title>渡口 · 岛际客运信息屏</title>
+<style>
+:root{--ink:#161914;--dark:#232820;--paper:#f4f0e5;--yellow:#ffc827;--alert:#a63e28;--rule:#c4c2b6;--pad:clamp(20px,3vw,74px);--sans:"IBM Plex Sans","Microsoft YaHei","PingFang SC",system-ui,sans-serif;--number:"Barlow Condensed","Arial Narrow","Arial",sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-synthesis:weight}
+h1,h2,p,th,td{margin:0}
+button{font:inherit;cursor:pointer}
+[hidden]{display:none!important}
+button:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.wall{display:grid;min-height:100vh;min-height:100svh;grid-template-rows:auto auto 1fr auto}
+.mast{display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:var(--paper);padding:12px var(--pad);gap:24px}
+.brand,.clock,.controls,.frame-group,.next-label,.gate-caption{display:flex;align-items:center}
+.brand{gap:clamp(14px,1.3vw,26px)}
+.brand h1{font-size:clamp(21px,1.9vw,40px);font-weight:850;line-height:1.05;letter-spacing:.04em}
+.terminal{padding-left:clamp(16px,1.5vw,28px);border-left:1px solid #a3a598;font-size:clamp(13px,1.14vw,22px);font-weight:600;line-height:1.5}
+.vessel-mark{display:inline-block;position:relative;width:clamp(34px,3.2vw,64px);aspect-ratio:6/5;color:var(--yellow);flex:none}
+.vessel-mark::before,.vessel-mark::after{content:"";position:absolute;background:currentColor}
+.vessel-mark::before{left:18%;top:12%;width:61%;height:38%;clip-path:polygon(12% 12%,37% 12%,37% 0,67% 0,67% 12%,88% 12%,100% 100%,72% 100%,67% 49%,52% 49%,52% 100%,42% 100%,42% 49%,28% 49%,23% 100%,0% 100%)}
+.vessel-mark::after{inset:49% 0 5%;clip-path:polygon(0 21%,50% 0,100% 21%,80% 85%,50% 100%,20% 85%)}
+.clock{gap:13px;line-height:1;white-space:nowrap}
+.clock .date{font-size:clamp(12px,1vw,21px);text-align:right;line-height:1.44;color:#dedfd4}
+.clock b,.departure,.seq-time,.gate-number,.snapshot,.gate-cell b{font-family:var(--number);font-variant-numeric:tabular-nums lining-nums}
+.clock b{color:var(--yellow);font-size:clamp(28px,2.7vw,57px);letter-spacing:-.05em}
+.featured{display:grid;grid-template-columns:minmax(235px,.95fr) minmax(250px,1.2fr) minmax(215px,.78fr);align-items:center;gap:clamp(15px,2.8vw,72px);padding:clamp(18px,2.4vh,34px) var(--pad);border-bottom:6px solid var(--ink);background:var(--yellow)}
+.next-label{gap:.5em;font-size:clamp(17px,1.4vw,28px);font-weight:800;white-space:nowrap}
+.boarding-icon{width:.72em;height:.72em;display:inline-block;background:var(--ink);clip-path:polygon(0 0,100% 50%,0 100%)}
+.time-line{display:flex;align-items:baseline;gap:clamp(5px,.8vw,15px);white-space:nowrap}.time-line small{font-size:clamp(14px,1.2vw,26px);font-weight:750}
+.departure{display:block;font-weight:800;font-size:clamp(72px,min(7.6vw,13.7vh),166px);line-height:.97;letter-spacing:-.038em;margin:.08em 0 .07em;font-stretch:condensed}
+.vessel-id,.location-word{font-size:clamp(15px,1.17vw,25px);font-weight:650;line-height:1.35}
+.vessel-id strong{letter-spacing:.055em}
+.destination{border-left:1px solid #816c26;padding-left:clamp(21px,2.5vw,64px)}
+.route{font-size:clamp(16px,1.27vw,27px);font-weight:650;line-height:1.4}
+.destination h2{font-size:clamp(52px,min(5.9vw,10.9vh),132px);font-weight:900;line-height:1.2;letter-spacing:-.065em;margin:.08em 0 .1em}
+.gate{align-self:stretch;display:flex;flex-direction:column;align-items:stretch;justify-content:center;border-left:1px solid #816c26;padding-left:clamp(19px,2.5vw,66px)}
+.gate-caption{gap:.65em;font-size:clamp(17px,1.37vw,29px);font-weight:800}
+.signline{display:flex;align-items:center;gap:clamp(8px,1.1vw,24px);margin:.2em 0}
+.gate-number{font-size:clamp(59px,min(6.7vw,11.9vh),150px);font-weight:850;line-height:.98;letter-spacing:-.06em}
+.arrow{display:block;width:clamp(53px,min(6.6vw,11vh),142px);aspect-ratio:1;flex:none;background:var(--ink);clip-path:polygon(3% 71%,49% 25%,19% 25%,19% 2%,98% 2%,98% 80%,74% 80%,74% 44%,20% 98%);margin-left:.2em}
+.arrow.west{transform:scaleX(-1)}
+.gate-change{font-weight:800;border:2px solid var(--ink);font-size:.76em;padding:.02em .38em;line-height:1.3}
+.board{min-width:0;display:grid;grid-template-rows:auto 1fr;align-content:start;padding:0 var(--pad)}
+.board-title{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:clamp(12px,1.7vh,24px) 0 clamp(8px,1vh,16px)}
+.board-title h2{font-weight:850;letter-spacing:-.025em;font-size:clamp(23px,1.85vw,40px)}
+.sort{font-size:clamp(13px,1vw,20px);color:#4c5047;font-weight:600}
+table{width:100%;border-collapse:collapse;table-layout:fixed;border-top:2px solid var(--ink)}
+col.time{width:18%}col.dest{width:29%}col.ship{width:21%}col.door{width:14%}col.status{width:18%}
+thead th{text-align:left;font-size:clamp(14px,1.1vw,23px);line-height:1.35;font-weight:650;color:#515347;padding:clamp(5px,.65vh,9px) 0;border-bottom:1px solid var(--ink)}
+tbody th,tbody td{text-align:left;border-bottom:1px solid var(--rule);vertical-align:middle;padding:clamp(8px,1vh,17px) 8px clamp(8px,1vh,17px) 0;line-height:1.1}
+tbody tr:last-child>*{border-color:transparent}
+.seq-time{display:block;font-size:clamp(29px,min(2.8vw,5.7vh),69px);letter-spacing:-.055em;font-weight:750}
+.sub{display:block;font-size:clamp(13px,1.03vw,21px);font-weight:550;line-height:1.4;margin-top:.16em;color:#55584c}
+.destination-name{font-size:clamp(23px,min(2.12vw,4.1vh),51px);font-weight:850}
+.ship-code{font:700 clamp(18px,1.55vw,35px)/1 var(--number);letter-spacing:.035em}
+.gate-cell b{display:inline-block;border:2px solid var(--ink);min-width:1.75em;text-align:center;padding:.04em .13em;font-size:clamp(21px,1.65vw,40px);line-height:1.05}
+.status-cell{font-size:clamp(17px,1.48vw,32px);font-weight:750;color:#4a4e42}
+.status-cell::before{content:"";width:.54em;height:.54em;border:2px solid currentColor;display:inline-block;margin-right:.46em;vertical-align:.06em;border-radius:100%}
+.status-cell.delay{color:var(--alert)}.status-cell.delay::before{border:0;width:.75em;height:.74em;clip-path:polygon(50% 0,100% 100%,0 100%);background:currentColor}
+.foot{background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px var(--pad)}
+.notice{display:flex;gap:.75em;align-items:center;font-size:clamp(14px,1.12vw,23px);line-height:1.45}
+.notice strong{color:var(--yellow);font-weight:800;white-space:nowrap}
+.notice strong::before{content:"";display:inline-block;width:1.05em;height:.8em;margin-right:.5em;vertical-align:-.04em;background:repeating-linear-gradient(-61deg,var(--yellow) 0 .18em,transparent .18em .32em)}
+.controls{gap:clamp(8px,1vw,20px);flex:none;color:#e2e2d6;font-size:clamp(12px,.95vw,18px)}
+.frame-group{border:1px solid #7a7c71}
+.snapshot,.fullscreen{font-weight:700;font-size:clamp(13px,1.05vw,21px);border:0;color:var(--paper);background:transparent;padding:.43em .66em;min-height:34px}
+.snapshot[aria-pressed=true]{background:var(--paper);color:var(--ink)}
+.snapshot:focus-visible{position:relative;z-index:1}
+.fullscreen{border:1px solid #7a7c71;font:inherit}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:901px) and (min-height:600px){.wall{height:100vh;height:100svh;grid-template-rows:minmax(58px,8%) minmax(152px,27%) minmax(0,1fr) minmax(56px,7.5%)}}
+@media(min-aspect-ratio:22/9) and (min-width:901px){.featured{grid-template-columns:1fr 1.35fr 1fr}.board-title{padding:7px 0}tbody th,tbody td{padding:5px 8px 5px 0}thead th{padding:3px 0}}
+@media(max-width:900px){.featured{grid-template-columns:1fr 1.12fr .84fr;gap:18px}.destination,.gate{padding-left:15px}.departure{font-size:clamp(52px,8.4vw,74px)}.destination h2{font-size:clamp(39px,6vw,56px)}.gate-number{font-size:clamp(42px,6.8vw,64px)}.arrow{width:clamp(33px,5vw,48px)}.foot{flex-wrap:wrap;gap:12px}.controls{margin-left:auto}.board{margin-bottom:10px}}
+@media(max-width:650px){
+  :root{--pad:16px}.mast{padding:12px var(--pad);gap:8px}.brand{gap:8px}.brand h1{font-size:21px}.vessel-mark{width:27px}.terminal{font-size:12px;padding-left:9px}.clock{gap:7px}.clock .date{font-size:10px}.clock b{font-size:26px}
+  .featured{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px 20px;padding:18px var(--pad) 17px;border-bottom-width:4px}.next{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:13px}.next-label{font-size:15px}.departure{font-size:45px;margin:0;line-height:1}.vessel-id{grid-column:1/-1;margin-top:3px;font-size:12px}
+  .destination{border:0;padding:0}.destination h2{font-size:clamp(37px,8.6vw,52px);margin:2px 0 3px}.route,.location-word{font-size:13px}.gate{padding-left:14px}.gate-caption{font-size:13px}.gate-number{font-size:42px}.arrow{width:36px}.signline{margin:3px 0;gap:8px}
+  .board-title{padding:17px 0 10px}.board-title h2{font-size:22px}.sort{font-size:11px}
+  table,tbody{display:block}colgroup{display:none}thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}tbody tr{display:grid;grid-template-columns:64px minmax(0,1fr) 48px;grid-template-areas:"time dest gate" "time ship state";align-items:center;gap:3px 10px;padding:12px 0;border-bottom:1px solid var(--rule)}
+  tbody tr:last-child{border-bottom:0}tbody td,tbody th{border:0;padding:0}.time-cell{grid-area:time;align-self:start}.seq-time{font-size:26px}.destination-cell{grid-area:dest}.destination-name{font-size:20px}.destination-cell .sub{display:inline;font-size:11px;margin-left:5px}.ship-cell{grid-area:ship}.ship-code,.ship-cell .sub{display:inline;font:550 12px/1.3 var(--sans);color:#55584c}.ship-cell .sub{margin-left:5px}.sub{font-size:11px}.gate-cell{grid-area:gate;text-align:right}.gate-cell b{font-size:16px;border:1.5px solid}.gate-cell b::before{content:"闸 ";font:600 11px var(--sans)}.status-cell{grid-area:state;font-size:12px;white-space:nowrap;text-align:right}.status-cell::before{border-width:1px}
+  .board tbody{display:grid;height:100%;grid-template-rows:repeat(4,1fr)}.board tbody tr{grid-template-columns:64px minmax(0,1fr) 66px;align-content:center}.status-cell .sub{white-space:normal}.board{margin:0}.foot{padding:13px var(--pad);gap:12px}.notice{font-size:12px;align-items:baseline;gap:9px}.controls{width:100%;margin:0;gap:10px}.frame-group{margin-left:auto}.snapshot,.fullscreen{min-height:40px}.snapshot{min-width:58px}
+}
+@media(max-width:355px){:root{--pad:12px}.terminal{max-width:72px}.clock .date{font-size:9px}.destination-cell .sub{display:block;margin:2px 0 0}.vessel-mark{width:24px}.brand{gap:6px}}
+@media(forced-colors:active){.arrow,.boarding-icon,.vessel-mark{forced-color-adjust:none}}
+</style>
+</head>
+<body data-review-context="board0750">
+<main class="wall">
+  <header class="mast">
+    <div class="brand"><span class="vessel-mark" aria-hidden="true"></span><h1>渡口</h1><span class="terminal">白沙港<br>岛际客运站</span></div>
+    <div class="clock" aria-label="演示班表的本地时间"><span class="date">6 月 18 日<br>北京时间</span><b id="board-time">07:50</b></div>
+  </header>
+  <section class="featured" aria-label="正在检票的船班">
+    <div class="next"><div class="next-label"><i class="boarding-icon" aria-hidden="true"></i>正在检票</div><div class="time-line"><strong class="departure" id="featured-time"></strong><small>离港</small></div><p class="vessel-id"><strong id="featured-code"></strong> · <span id="featured-ship"></span></p></div>
+    <div class="destination"><p class="route">白沙港出发，开往</p><h2 id="featured-dest"></h2><p class="location-word" id="featured-pier"></p></div>
+    <div class="gate"><p class="gate-caption">检票闸口 <span id="gate-change" class="gate-change" hidden></span></p><div class="signline"><strong class="gate-number" id="featured-gate"></strong><span aria-hidden="true" class="arrow" id="direction"></span></div><p class="location-word" id="featured-way"></p></div>
+  </section>
+  <section class="board" aria-labelledby="next-list">
+    <div class="board-title"><h2 id="next-list">后续离港</h2><span class="sort">按预计离港时间排列</span></div>
+    <table role="table" aria-label="后续四班离港船"><colgroup><col class="time"><col class="dest"><col class="ship"><col class="door"><col class="status"></colgroup><thead><tr><th scope="col">预计离港</th><th scope="col">目的地</th><th scope="col">船班 / 船名</th><th scope="col">闸口</th><th scope="col">候船状态</th></tr></thead><tbody id="rows"></tbody></table>
+  </section>
+  <footer class="foot">
+    <p class="notice"><strong>客运提示</strong><span id="notice"></span></p>
+    <div class="controls"><span>演示班表</span><div class="frame-group" role="group" aria-label="选择班表快照"><button type="button" class="snapshot" id="frame-0750" data-frame="0750" data-review-id="departures-frame-0750" aria-pressed="true">07:50</button><button type="button" class="snapshot" id="frame-0810" data-frame="0810" data-review-id="departures-frame-0810" aria-pressed="false">08:10</button></div><button id="fullscreen" class="fullscreen" data-review-id="departures-fullscreen" type="button" hidden>全屏</button></div>
+  </footer>
+</main>
+<div id="announce" class="sr" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+const sailings = [
+  {code:'W201', time:'08:05', dest:'青屿岛', pier:'南埠码头', ship:'海燕三号', gate:'02'},
+  {code:'W203', time:'08:25', dest:'榆沙岛', pier:'榆湾码头', ship:'栖潮一号', gate:'03'},
+  {code:'W205', time:'08:35', dest:'鹿鸣岛', pier:'南湾码头', ship:'白鸥六号', gate:'01'},
+  {code:'W207', time:'08:50', dest:'北岬岛', pier:'岬口码头', ship:'栖潮七号', gate:'04'},
+  {code:'W209', time:'09:10', dest:'青屿岛', pier:'南埠码头', ship:'海燕五号', gate:'02'},
+  {code:'W211', time:'09:35', dest:'鹿鸣岛', pier:'南湾码头', ship:'白鸥一号', gate:'01'}
+];
+const frames = {
+  '0750':{time:'07:50', boarding:'W201', delayed:{W205:'08:55'}, gates:{}, notice:'W205 鹿鸣岛船班延后 20 分钟，预计 08:55 离港。'},
+  '0810':{time:'08:10', boarding:'W203', delayed:{W205:'08:55'}, gates:{W203:'05'}, notice:'W203 榆沙岛船班由 03 改至 05 闸，请前往右前方东廊。'}
+};
+const gateWay = {'01':'左前方 · 西廊','02':'左前方 · 西廊','03':'左前方 · 西廊','04':'右前方 · 东廊','05':'右前方 · 东廊'};
+const byId = id => document.getElementById(id);
+const buttons = [...document.querySelectorAll('[data-frame]')];
+const minutes = time => Number(time.slice(0,2))*60+Number(time.slice(3));
+function setText(id, text, anchor) {
+  const el=byId(id);el.textContent=text;
+  if(anchor)el.dataset.reviewId='departures-'+anchor;
+}
+function cell(row, tag, cls, anchor) {
+  const el=document.createElement(tag);el.className=cls;el.dataset.reviewId='departures-'+anchor;
+  if(tag==='th')el.scope='row';
+  row.append(el);return el;
+}
+function line(parent, cls, text, tag='span') {
+  const el=document.createElement(tag);el.className=cls;el.textContent=text;parent.append(el);
+}
+function renderFrame(key, announce) {
+  const frame=frames[key], selected=sailings.find(leg=>leg.code===frame.boarding);
+  const gate=frame.gates[selected.code] || selected.gate;
+  const scope=key+'-'+selected.code+'-';
+  document.body.dataset.reviewContext='board'+key;
+  setText('board-time',frame.time,key+'-clock');
+  setText('featured-time',frame.delayed[selected.code] || selected.time,scope+'time');
+  setText('featured-code',selected.code,scope+'code');
+  setText('featured-ship',selected.ship,scope+'ship');
+  setText('featured-dest',selected.dest,scope+'destination');
+  setText('featured-pier',selected.pier,scope+'pier');
+  setText('featured-gate',gate,scope+'gate');
+  setText('featured-way',gateWay[gate],scope+'direction');
+  byId('direction').classList.toggle('west',gateWay[gate].startsWith('左'));
+  const moved=gate!==selected.gate;
+  byId('gate-change').hidden=!moved;
+  setText('gate-change',moved?'原 '+selected.gate+' 闸':'',scope+'previous');
+  setText('notice',frame.notice,key+'-notice');
+  const upcoming=sailings.map(leg=>({...leg, estimate:frame.delayed[leg.code] || leg.time, currentGate:frame.gates[leg.code] || leg.gate}))
+    .filter(leg=>leg.code!==frame.boarding && leg.estimate>frame.time)
+    .sort((a,b)=>a.estimate.localeCompare(b.estimate)).slice(0,4);
+  const rows=upcoming.map(leg=>{
+    const id=key+'-'+leg.code+'-', tr=document.createElement('tr');
+    const delayed=leg.estimate!==leg.time;
+    const time=cell(tr,'td','time-cell',id+'time');line(time,'seq-time',leg.estimate);
+    if(delayed)line(time,'sub','原定 '+leg.time);
+    const dest=cell(tr,'th','destination-cell',id+'destination');
+    line(dest,'destination-name',leg.dest);line(dest,'sub',leg.pier);
+    const ship=cell(tr,'td','ship-cell',id+'ship');line(ship,'ship-code',leg.code);line(ship,'sub',leg.ship);
+    line(cell(tr,'td','gate-cell',id+'gate'),'plain',leg.currentGate,'b');
+    const status=cell(tr,'td','status-cell'+(delayed?' delay':''),id+'status');
+    status.textContent=delayed?'延误':'候船';
+    if(delayed)line(status,'sub','延后 '+(minutes(leg.estimate)-minutes(leg.time))+' 分钟');
+    return tr;
+  });
+  byId('rows').replaceChildren(...rows);
+  buttons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.frame===key)));
+  if(announce)byId('announce').textContent=frame.time+' 班表。正在检票，'+selected.code+' 开往'+selected.dest+'，'+gate+' 闸。'+frame.notice;
+}
+buttons.forEach((button,index)=>{
+  button.addEventListener('click',()=>renderFrame(button.dataset.frame,true));
+  button.addEventListener('keydown',event=>{
+    const positions={ArrowLeft:1-index,ArrowRight:1-index,Home:0,End:1};
+    if(!Object.hasOwn(positions,event.key))return;
+    event.preventDefault();const next=buttons[positions[event.key]];next.focus();renderFrame(next.dataset.frame,true);
+  });
+});
+const fullscreen=byId('fullscreen');
+if(document.fullscreenEnabled){
+  fullscreen.hidden=false;
+  fullscreen.addEventListener('click',async()=>{
+    try { if(document.fullscreenElement)await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); }
+    catch { byId('announce').textContent='当前预览无法全屏，请独立打开客运信息屏。'; }
+  });
+  document.addEventListener('fullscreenchange',()=>{fullscreen.textContent=document.fullscreenElement?'退出全屏':'全屏';});
+}
+renderFrame('0750',false);
+</script>
+</body>
+</html>

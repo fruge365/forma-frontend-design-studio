@@ -10,7 +10,7 @@ const { createReviewServer, parsePort } = require('../serve-review.cjs');
 
 const root = path.resolve(__dirname, '..');
 const review = path.join(root, 'html-review');
-const samples = ['assets', 'atlas', 'bigscreen', 'cues', 'culture', 'depot', 'editions', 'field-app', 'handover', 'intake', 'library', 'materials', 'mobility', 'platform', 'policy-diff', 'programme', 'proofroom', 'reader', 'repair-mini', 'scheduling', 'style-lab', 'website'];
+const samples = ['assets', 'atlas', 'bigscreen', 'cues', 'culture', 'departures', 'depot', 'editions', 'field-app', 'handover', 'intake', 'library', 'materials', 'mobility', 'orbital', 'platform', 'policy-diff', 'programme', 'proofroom', 'reader', 'repair-mini', 'scheduling', 'style-lab', 'website'];
 const expected = ['index', ...samples].map(name => name + '.html').sort();
 let server;
 let port;
@@ -72,7 +72,7 @@ test('the review shell and each standalone page return the complete UTF-8 file',
 
 test('non-page requests cannot read source files or escape the review directory', async () => {
   for (const target of [
-    '/README.md', '/serve-review.cjs', '/frontend-design-studio/SKILL.md',
+    '/README.md', '/serve-review.cjs', '/skills/forma-ui-ux-design/SKILL.md',
     '/../index.html', '/folder/../index.html', '/%2e%2e%2findex.html',
     '/%2e%2e%5cserve-review.cjs', '//example.test/index.html',
     'http://example.test/index.html', '/index.html%00'
@@ -132,7 +132,7 @@ test('pages can render offline and all inline scripts parse', async () => {
 });
 
 test('relative links in the skill resolve inside its portable folder', async () => {
-  const skillDir = path.join(root, 'frontend-design-studio');
+  const skillDir = path.join(root, 'skills', 'forma-ui-ux-design');
   const refs = (await readdir(path.join(skillDir, 'references'))).filter(name => name.endsWith('.md'));
   const guides = ['SKILL.md', ...refs.map(name => 'references/' + name)];
   for (const guide of guides) {

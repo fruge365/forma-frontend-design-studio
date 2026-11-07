@@ -1,6 +1,0 @@
-interface:
-  display_name: "前端设计工作室"
-  short_description: "为官网、业务系统、大屏、App 与微信小程序选择布局、配色和交互方式"
-  default_prompt: "使用 $frontend-design-studio，根据我的项目场景设计并实现精致、易用且可评审的前端页面。"
-policy:
-  allow_implicit_invocation: true

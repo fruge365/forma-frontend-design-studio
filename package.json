@@ -1,8 +1,8 @@
 {
-  "name": "forma-frontend-design-studio",
-  "version": "10.0.0",
+  "name": "forma-ui-ux-design",
+  "version": "11.0.0",
   "private": true,
-  "description": "覆盖官网、业务系统、数据大屏、App 与小程序的前端 UI/UX skill 和 HTML 标注评审台",
+  "description": "UI/UX design skill for command centers, public displays, websites, platforms and mobile interfaces, with an interactive HTML gallery.",
   "engines": {
     "node": ">=20"
   },

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070e18">
+<title>凌日 · 轨道测控大厅</title>
+<style>
+:root{color-scheme:dark;--space:#070e18;--deck:#0b1723;--line:#293d4b;--ink:#e6f0f2;--muted:#a1b3c1;--dim:#899eae;--signal:#76eed1;--amber:#edbc76;--mono:"IBM Plex Mono",Consolas,"Microsoft YaHei",monospace;font-family:Inter,"Microsoft YaHei","PingFang SC",sans-serif;background:var(--space);color:var(--ink)}
+*{box-sizing:border-box}
+body{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+.console{height:100svh;min-height:666px;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;max-width:3440px;margin:auto;background:var(--space)}
+.mast,.top,.bottom{padding-inline:clamp(20px,2.3vw,58px)}
+.mast{min-height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:20px}
+.brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;letter-spacing:.11em}.brand small{padding-left:13px;border-left:1px solid #344754;font:11px var(--mono);letter-spacing:.13em;color:var(--muted)}
+.brand-mark{position:relative;width:32px;height:27px}.brand-mark::before,.brand-mark::after{position:absolute;content:"";left:4px;top:2px;width:20px;height:20px;border:2px solid var(--signal);border-radius:50%}.brand-mark::after{width:31px;height:8px;left:0;top:8px;transform:rotate(-33deg);border-color:var(--ink);border-width:1.5px}
+.archive{display:flex;align-items:center;gap:13px;font:13px var(--mono);color:var(--muted)}.archive b{font:600 12px Inter,"Microsoft YaHei",sans-serif;display:flex;align-items:center;gap:7px;color:var(--amber)}.archive b::before{content:"";background:var(--amber);width:6px;height:6px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:22px;padding-block:clamp(11px,1.8vh,22px);background:linear-gradient(95deg,#112532 0,transparent 55%);border-bottom:1px solid var(--line)}
+h1,h2,h3,p{margin:0}.top h1{font-size:clamp(27px,2.15vw,52px);line-height:1.2;font-weight:680;letter-spacing:.052em}
+.snapshots{display:flex;align-items:center;gap:11px}.snapshots>span,.caption{font-size:13px;color:var(--muted)}.steps{display:flex;border:1px solid #35505b;padding:3px;gap:2px}.steps button{min-height:36px;padding:4px clamp(9px,1vw,22px);border:0;font:600 clamp(14px,1vw,21px) var(--mono);background:transparent;color:#adbfcb}.steps button[aria-pressed=true]{color:var(--space);background:var(--signal)}.steps button:not([aria-pressed=true]):hover{background:#1a3241}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) clamp(322px,28.6%,650px);min-height:0}
+.main-deck{display:grid;grid-template-rows:minmax(0,1fr) auto;min-height:0;min-width:0}
+.scene{position:relative;min-height:0;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 49% 52%,#132632 0,#0b1926 47%,#09121e 74%,#080f19 100%)}
+.scene canvas{position:absolute;inset:0;width:100%;height:100%}
+.scene-top{position:absolute;top:clamp(18px,2vh,34px);left:clamp(20px,2.3vw,58px);pointer-events:none}.scene-top h2,.windows h2,.fleet h2,.detail h2{font:600 clamp(16px,1.16vw,28px) Inter,"Microsoft YaHei",sans-serif;letter-spacing:.05em}
+.scene-top small{display:block;font-size:12px;margin-top:6px;color:var(--muted)}.map-key{position:absolute;left:clamp(20px,2.3vw,58px);bottom:15px;display:flex;gap:15px;color:#b9c9d1;font-size:12px}.map-key span{display:flex;align-items:center;gap:6px}.space-dot{width:8px;height:8px;background:var(--signal);display:inline-block;transform:rotate(45deg)}.ground-dot{width:9px;height:9px;border:1.5px solid #d5e7ed;display:inline-block;border-radius:50%}
+.windows{border-top:1px solid var(--line);padding:clamp(11px,1.7vh,23px) clamp(20px,2.3vw,58px);background:#0a1520}.window-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.ticks,.timeline-row{display:grid;grid-template-columns:clamp(91px,8.1vw,170px) 1fr;align-items:center;gap:12px}
+.ticks{font:11px var(--mono);color:var(--dim);height:17px}.ticks div{position:relative;height:16px}.ticks i{position:absolute;transform:translateX(-50%);font-style:normal}.ticks i:first-child{transform:none}.ticks i:last-child{transform:translateX(-100%)}
+.timeline-row{width:100%;padding:0;min-height:26px;border:0;background:transparent;text-align:left;color:var(--muted)}.timeline-row>span:first-child{font-size:12px;white-space:nowrap}.timeline-row[aria-pressed=true]>span:first-child{color:var(--signal);font-weight:650}
+.track{position:relative;height:15px;background:repeating-linear-gradient(90deg,#314653 0 1px,transparent 1px calc(100% / 6)),linear-gradient(0deg,transparent 46%,#243742 47% 53%,transparent 54%);border-right:1px solid #314653}.track .window{position:absolute;top:4px;height:7px;background:var(--craft-color);opacity:.68}.timeline-row[aria-pressed=true] .window{background:var(--craft-color);opacity:1}.track .now{position:absolute;top:-2px;bottom:-3px;width:2px;background:#f3f6f0;z-index:2}.timeline-row:hover{background:#132430}
+.telemetry{min-height:0;border-left:1px solid var(--line);display:grid;grid-template-rows:minmax(0,1fr) auto;background:linear-gradient(150deg,#112331 0,#0b1723 57%)}
+.detail,.fleet{padding:clamp(13px,1.9vh,26px) clamp(15px,1.6vw,36px);min-width:0}.detail{display:flex;flex-direction:column;justify-content:space-evenly;gap:6px;min-height:0}
+.panel-label{display:flex;align-items:center;justify-content:space-between;gap:10px}.panel-label small{color:var(--muted);font:12px var(--mono)}.detail .craft-heading{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:3px}.craft-heading strong{font-size:clamp(24px,2vw,44px);font-weight:670;letter-spacing:.04em}.craft-heading small{color:var(--signal);font:14px var(--mono)}
+.link-status{color:var(--signal);font-size:clamp(13px,1vw,22px)}.link-status[data-state="next"]{color:var(--amber)}.link-status[data-state="past"]{color:var(--muted)}
+.angle{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding-bottom:9px}.angle strong{font:500 clamp(45px,4.15vw,100px)/1.06 var(--mono);letter-spacing:-.07em;font-variant-numeric:tabular-nums}.angle strong small{font-size:.48em;vertical-align:top;letter-spacing:0;color:var(--signal)}.angle span{color:var(--muted);font-size:14px;padding-bottom:5px;white-space:nowrap}
+.profile{height:clamp(76px,10vh,140px);position:relative;min-height:64px}.profile canvas{width:100%;height:100%;display:block}
+dl{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 17px}dl div{min-width:0}dt{font-size:12px;color:var(--muted);line-height:1.5}dd{margin:1px 0;font:500 clamp(15px,1.15vw,27px) var(--mono);letter-spacing:.02em}
+.fleet{border-top:1px solid var(--line);background:#0b1722}.fleet .panel-label{margin-bottom:7px}.fleet-list{display:grid}.ship{border:0;border-top:1px solid #263b48;display:flex;align-items:center;gap:10px;text-align:left;padding:0 7px;min-height:clamp(36px,4.6vh,64px);background:none}
+.ship:last-child{border-bottom:1px solid #263b48}.ship:hover,.ship[aria-pressed=true]{background:#132d37}.ship[aria-pressed=true]{box-shadow:inset 2px 0 var(--craft-color)}.ship .chip{width:7px;height:7px;background:var(--craft-color);transform:rotate(45deg);flex:none;margin-left:3px}.ship b{font-size:clamp(13px,1vw,22px);font-weight:600}.ship small{margin-left:auto;font:12px var(--mono);color:var(--muted)}.ship[aria-pressed=true] small{color:var(--signal)}
+.bottom{min-height:28px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);gap:12px;font-size:11px;color:var(--dim)}.bottom span:last-child{font-family:var(--mono)}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+@media(min-height:950px) and (min-width:1100px){.mast{min-height:65px}.track{height:20px}.track .window{height:9px;top:6px}.timeline-row{min-height:33px}.timeline-row>span:first-child,.scene-top small,.map-key,.caption,dt,.snapshots>span{font-size:15px}.ticks,.bottom{font-size:13px}.bottom{min-height:34px}.profile{height:13vh}}
+@media(min-width:2200px){.scene-top h2,.windows h2,.fleet h2,.detail h2{font-size:26px}.map-key,.caption,.ticks,.timeline-row>span:first-child,.ship small,.archive,.scene-top small,dt,.bottom{font-size:17px}}
+@media(max-width:790px){.console{height:auto;min-height:100svh}.mast,.top,.bottom{padding-inline:18px}.mast{min-height:49px}.brand{font-size:19px}.brand small{display:none}.archive{font-size:11px;gap:8px}.top{align-items:flex-start;flex-wrap:wrap;gap:14px;padding:17px 18px}.top h1{font-size:27px}.snapshots{flex-wrap:wrap;gap:8px}.steps button{min-height:38px;min-width:65px}.layout{display:flex;flex-direction:column}.main-deck{display:contents}.scene{order:0;height:clamp(325px,72vw,445px)}.scene-top{top:15px;left:18px}.scene-top h2{font-size:15px}.scene-top small{font-size:11px}.map-key{bottom:10px;left:18px;font-size:11px}.telemetry{order:1;display:flex;flex-direction:column;border-left:0;border-top:1px solid var(--line)}.fleet{order:0;border-top:0;padding:13px 18px}.fleet-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.ship{display:grid;grid-template-columns:7px auto;justify-content:center;gap:2px 7px;min-height:51px;padding:5px 2px;border:1px solid #29404b!important}.ship small{grid-column:2;margin:0;font-size:11px}.ship .chip{margin:0;width:6px;height:6px}.ship b{font-size:13px}.detail{order:1;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center;padding:16px 18px 18px;border-top:1px solid var(--line)}.detail>.panel-label{grid-column:1/-1}.detail .craft-heading{grid-column:1;grid-row:2;display:block}.craft-heading strong{font-size:24px;display:block}.craft-heading small{font-size:12px}.link-status{grid-column:1/-1;grid-row:3}.angle{grid-column:2;grid-row:2;justify-content:end;border:0;padding:0;gap:8px}.angle span{font-size:12px}.angle strong{font-size:44px}.profile{grid-column:1/-1;height:105px}.detail dl{grid-column:1/-1;gap:12px}.windows{order:2;padding:15px 18px 22px}.timeline-row{min-height:38px}.timeline-row>span:first-child{font-size:12px}.ticks,.timeline-row{grid-template-columns:60px minmax(0,1fr);gap:6px}.ticks{font-size:9px}.ticks i:nth-child(2n){display:none}.bottom{min-height:38px;padding-block:6px;flex-wrap:wrap;gap:2px 6px}.bottom span:last-child{font-size:10px}.window-title .caption{font-size:11px}}
+@media(max-width:365px){.top{gap:11px}.steps button{min-width:56px}.archive{gap:5px}.mast,.top,.bottom{padding-inline:12px}.scene{height:305px}.angle strong{font-size:35px}}
+</style>
+</head>
+<body data-review-context="replay">
+<main class="console">
+<header class="mast"><div class="brand"><i class="brand-mark" aria-hidden="true"></i>凌日 <small>ORBITAL CONTROL</small></div><div class="archive"><b>回放</b><span>2026.11.07 / UTC+8</span></div></header>
+<section class="top" aria-labelledby="hall-title"><h1 id="hall-title" data-review-id="orbital-title">轨道测控大厅</h1><div class="snapshots"><span>回放时刻</span><div class="steps" id="times" role="group" aria-label="回放时刻"></div></div></section>
+<div class="layout"><div class="main-deck">
+<section class="scene" aria-labelledby="view-title"><canvas id="globe" role="img"></canvas><div class="scene-top"><h2 id="view-title">轨道态势</h2><small>亚欧站网 · 正射投影</small></div><div class="map-key"><span><i class="space-dot"></i>航天器</span><span><i class="ground-dot"></i>地面站</span></div></section>
+<section class="windows" aria-labelledby="windows-title"><div class="window-title"><h2 id="windows-title">过站窗口</h2><span class="caption">白线为回放时刻 · 仰角 ≥ 10°</span></div><div class="ticks" aria-hidden="true"><span></span><div id="ticks"></div></div><div id="bands" role="group" aria-label="按过站窗口选择航天器"></div></section></div>
+<aside class="telemetry" aria-label="航天器遥测"><section class="detail"><div class="panel-label"><h2>目标遥测</h2><small id="station"></small></div><h3 class="craft-heading" id="target"><strong id="name"></strong><small id="callsign"></small></h3><p class="link-status" id="link"></p><div class="angle"><strong><b id="elevation"></b><small>°</small></strong><span>站心仰角</span></div><div class="profile"><canvas id="profile" role="img"></canvas></div><dl><div><dt>进入窗口</dt><dd id="enter"></dd></div><div><dt>离开窗口</dt><dd id="exit"></dd></div><div><dt>轨道高度</dt><dd id="height"></dd></div><div><dt>最高仰角</dt><dd id="peak"></dd></div></dl></section>
+<section class="fleet"><div class="panel-label"><h2>跟踪目标</h2><small>3 星 / 3 站</small></div><div class="fleet-list" id="ships" role="group" aria-label="选择跟踪目标"></div></section></aside></div>
+<footer class="bottom"><span>虚构任务回放 · 圆轨道与站网示意</span><span id="clock"></span></footer><p class="sr" id="announce" role="status"></p>
+</main>
+<script>
+'use strict';
+const get=id=>document.getElementById(id);
+const rad=Math.PI/180;
+const earth=6371;
+const craft=[
+  {id:'BC01',name:'北辰一号',station:'河西站',lon:98.3,lat:39.6,alt:560,peak:19.35,miss:2.4,bearing:38,color:'#76eed1'},
+  {id:'YT02',name:'云汀二号',station:'岭南站',lon:113.3,lat:23.1,alt:725,peak:27.2,miss:-3.5,bearing:118,color:'#e2ae72'},
+  {id:'CG03',name:'澄光三号',station:'漠北站',lon:89.5,lat:48.2,alt:480,peak:13.3,miss:1.8,bearing:-66,color:'#92afea'}
+];
+const moments=[14,20,26],start=5,end=35;
+let chosen=0,minute=20;
+function xyz(lon,lat){const l=lon*rad,p=lat*rad;return [Math.cos(p)*Math.cos(l),Math.cos(p)*Math.sin(l),Math.sin(p)]}
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+const combine=(a,b,t,u)=>a.map((v,i)=>v*t+b[i]*u);
+function vectorFrame(lon,lat){return {u:xyz(lon,lat),e:xyz(lon+90,0),n:xyz(lon+180,90-lat)}}
+const camera=vectorFrame(85,33);
+function point(v){return [dot(v,camera.e),-dot(v,camera.n),dot(v,camera.u)]}
+for(const c of craft){
+  const basis=vectorFrame(c.lon,c.lat),a=c.bearing*rad;
+  c.ground=basis.u;
+  c.along=combine(basis.n,basis.e,Math.cos(a),Math.sin(a));
+  const cross=combine(basis.e,basis.n,Math.cos(a),-Math.sin(a));
+  c.near=combine(c.ground,cross,Math.cos(c.miss*rad),Math.sin(c.miss*rad));
+  c.angleRate=60*Math.sqrt(398600.44/(earth+c.alt)**3);
+}
+function position(c,t){const angle=(t-c.peak)*c.angleRate;return combine(c.near,c.along,Math.cos(angle),Math.sin(angle))}
+function elevation(c,t){const cos=Math.min(1,Math.max(-1,dot(c.ground,position(c,t))));return Math.atan2(cos-earth/(earth+c.alt),Math.sqrt(1-cos*cos))/rad}
+const threshold=10;
+for(const c of craft){
+  let low=0,high=15;
+  for(let i=0;i<32;i++){const m=(low+high)/2;if(elevation(c,c.peak+m)>threshold)low=m;else high=m}
+  c.open=c.peak-low;c.close=c.peak+low;
+}
+function time(t,seconds=true){const n=Math.round(t*60);return '19:'+String(Math.floor(n/60)).padStart(2,'0')+(seconds?':'+String(n%60).padStart(2,'0'):'')}
+function countdown(t){const n=Math.max(0,Math.round(t*60));return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
+function state(c){if(minute<c.open)return {key:'next',label:'待捕获',line:'距窗口开启 '+countdown(c.open-minute)};if(minute>c.close)return {key:'past',label:'已过站',line:'窗口已结束 '+countdown(minute-c.close)};return {key:'active',label:'接收中',line:'窗口剩余 '+countdown(c.close-minute)}}
+const percent=t=>100*(t-start)/(end-start);
+function button(text,handler,id){const b=document.createElement('button');b.type='button';b.textContent=text;b.addEventListener('click',handler);b.dataset.reviewId=id;return b}
+const timeButtons=moments.map(t=>{const b=button(time(t,false),()=>{minute=t;update(true)},'orbital-time-'+t);b.dataset.minute=t;get('times').append(b);return b});
+const shipButtons=[],windowButtons=[];
+craft.forEach((c,i)=>{
+  const select=()=>{chosen=i;update(true)};
+  const ship=button('',select,'orbital-craft-'+c.id);ship.dataset.craft=c.id;ship.className='ship';ship.style.setProperty('--craft-color',c.color);
+  const chip=document.createElement('i'),name=document.createElement('b'),status=document.createElement('small');chip.className='chip';name.textContent=c.name;ship.append(chip,name,status);get('ships').append(ship);shipButtons.push(ship);
+  const b=button('',select,'orbital-window-'+c.id);b.className='timeline-row';b.style.setProperty('--craft-color',c.color);
+  const label=document.createElement('span'),track=document.createElement('span'),win=document.createElement('i'),now=document.createElement('i');
+  label.textContent=c.name;track.className='track';win.className='window';now.className='now';win.style.left=percent(c.open)+'%';win.style.width=percent(c.close)-percent(c.open)+'%';track.append(win,now);b.append(label,track);
+  b.setAttribute('aria-label',c.name+'，'+c.station+'，'+time(c.open)+' 至 '+time(c.close));get('bands').append(b);windowButtons.push(b);
+});
+for(let t=start;t<=end;t+=5){const e=document.createElement('i');e.style.left=percent(t)+'%';e.textContent=time(t,false);get('ticks').append(e)}
+// Hand-drawn coastlines serve as orientation on the simulated orbit plot.
+const continents=[
+ [[-16,29],[-10,37],[-4,36],[1,38],[10,37],[13,33],[22,31],[29,31],[35,29],[38,20],[44,12],[51,12],[47,3],[42,-3],[40,-12],[35,-20],[34,-27],[28,-33],[19,-35],[15,-28],[12,-17],[11,-9],[8,-4],[9,3],[4,6],[-1,5],[-8,5],[-13,9],[-17,15],[-15,23]],
+ [[-10,36],[0,36],[3,42],[8,44],[12,42],[16,38],[17,41],[13,45],[18,45],[23,38],[28,40],[33,36],[36,35],[35,30],[42,17],[47,13],[55,16],[60,22],[56,25],[50,27],[48,30],[56,27],[63,25],[67,24],[69,20],[73,16],[77,8],[80,11],[80,15],[85,19],[88,22],[91,21],[94,17],[97,16],[99,10],[101,4],[104,2],[102,12],[105,10],[109,12],[108,17],[106,21],[110,21],[116,23],[121,27],[122,31],[120,35],[122,37],[119,39],[123,40],[126,38],[127,35],[130,36],[130,41],[136,44],[141,49],[140,54],[135,54],[138,58],[150,60],[154,56],[156,51],[160,54],[164,60],[174,62],[179,65],[179,70],[164,70],[155,73],[147,72],[140,75],[126,73],[120,74],[112,73],[105,77],[94,78],[80,73],[72,72],[68,69],[60,70],[55,68],[48,67],[42,68],[36,67],[31,70],[25,71],[20,69],[14,67],[9,63],[5,61],[5,59],[9,58],[14,61],[18,65],[22,66],[23,61],[22,59],[16,56],[12,55],[9,55],[8,53],[4,52],[-1,49],[-5,48],[-1,46],[-2,44],[-9,44]],
+ [[42,-12],[49,-13],[50,-17],[46,-25],[44,-25],[43,-20]],
+ [[130,33],[133,34],[135,34],[140,36],[142,40],[141,41],[138,37],[134,35],[131,34]],[[141,42],[145,44],[144,45],[140,44]],
+ [[-6,50],[1,51],[0,54],[-3,55],[-2,58],[-5,59],[-6,55],[-3,53]],[[119,22],[122,25],[122,23],[121,21]],
+ [[95,5],[99,3],[104,-3],[106,-6],[102,-5],[98,0]],[[109,3],[117,7],[119,4],[117,0],[115,-4],[110,-3]],[[105,-6],[115,-8],[113,-9],[105,-7]],
+ [[119,-20],[123,-17],[127,-14],[130,-12],[136,-12],[138,-16],[142,-11],[145,-16],[150,-22],[154,-28],[151,-34],[146,-39],[139,-36],[136,-34],[132,-32],[124,-33],[116,-35],[113,-28],[114,-22]],
+ [[-168,65],[-160,70],[-140,69],[-128,70],[-112,74],[-90,75],[-75,70],[-61,61],[-55,52],[-65,47],[-71,42],[-77,36],[-81,29],[-84,30],[-90,30],[-97,26],[-98,20],[-90,18],[-87,21],[-86,15],[-82,9],[-79,8],[-90,14],[-104,19],[-110,25],[-116,32],[-122,37],[-124,47],[-131,53],[-140,59],[-150,60],[-162,58]],
+ [[-81,12],[-71,12],[-63,11],[-53,5],[-48,0],[-36,-5],[-35,-10],[-40,-19],[-45,-24],[-49,-28],[-54,-33],[-58,-39],[-65,-50],[-68,-55],[-74,-51],[-74,-40],[-71,-32],[-75,-14],[-80,-6]],
+ [[-54,59],[-42,61],[-29,68],[-20,74],[-18,80],[-28,84],[-50,83],[-62,80],[-69,76],[-62,71]]
+];
+function inside(x,y,p){let hit=false;for(let i=0,j=p.length-1;i<p.length;j=i++){const [a,b]=p[i],[c,d]=p[j];if((b>y)!==(d>y)&&x<(c-a)*(y-b)/(d-b)+a)hit=!hit}return hit}
+const land=[];
+for(let lat=-78;lat<=82;lat+=1.45){const step=1.48/Math.cos(lat*rad);for(let lon=-180;lon<180;lon+=step){const v=point(xyz(lon,lat));if(v[2]>.015&&continents.some(p=>inside(lon,lat,p)))land.push(v)}}
+function surface(canvas){const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);const w=Math.round(rect.width),h=Math.round(rect.height);if(!w||!h)return null;if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);return {ctx,w,h}}
+function drawGlobe(){
+  const surfaceInfo=surface(get('globe'));if(!surfaceInfo)return;
+  const {ctx,w,h}=surfaceInfo,small=w<550,r=Math.min(w*(small?.351:.34),h*(small?.360:.407)),cx=w*.489,cy=h*(small?.542:.511);
+  const c=craft[chosen];
+  function path(points,color,line=1,dash=[]){ctx.beginPath();let next=true;for(const v of points){if(!v){next=true;continue}const x=cx+v[0]*r,y=cy+v[1]*r;if(next)ctx.moveTo(x,y);else ctx.lineTo(x,y);next=false}ctx.strokeStyle=color;ctx.lineWidth=line;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([])}
+  function arc(radius,stroke,width=1){ctx.beginPath();ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke()}
+  let seed=246813;function rand(){seed=(seed*16807)%2147483647;return seed/2147483647}
+  for(let i=0;i<111;i++){const x=rand()*w,y=rand()*h,a=rand();ctx.fillStyle='rgba(157,196,219,'+(.1+a*.37)+')';ctx.fillRect(x,y,a>.88?1.75:1,a>.88?1.75:1)}
+  const glow=ctx.createRadialGradient(cx,cy,r*.94,cx,cy,r*1.18);glow.addColorStop(0,'rgba(66,178,185,.2)');glow.addColorStop(.35,'rgba(42,151,171,.09)');glow.addColorStop(1,'rgba(20,90,120,0)');ctx.fillStyle=glow;ctx.fillRect(cx-r*1.2,cy-r*1.2,r*2.4,r*2.4);
+  const ocean=ctx.createRadialGradient(cx-r*.32,cy-r*.47,r*.07,cx+r*.28,cy+r*.31,r*1.32);ocean.addColorStop(0,'#244755');ocean.addColorStop(.55,'#122e3e');ocean.addColorStop(1,'#07121f');ctx.fillStyle=ocean;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+  for(let lat=-75;lat<=75;lat+=15){const pts=[];for(let l=-180;l<=180;l+=2){const v=point(xyz(l,lat));pts.push(v[2]>=0?v:null)}path(pts,lat===0?'#365968':'#294655',lat===0?1.05:.7)}
+  for(let lon=-180;lon<180;lon+=15){const pts=[];for(let l=-90;l<=90;l+=2){const v=point(xyz(lon,l));pts.push(v[2]>=0?v:null)}path(pts,'#294655',.65)}
+  const dotR=Math.max(.62,r*.0054);
+  for(const v of land){const light=Math.max(0,(-v[0]*.37-v[1]*.49+v[2]*.49));ctx.fillStyle='rgba(140,202,200,'+(.34+.55*light)+')';ctx.beginPath();ctx.ellipse(cx+v[0]*r,cy+v[1]*r,dotR*(.45+.55*v[2]),dotR,0,0,Math.PI*2);ctx.fill()}
+  arc(r,'#65a5ad',1.1);arc(r+2,'#467a83',.8);
+  // The apparent limb also occludes the back side of each real-radius orbital path.
+  const screenPositions=[];
+  for(const i of [...craft.keys()].sort((a,b)=>Number(a===chosen)-Number(b===chosen))){
+    const item=craft[i],height=1+item.alt/earth,pts=[];
+    for(let j=0;j<=480;j++){const t=item.peak+(j/480*2-1)*Math.PI/item.angleRate;const v=point(position(item,t)).map(n=>n*height);pts.push(v[2]<0&&v[0]*v[0]+v[1]*v[1]<1?null:v)}
+    path(pts,item.color,i===chosen?1.85:1.03,i===chosen?[]:[4,5]);
+    const v=point(position(item,minute)).map(n=>n*height),s=point(item.ground);
+    if(i===chosen&&state(item).key==='active')path([s,v],'#d5f8e9',1.2,[3,3]);
+    ctx.strokeStyle=i===chosen?'#f8fbf5':'#97b1be';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(cx+s[0]*r,cy+s[1]*r,i===chosen?4.2:2.8,0,Math.PI*2);ctx.stroke();
+    if(v[2]>=0||v[0]*v[0]+v[1]*v[1]>=1)screenPositions.push({i,x:cx+v[0]*r,y:cy+v[1]*r});
+  }
+  for(const p of screenPositions){const selected=p.i===chosen;ctx.fillStyle=craft[p.i].color;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(Math.PI/4);ctx.fillRect(selected?-4:-3,selected?-4:-3,selected?8:6,selected?8:6);if(selected){ctx.lineWidth=1;ctx.strokeStyle='#f1f8f5';ctx.strokeRect(-8,-8,16,16)}ctx.restore()}
+  const selected=screenPositions.find(p=>p.i===chosen);
+  if(selected){const dir=selected.x<cx?-1:1;const endX=selected.x+dir*r*.33,endY=selected.y-r*.26;ctx.beginPath();ctx.moveTo(selected.x+dir*9,selected.y-6);ctx.lineTo(selected.x+dir*r*.16,endY);ctx.lineTo(endX,endY);ctx.strokeStyle='#88ead3';ctx.lineWidth=1;ctx.stroke();
+    ctx.font='600 '+(small?11:Math.max(13,Math.round(r*.059)))+'px Consolas, monospace';const label=craft[chosen].id;const tw=ctx.measureText(label).width;const lx=dir>0?endX+4:endX-tw-4;ctx.fillStyle='#0b1e28';ctx.fillRect(lx-2,endY-11,tw+4,18);ctx.fillStyle='#a9ffe7';ctx.fillText(label,lx,endY+4)}
+  if(!small){ctx.font='12px Consolas, monospace';ctx.fillStyle='#8faab6';ctx.textAlign='center';ctx.fillText('N',cx,cy-r-17);ctx.textAlign='left';ctx.fillStyle='#8faab6';ctx.fillText('85° E / 33° N',w-116,h-17)}
+}
+function drawProfile(){
+  const info=surface(get('profile'));if(!info)return;const {ctx,w,h}=info,c=craft[chosen];const top=7,bottom=h-18,left=30,right=w-4;const x=t=>left+(t-start)/(end-start)*(right-left);const y=e=>bottom-(e+65)/155*(bottom-top);
+  const boundary=y(threshold);ctx.strokeStyle='#496273';ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(left,boundary);ctx.lineTo(right,boundary);ctx.stroke();ctx.setLineDash([]);
+  ctx.beginPath();let i=0;for(let t=start;t<=end+.001;t+=.125){const a=x(t),b=y(elevation(c,t));if(i++===0)ctx.moveTo(a,b);else ctx.lineTo(a,b)}
+  ctx.strokeStyle='#78e7d0';ctx.lineWidth=2;ctx.stroke();ctx.lineTo(right,bottom);ctx.lineTo(left,bottom);ctx.closePath();const fill=ctx.createLinearGradient(0,top,0,bottom);fill.addColorStop(0,'rgba(118,238,209,.29)');fill.addColorStop(1,'rgba(118,238,209,.03)');ctx.fillStyle=fill;ctx.fill();
+  const a=x(minute),b=y(elevation(c,minute));ctx.strokeStyle='#b2c7cd';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a,top);ctx.lineTo(a,bottom);ctx.stroke();ctx.beginPath();ctx.arc(a,b,3.7,0,Math.PI*2);ctx.fillStyle='#c4fff0';ctx.fill();ctx.font='11px Consolas, monospace';ctx.fillStyle='#a9bac5';ctx.textAlign='left';ctx.fillText('10°',0,boundary+3);ctx.fillText(time(start,false),left,h-3);ctx.textAlign='right';ctx.fillText(time(end,false),right,h-3);ctx.textAlign='left';
+}
+function update(announce){
+  const c=craft[chosen],phase=state(c);get('name').textContent=c.name;get('callsign').textContent=c.id;get('station').textContent=c.station;get('elevation').textContent=elevation(c,minute).toFixed(1);get('enter').textContent=time(c.open);get('exit').textContent=time(c.close);get('peak').textContent=elevation(c,c.peak).toFixed(1)+'°';get('height').textContent=c.alt+' km';get('link').textContent=phase.label+' · '+phase.line;get('link').dataset.state=phase.key;
+  get('clock').textContent='站网快照 '+time(minute);document.body.dataset.reviewObject=c.id+'-'+minute;
+  for(const id of ['target','name','callsign','station','elevation','enter','exit','peak','height','link','globe','profile'])get(id).dataset.reviewId='orbital-'+id+'-'+c.id+'-'+minute;
+  for(const id of ['station','elevation','enter','exit','peak','height']){
+    get(id).closest('div').dataset.reviewId='orbital-reading-'+id+'-'+c.id+'-'+minute;
+  }
+  get('globe').setAttribute('aria-label',time(minute)+' 卫星与站网示意，当前目标 '+c.name+'，'+c.station+' '+phase.label);get('profile').setAttribute('aria-label',c.name+' 站心仰角随时间变化，最高 '+get('peak').textContent+'，过站窗口 '+time(c.open)+' 至 '+time(c.close));
+  timeButtons.forEach((b,i)=>b.setAttribute('aria-pressed',String(moments[i]===minute)));
+  craft.forEach((item,i)=>{shipButtons[i].setAttribute('aria-pressed',String(i===chosen));shipButtons[i].querySelector('small').textContent=state(item).label;windowButtons[i].setAttribute('aria-pressed',String(i===chosen));windowButtons[i].querySelector('.now').style.left=percent(minute)+'%'});
+  drawGlobe();drawProfile();if(announce)get('announce').textContent=time(minute)+'，'+c.name+'，'+phase.label+'，仰角 '+get('elevation').textContent+' 度';
+}
+new ResizeObserver(()=>{drawGlobe();drawProfile()}).observe(document.querySelector('.scene'));
+new ResizeObserver(drawProfile).observe(get('profile'));
+update(false);
+</script>
+</body>
+</html>

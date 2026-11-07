@@ -1,0 +1,6 @@
+interface:
+  display_name: "FORMA UI/UX Design"
+  short_description: "为指挥大屏、公共信息屏、官网、业务系统和移动端设计并实现可用的界面"
+  default_prompt: "使用 $forma-ui-ux-design，依据我的用户、屏幕和关键任务设计并实现页面。"
+policy:
+  allow_implicit_invocation: true

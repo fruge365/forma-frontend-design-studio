@@ -1,15 +1,17 @@
 ---
-name: frontend-design-studio
-description: 为品牌官网、业务系统、数据大屏、App、微信小程序及 H5 设计并实现前端 UI/UX。适用于按任务选择布局和配色、跨端交互设计、页面视觉重构、评审和标注迭代。
+name: forma-ui-ux-design
+description: Design, implement, or review distinctive frontend UI/UX for command-center video walls, public displays, brand websites, business platforms, apps, and mini programs. 用于数据大屏、官网、后台及移动端的视觉设计、交互实现与界面评审。
 ---
 
-# 前端设计工作室
+# FORMA UI/UX Design
 
 从真实内容和用户动作确定页面的视觉主次，把版式、交互状态、响应式布局一起落实到前端代码。
 
-## 开始前
+## 确定任务和视觉方向
 
 先看项目已有品牌、组件、数据与设备要求。用一句具体的话明确“谁、在什么设备上、依据什么信息、完成什么动作”。从这句话确定首屏最大的对象，以及最先出现的操作。例如园区值班员在值守屏上先看异常区域和影响设备，再转到异常清单处理。窄范围修改沿用既有体系。
+
+从题材里找一件能承担信息的主视觉。轨道测控需要能读的轨迹和过站窗口，港口旅客要先看到下一班的时间与闸口，品牌产品页则可能需要一张能看清材料与尺寸的近景。对新设计，试排两种有实质区别的构图，再决定留白、字形、表面和动效。对已有页面，优先保留用户熟悉的操作位置。收到设计评审请求时，从实际界面找出问题，给出位置、影响、改法与复核路径。
 
 ## 选择参考
 
@@ -27,9 +29,10 @@ description: 为品牌官网、业务系统、数据大屏、App、微信小程�
 | 分段填报，核对后改选商品或履约方式，或在退回后补正同一份申请 | [分步办理、核对与退补](references/transaction-flows.md) |
 | 为 App、微信小程序或 H5 设计任务入口、返回、草稿和提交 | [移动平台的导航与验证](references/mobile-platforms.md) |
 | 切换深浅主题、调整长文字号与行距，或在值守界面区分预选和执行 | [外观偏好、阅读位置与动态反馈](references/appearance-and-reading.md) |
-| 远距发现异常、区分实测与预测，或从区域趋势找到待处理站点 | [大屏与分析看板](references/data-display.md) |
+| 设计指挥中心大屏、场馆公共显示或能源监控墙，确定主画面、远距字阶和整屏布局 | [大屏视觉方向与验证](references/wall-displays.md) |
+| 区分实测与预测，或从区域趋势找到待处理站点 | [数据大屏与分析看板](references/data-display.md) |
 | 借鉴小米、华为、Rokid、Apple 或记录中的其他品牌 | [官方页面观察与迁移边界](references/brand-research.md) |
-| 检查成品，或将用户标注用于下一轮修改 | [质量评审](references/quality-review.md)、[标注反馈迭代](references/review-loop.md) |
+| 检查成品，或根据用户标注修正具体页面 | [质量评审](references/quality-review.md)、[标注反馈](references/review-loop.md) |
 
 同一项目可按页面组合不同场景。图书馆活动介绍需要读者理解活动，选座页需要读者核对场次与座位，可以共享馆徽、字体与品牌色，分别决定标题大小、图片占比和首要操作位置。
 
