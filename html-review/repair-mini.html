@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f6ed">
+<title>栖庭 · 访客报修</title>
+<style>
+:root{--ink:#203931;--green:#126858;--paper:#f7f6ed;--card:#fffef7;--tint:#dcead4;--line:#c6d0bf;--muted:#526454;--rust:#963d25;color:var(--ink);background:var(--paper);font-family:Inter,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}body{margin:0}button,textarea{font:inherit}a,button{touch-action:manipulation;color:inherit}a{text-decoration:none}button{cursor:pointer}button,a,textarea,input{outline-offset:4px}button:focus-visible,a:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--rust)}[hidden]{display:none!important}[tabindex="-1"]:focus{outline:none}h1,h2,h3,p,dl,dd,fieldset,ol{margin:0}fieldset{min-width:0;padding:0;border:0}legend{padding:0}
+.top{max-width:976px;margin:auto;padding:0 26px;min-height:68px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:16px}.brand{display:flex;align-items:center;gap:11px;font-size:17px;font-weight:700}.mark{width:24px;height:24px;display:inline-block;border:3px solid var(--green);border-radius:7px 7px 6px 0;position:relative}.mark:after{content:"";position:absolute;inset:5px 1px -3px 5px;border:2px solid var(--green);border-bottom:0;border-right:0}.link,.back{display:inline-flex;align-items:center;min-height:44px;font-weight:620;font-size:14px;color:var(--green)}.link{gap:7px}.link .counter{background:var(--tint);min-width:20px;padding:2px 4px;border-radius:20px;text-align:center;font-size:12px}
+main{max-width:976px;margin:auto;padding:40px 26px max(26px,env(safe-area-inset-bottom))}.compose{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(24px,6vw,74px);align-items:start}.title{font-size:clamp(36px,5.6vw,62px);font-weight:750;letter-spacing:-.065em;line-height:1.17}.lead{font-size:15px;line-height:1.65;color:var(--muted);margin:8px 0 22px}.place{border:1px solid #bacbad;border-radius:3px;background:var(--tint);position:relative;overflow:hidden;min-height:135px;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:21px 18px}.place:after{content:"";position:absolute;right:-23px;bottom:-41px;width:107px;height:107px;border:1px solid #adbfa3;border-radius:100%;box-shadow:0 0 0 10px var(--tint),0 0 0 11px #adbfa3,0 0 0 21px var(--tint),0 0 0 22px #adbfa3}.place>div,.place>strong{position:relative;z-index:1}.place small{color:#405d43;font-size:12px}.place h2{font-size:23px;line-height:1.35;letter-spacing:-.04em;margin:5px 0 2px}.place p{font-size:13px;color:#405d43}.plate{font-family:"IBM Plex Mono",Consolas,monospace;font-size:31px;font-weight:700;letter-spacing:-.09em;border:2px solid var(--ink);border-radius:3px;min-width:60px;line-height:1.35;text-align:center;background:var(--tint);transform:rotate(-4deg)}
+.form-panel{margin-top:4px}legend,.label,.section-title{font-size:20px;font-weight:700;line-height:1.5;letter-spacing:-.03em}.small{font-size:12px;color:var(--muted);font-weight:450;margin-left:6px}.options{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.option{position:relative;min-width:0}.option label{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--card);border-radius:4px;padding:12px 10px;min-height:55px;cursor:pointer;font-size:15px;font-weight:600}.option input{width:17px;height:17px;position:absolute;margin:0;top:50%;left:12px;transform:translateY(-50%);accent-color:var(--green)}.option label span{margin-left:26px}.option input:checked+label{background:#e5efde;border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}.option input:focus-visible+label{outline:3px solid var(--rust);outline-offset:2px}.option input:focus-visible{outline:0}.label{margin-top:23px;display:block}.label small{font-size:12px;color:var(--muted);font-weight:400}.note{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:13px;border-radius:4px;resize:vertical;min-height:85px;margin:9px 0 0;line-height:1.5}.note::placeholder{color:#647365}.error{color:var(--rust);font-size:14px;line-height:1.5;margin-top:8px}
+.actions{display:flex;align-items:center;flex-wrap:wrap;gap:13px;margin-top:19px}.primary,.secondary{border-radius:4px;display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 20px;font-weight:650;line-height:1.4}.primary{background:var(--green);color:white;border:1px solid var(--green)}.primary:hover{background:#0b5146}.secondary{background:none;border:1px solid #a3b29f;color:var(--green)}.advance{width:100%;justify-content:space-between}.foot,.quiet{font-size:12px;color:var(--muted);line-height:1.7}.foot{margin-top:22px}.single{max-width:620px;margin:auto}.back{margin-bottom:14px}.single .title{font-size:clamp(31px,6vw,42px)}.receipt{border:1px solid var(--line);border-top:4px solid var(--green);border-radius:3px;background:var(--card);margin:18px 0;padding:9px 18px}.receipt div{display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid #dce1d5;align-items:baseline}.receipt div:last-child{border-bottom:0}.receipt dt{color:var(--muted);font-size:13px}.receipt dd{font-weight:550;overflow-wrap:anywhere;white-space:pre-wrap}.success-mark{display:inline-grid;place-items:center;background:var(--tint);width:44px;height:44px;color:var(--green);font-size:28px;font-weight:750;border-radius:100%;margin-bottom:12px}.track{list-style:none;padding:14px 0 2px}.track li{padding:0 0 20px 23px;border-left:2px solid var(--line);position:relative;margin-left:7px}.track li:last-child{border-color:transparent}.track li:before{content:"";position:absolute;left:-7px;top:4px;width:9px;height:9px;border:2px solid #9aa998;background:var(--paper);border-radius:100%}.track li:first-child:before{background:var(--green);border-color:var(--green)}.track strong{font-size:15px}.track p{font-size:13px;color:var(--muted);margin-top:3px}.records{list-style:none;padding:0;margin:20px 0}.records a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 0;border-block-end:1px solid var(--line)}.records strong,.records small{display:block}.records small{font-size:12px;color:var(--muted);margin-top:5px}.empty{margin:17px 0;color:var(--muted)}
+@media(max-width:700px){.top{padding:0 19px;min-height:55px}.brand{font-size:16px}main{padding:24px 19px max(24px,env(safe-area-inset-bottom))}.compose{grid-template-columns:1fr;gap:22px}.lead{margin:5px 0 14px;font-size:14px}.place{min-height:99px;padding:13px 15px}.place h2{font-size:21px}.options{margin-top:7px}.option label{min-height:48px}.form-panel{margin:0}.label{margin-top:18px}.foot{margin-top:16px}}
+@media(max-width:355px){.top{padding:0 13px}main{padding-inline:13px}.plate{min-width:50px;font-size:27px}.option label{font-size:14px}.receipt div{grid-template-columns:64px minmax(0,1fr)}}
+</style></head><body>
+<header class="top"><span class="brand"><i class="mark" aria-hidden="true"></i>栖庭园区服务</span><a class="link" id="my-tickets" href="#tickets" data-review-id="mini-history">我的报修 <span class="counter" id="count">0</span></a></header>
+<main>
+<section class="compose" id="compose">
+  <div><h1 class="title" id="compose-title" tabindex="-1">园区报修</h1><p class="lead">公共区域设施问题，可在这里登记。</p>
+    <section class="place" aria-label="报修地点" data-review-id="mini-scan-location"><div><small>演示扫码点位</small><h2 id="place-name"></h2><p id="place-zone"></p></div><strong class="plate" id="place-code"></strong></section>
+  </div>
+  <form id="request-form" class="form-panel" novalidate>
+    <fieldset id="problem-list" data-review-id="mini-issue"><legend>遇到了什么问题？<span class="small">必选</span></legend><div class="options" id="options"></div></fieldset>
+    <p class="error" id="type-error" role="alert" hidden></p>
+    <label class="label" for="details">补充描述 <small>选填</small></label><textarea class="note" id="details" rows="3" maxlength="200" placeholder="例如：入口左侧第二盏灯不亮"></textarea>
+    <div class="actions"><button class="primary advance" type="submit" data-review-id="mini-review">核对报修 <span aria-hidden="true">→</span></button></div>
+    <p class="foot">本机演示 · 回执仅保存在当前浏览器。</p>
+  </form>
+</section>
+<section class="single" id="review" hidden>
+  <a class="back" href="#compose">← 返回填写</a><h1 class="title" id="review-title" tabindex="-1">核对报修</h1><dl class="receipt" id="review-facts" data-review-id="mini-confirm-facts"></dl>
+  <p class="quiet">确认后将在本机生成演示回执。</p><p class="error" id="save-error" role="alert" hidden></p>
+  <div class="actions"><button type="button" class="primary" id="confirm" data-review-id="mini-confirm">确认登记</button><a class="secondary" href="#compose">修改内容</a></div>
+</section>
+<section class="single" id="receipt" hidden><div class="success-mark" aria-hidden="true">✓</div><h1 class="title" id="receipt-title" tabindex="-1">回执已保存在本机</h1><dl class="receipt" id="receipt-facts"></dl>
+  <div class="actions"><a class="primary" id="track-link">查看进度</a><a class="secondary" href="#compose">继续报修</a></div>
+</section>
+<section class="single" id="tickets" hidden><a class="back" href="#compose">← 返回报修</a><h1 class="title" id="tickets-title" tabindex="-1">我的报修</h1><p class="foot">当前浏览器保存的演示记录</p><ol class="records" id="records"></ol><p id="empty" class="empty">还没有报修回执。</p></section>
+<section class="single" id="tracking" hidden><a class="back" href="#tickets">← 我的报修</a><h1 class="title" id="tracking-title" tabindex="-1">报修进度</h1><dl class="receipt" id="tracking-facts"></dl>
+  <ol class="track" data-review-id="mini-progress"><li><strong>已在本机登记</strong><p id="registered-at"></p></li><li><strong>待园区受理</strong><p>本页演示到回执生成，园区受理进度须由服务台提供。</p></li></ol><a class="secondary" href="#compose">继续报修</a>
+</section>
+</main>
+<script>
+'use strict';
+const spots={
+  C2:{name:'东连廊入口',zone:'东园 · 连廊一层'},
+  B1:{name:'西庭休息区',zone:'西园 · 步道一层'}
+};
+const issues=['灯具照明','门窗通行','给排水','其他设施'];
+const id=name=>document.getElementById(name);
+const storageKey='qiting-repair-v1:'+new URL('.',location.href).pathname;
+const requested=new URL(location.href).searchParams.get('spot')||'C2';
+const place=Object.hasOwn(spots,requested)?requested:null;
+const titles={compose:'compose-title',review:'review-title',receipt:'receipt-title',tickets:'tickets-title',tracking:'tracking-title'};
+let selected='',receipts=load(),currentPage='',submitting=false,pendingId='';
+function element(tag,text){const item=document.createElement(tag);if(text!==undefined)item.textContent=text;return item}
+function valid(item){
+  return item&&typeof item.id==='string'&&/^QT-[A-Z0-9-]{6,45}$/.test(item.id)&&Object.hasOwn(spots,item.place)&&issues.includes(item.issue)&&typeof item.note==='string'&&item.note.length<=200&&Number.isFinite(item.time);
+}
+function load(){
+  try{const saved=JSON.parse(localStorage.getItem(storageKey)||'[]');return Array.isArray(saved)?saved.filter(valid):[]}
+  catch{return []}
+}
+function format(time){return new Intl.DateTimeFormat('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(time))}
+function showFacts(target,rows){
+  const elements=rows.map(([label,value])=>{const row=element('div');row.append(element('dt',label),element('dd',value));return row});
+  id(target).replaceChildren(...elements);
+}
+function recordFacts(ticket){return [['回执编号',ticket.id],['地点',spots[ticket.place].name+' · '+ticket.place],['问题类型',ticket.issue],['备注',ticket.note||'无'],['登记时间',format(ticket.time)]]}
+function drawRecords(){
+  const rows=receipts.map(ticket=>{
+    const row=element('li'),link=element('a'),words=element('div');link.href='#tracking/'+ticket.id;
+    words.append(element('strong',ticket.issue+' · '+spots[ticket.place].name),element('small',format(ticket.time)+' · 本机已登记'));
+    link.append(words,element('span','查看 ›'));row.append(link);return row;
+  });
+  id('records').replaceChildren(...rows);id('empty').hidden=!!rows.length;
+}
+function navigate(page){history.replaceState(null,'','#'+page);route()}
+function route(){
+  receipts=load();id('count').textContent=String(receipts.length);id('save-error').hidden=true;
+  const [target,ref]=location.hash.slice(1).split('/');let page=Object.hasOwn(titles,target)?target:'compose';
+  const ticket=receipts.find(item=>item.id===ref);
+  if((page==='receipt'||page==='tracking')&&!ticket)page='tickets';
+  if(page==='review'&&(!selected||!place))page='compose';
+  if(page==='review')showFacts('review-facts',[['地点',spots[place].name+' · '+place],['问题类型',selected],['备注',id('details').value.trim()||'无']]);
+  if(page==='receipt'){showFacts('receipt-facts',recordFacts(ticket));id('track-link').href='#tracking/'+ticket.id}
+  if(page==='tracking'){showFacts('tracking-facts',recordFacts(ticket).slice(0,4));id('registered-at').textContent=format(ticket.time)}
+  if(page==='tickets')drawRecords();
+  for(const name of Object.keys(titles))id(name).hidden=page!==name;
+  if(currentPage){id(titles[page]).focus();window.scrollTo(0,0)}
+  currentPage=page;
+}
+id('place-name').textContent=place?spots[place].name:'点位未识别';
+id('place-zone').textContent=place?spots[place].zone:'请重新进入有效点位。';
+id('place-code').textContent=place||'—';
+if(!place){
+  const change=element('a','打开 C2 演示点位');change.className='link';const corrected=new URL(location.href);corrected.searchParams.set('spot','C2');corrected.hash='compose';change.href=corrected.href;
+  id('place-zone').append(document.createElement('br'),change);
+}
+for(const [index,issue] of issues.entries()){
+  const opt=element('div');opt.className='option';const input=element('input'),label=element('label');
+  input.type='radio';input.name='problem';input.value=issue;input.id='issue-'+index;input.required=true;label.htmlFor=input.id;label.append(element('span',issue));opt.append(input,label);id('options').append(opt);
+}
+id('problem-list').addEventListener('change',event=>{selected=event.target.value;id('type-error').hidden=true;id('problem-list').removeAttribute('aria-invalid')});
+id('request-form').addEventListener('submit',event=>{
+  event.preventDefault();
+  if(!place||!issues.includes(selected)){
+    id('type-error').textContent=place?'请选择一个问题类型。':'请使用有效点位重新打开报修入口。';
+    id('type-error').hidden=false;id('problem-list').setAttribute('aria-invalid','true');
+    (place?id('issue-0'):id('place-zone').querySelector('a')).focus();return;
+  }
+  if(!pendingId)pendingId='QT-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
+  location.hash='review';
+});
+id('confirm').addEventListener('click',()=>{
+  if(submitting||!pendingId||!place||!issues.includes(selected))return;
+  submitting=true;id('confirm').disabled=true;
+  const entry={id:pendingId,time:Date.now(),place,issue:selected,note:id('details').value.trim()};
+  try{
+    const latest=load();if(!latest.some(item=>item.id===entry.id))localStorage.setItem(storageKey,JSON.stringify([entry,...latest]));
+  }catch{
+    id('save-error').hidden=false;id('save-error').textContent='浏览器暂时无法保存回执。已保留当前内容，可返回修改或再次尝试。';return;
+  }finally{submitting=false;id('confirm').disabled=false}
+  pendingId='';selected='';id('request-form').reset();navigate('receipt/'+entry.id);
+});
+window.addEventListener('hashchange',route);
+window.addEventListener('storage',event=>{if(event.key===storageKey){receipts=load();id('count').textContent=String(receipts.length);if(currentPage==='tickets')drawRecords()}});
+route();
+</script></body></html>

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>叠尺 · 生产排程</title>
+  <style>
+    :root{color-scheme:light;--paper:#f3f2ee;--surface:#fffefb;--ink:#24283c;--muted:#60646d;--rule:#d9d9d4;--indigo:#353f84;--indigo-light:#e8ebfa;--amber:#824907;--amber-bg:#fff1d8;--mono:"IBM Plex Mono",Consolas,monospace;--sans:Inter,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-family:var(--sans);color:var(--ink);background:var(--paper);font-size:15px}
+    *{box-sizing:border-box}body{margin:0}button,select{font:inherit;color:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible,[tabindex="-1"]:focus-visible{outline:3px solid #5262b3;outline-offset:3px}button:disabled{cursor:default}h1,h2,h3,p,dl,dd{margin:0}button,a{-webkit-tap-highlight-color:transparent}.mono,time,.job-code{font-family:var(--mono);font-variant-numeric:tabular-nums}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.brandbar{background:#262a40;color:#fff}.brandinner{max-width:1680px;padding:0 clamp(18px,3.5vw,64px);height:58px;margin:auto;display:flex;align-items:center;gap:13px}.mark{width:27px;height:27px;display:grid;grid-template-columns:repeat(3,6px);gap:3px;align-items:end;transform:skew(-12deg)}.mark i{background:#c0c8ff;height:100%}.mark i:nth-child(2){height:75%}.mark i:nth-child(3){height:50%}.brandname{font-size:21px;letter-spacing:.07em;line-height:1}.brandcaption{color:#d0d2dd;font-size:13px;border-left:1px solid #606377;padding-left:14px}.plant{margin-left:auto;color:#ececf2;font-size:13px}
+    main{max-width:1680px;margin:auto;padding:0 clamp(18px,3.5vw,64px) 26px}.mast{padding:36px 0 25px;display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap}.mast h1{font-size:clamp(32px,3vw,46px);font-weight:720;line-height:1.12;letter-spacing:-.035em}.mast p{font-size:14px;color:var(--muted);margin-top:10px}.dayfilter{display:flex;align-items:center;gap:10px}.dayfilter>span{font-size:13px;color:var(--muted)}.days{display:flex;padding:3px;background:#e7e7e2;border:1px solid #d7d7d2;border-radius:7px;gap:2px}.days button{border:0;border-radius:4px;background:transparent;padding:8px 13px;font-size:13px;font-weight:600}.days button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 3px #25253726;color:var(--indigo)}.days button:not([aria-pressed="true"]):hover,.quiet:hover{background:#ebedf6}
+    .workarea{display:grid;grid-template-columns:minmax(0,1fr) minmax(278px,25%);align-items:start;gap:18px}.board,.detail{border:1px solid var(--rule);border-radius:10px;background:var(--surface);min-width:0;overflow:hidden}.boardhead,.detailhead{padding:22px 22px 18px}.boardhead{display:flex;justify-content:space-between;align-items:start;gap:16px}.section-title{font-size:21px;letter-spacing:-.025em;line-height:1.3}.subtitle{margin-top:5px;color:var(--muted);font-size:13px;line-height:1.55}.legend{display:flex;gap:12px;flex-wrap:wrap;color:#565965;font-size:12px;align-items:center}.legend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.swatch{display:inline-block;width:10px;height:10px;border:1px solid #acb0c3;background:#eef0f5;border-radius:2px}.swatch.chosen{background:var(--indigo);border-color:var(--indigo)}
+    .timeline{--lane:94px;margin:0 18px}.axis,.lane{display:grid;grid-template-columns:var(--lane) minmax(0,1fr)}.axis{min-height:37px;color:var(--muted);font-size:11px;font-weight:600;align-items:end}.axis>span{padding:0 4px 10px}.hours{display:flex;justify-content:space-between;padding-bottom:10px;line-height:1;font-family:var(--mono)}.hours span{width:0;display:flex;justify-content:center;white-space:nowrap}.hours span:first-child{justify-content:flex-start}.hours span:last-child{justify-content:flex-end}.lane{min-height:91px;border-top:1px solid var(--rule)}.line-name{display:flex;flex-direction:column;gap:4px;justify-content:center;padding-left:5px;min-width:0}.line-name b{font:650 17px var(--mono);color:#3a3e51}.line-name small{color:var(--muted);font-size:12px}.track{position:relative;border-left:1px solid var(--rule);border-right:1px solid var(--rule);background:repeating-linear-gradient(90deg,transparent 0,transparent calc(12.5% - 1px),#e5e5e0 calc(12.5% - 1px),#e5e5e0 12.5%)}.job{position:absolute;top:15px;height:60px;left:calc(var(--start)*6.25% + 2px);width:calc(var(--duration)*6.25% - 4px);border:1px solid #cdd0d9;border-left:3px solid #9096a9;background:#eceef3;border-radius:5px;display:flex;flex-direction:column;justify-content:center;align-items:start;text-align:left;gap:3px;padding:4px 8px;overflow:hidden}.job:hover{border-color:#7c85b3;background:#e4e7f4}.job[aria-pressed="true"]{color:#fff;border-color:var(--indigo);background:var(--indigo)}.job-code{font-size:11px;color:#51586b;white-space:nowrap;letter-spacing:.012em}.job[aria-pressed="true"] .job-code{color:#e2e5ff}.job-title{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;font-weight:650}.job-time{display:none}.boardfoot{margin:0 18px;padding:15px 4px;border-top:1px solid var(--rule);color:var(--muted);font-size:12px;display:flex;align-items:center;justify-content:space-between;gap:12px}.boardfoot strong{font-weight:600;color:var(--ink)}
+    .detailhead{padding-bottom:15px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between}.detailhead h2{font-size:16px}.detailbody{padding:21px}.ticket{display:inline-flex;align-items:center;gap:8px;color:var(--indigo);font:600 13px var(--mono);letter-spacing:.04em}.ticket:before{content:"";width:15px;height:8px;display:inline-block;border-block:2px solid var(--indigo)}#part{font-size:26px;letter-spacing:-.04em;line-height:1.3;margin:7px 0 16px}.schedule-strip{display:flex;gap:8px;flex-wrap:wrap;background:var(--indigo-light);border-left:3px solid var(--indigo);padding:9px 10px;color:#333b74;line-height:1.45;font-size:13px}.specs{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;margin:19px 0 22px;font-size:13px}.specs dt{color:var(--muted)}.specs dd{text-align:right}.primary,.quiet,.back{border:1px solid transparent;border-radius:5px;min-height:41px;padding:8px 14px;font-size:14px;font-weight:600}.primary{background:var(--indigo);color:white}.primary:hover{background:#27316f}.quiet{background:var(--surface);border-color:#c8cad5;color:#353952}.wide{width:100%}.back{display:none}.related{border-top:1px solid var(--rule);padding:16px 20px}.related h3{font-size:14px;margin:0 0 7px}.nearby-button{padding:8px 0;border:none;background:transparent;display:block;width:100%;text-align:left;color:#383e68;font-size:13px;line-height:1.5}.nearby-button:hover{text-decoration:underline}.related small,.empty{font-size:12px;color:var(--muted)}.nearby-button small{margin-right:7px}
+    .feedback{margin-top:17px;padding:11px 14px;border:1px solid #cbd0df;background:#eeeef7;border-radius:6px;display:flex;align-items:center;justify-content:space-between;gap:13px;font-size:13px;line-height:1.6}.feedback[hidden],button[hidden]{display:none}.feedback button{background:none;border:0;text-decoration:underline;font-weight:650;color:var(--indigo);padding:5px;white-space:nowrap}.footnote{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.7}
+    dialog{color:var(--ink);border:1px solid #c4c6ce;border-radius:12px;padding:0;background:var(--surface);width:min(420px,calc(100% - 24px));max-height:calc(100dvh - 28px);box-shadow:0 18px 64px #1d234333}dialog::backdrop{background:#1d223b5c}dialog form{padding:22px}.formhead{display:flex;align-items:center;justify-content:space-between;gap:10px}.formhead h2{font-size:23px}.close{width:36px;height:36px;border:0;background:transparent;border-radius:5px;font-size:22px}.close:hover{background:var(--paper)}#form-context{font-size:13px;line-height:1.65;color:var(--muted);margin:8px 0 20px}.field{display:block;margin:14px 0 0;font-size:14px;font-weight:600}.field select{display:block;width:100%;padding:7px 10px;margin-top:6px;border:1px solid #afb2bc;background:#fff;border-radius:5px;min-height:43px;font-weight:500}.error{background:var(--amber-bg);color:var(--amber);border-left:3px solid #aa721d;padding:9px 11px;border-radius:3px;line-height:1.6;font-size:13px;margin-top:15px}.error:empty{display:none}.formactions{display:flex;gap:8px;justify-content:end;margin-top:22px}
+    @media(min-width:1540px){.timeline{--lane:115px}.lane{min-height:103px}.job{top:19px;height:65px}}
+    @media(max-width:1120px) and (min-width:781px){.workarea{grid-template-columns:minmax(0,1fr)}.detail{display:grid;grid-template-columns:1.6fr 1fr}.detailhead{grid-column:1/-1;padding:12px 20px}.detailbody{padding:16px 20px}.related{border-top:0;border-left:1px solid var(--rule)}.specs{grid-template-columns:auto 1fr auto 1fr;gap:8px 14px;margin:12px 0}.specs dd{text-align:left}#part{margin:4px 0 8px}}
+    @media(max-width:780px){.brandinner{height:52px;padding:0 16px}.plant{display:none}main{padding:0 12px 20px}.mast{padding:24px 3px 17px;gap:13px;align-items:center}.mast h1{font-size:32px}.mast p{margin-top:6px;font-size:13px}.dayfilter{gap:6px}.dayfilter>span{display:none}.days button{min-height:38px}.workarea{display:flex;flex-direction:column;gap:14px}.board,.detail{width:100%}.boardhead{padding:16px 14px 11px;gap:8px}.section-title{font-size:19px}.legend{gap:7px;font-size:11px}.subtitle{font-size:12px}.timeline{margin:0 12px}.axis{display:none}.lane{display:block;min-height:initial;padding:11px 0}.line-name{display:flex;flex-direction:row;align-items:center;justify-content:start;gap:8px;padding:0 0 7px}.line-name b{font-size:14px}.track{display:flex;flex-direction:column;gap:4px;background:transparent;border:none}.track:empty:after{content:"本班暂无工单";font-size:13px;color:var(--muted)}.job{position:static;width:100%;height:auto;min-height:44px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;justify-content:initial;gap:7px;padding:6px 8px}.job-code{font-size:11px}.job-title{font-size:13px}.job-time{display:inline;white-space:nowrap;font:11px var(--mono)}.boardfoot{margin:0 12px;padding:11px 0}.detailhead{padding:11px 15px}.detailbody{padding:16px}.back{display:block;border-color:var(--rule);background:var(--surface);padding:6px 10px;min-height:36px;font-size:12px}.feedback{align-items:start}.locale{display:none}}
+    .job[aria-pressed="true"] .job-code:before{content:"✓ ";font-family:var(--sans)}
+    .list-hint{display:none}
+    @media(max-width:780px){.board-hint{display:none}.list-hint{display:inline}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+<header class="brandbar"><div class="brandinner"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><strong class="brandname">叠尺</strong><span class="brandcaption">制造执行系统</span><span class="plant">临川精工厂</span></div></header>
+<main>
+  <header class="mast"><div><h1>生产排程</h1><p>精密加工一车间 · 白班计划</p></div>
+    <div class="dayfilter"><span>排程日期</span><div class="days" role="group" aria-label="排程日期">
+      <button data-day="0" data-review-id="sched-day-09" aria-pressed="true">11/09 周一</button>
+      <button data-day="1" data-review-id="sched-day-10" aria-pressed="false">11/10 周二</button>
+    </div></div>
+  </header>
+  <div class="workarea">
+    <section class="board" aria-labelledby="board-title" data-review-id="sched-board">
+      <header class="boardhead"><div><h2 class="section-title" id="board-title">产线计划板</h2><p class="subtitle" id="scope"></p></div><div class="legend" aria-label="工单图例"><span><i class="swatch chosen"></i>已选</span><span><i class="swatch"></i>已排</span></div></header>
+      <div class="timeline"><div class="axis" aria-hidden="true"><span>产线 / 时刻</span><div class="hours"><span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span></div></div><div id="lanes"></div></div>
+      <p class="boardfoot"><strong id="board-count"></strong><span class="board-hint">空白时段可排产</span><span class="list-hint">点选工单查看详情</span></p>
+    </section>
+    <aside class="detail" aria-labelledby="detail-title" data-review-id="sched-detail"><div class="detailhead"><h2 id="detail-title" tabindex="-1">工单详情</h2><button class="back" id="back-to-board">返回已选工单 ↑</button></div>
+      <div class="detailbody"><span class="ticket" id="ticket"></span><h3 id="part"></h3><div class="schedule-strip" id="placement"></div><dl class="specs" id="specs"></dl><button class="primary wide" id="edit" data-review-id="sched-edit">调整排程</button></div>
+      <div class="related"><h3>同线相邻工单</h3><div id="neighbors"></div></div>
+    </aside>
+  </div>
+  <div class="feedback" hidden id="feedback"><span id="feedback-copy"></span><button id="undo" data-review-id="sched-undo">撤销最近调整</button></div>
+  <p class="visually-hidden" role="status" id="live"></p><p class="footnote" id="storage-hint">演示工单 · 排程保存在本机浏览器</p>
+</main>
+<dialog id="editor" aria-labelledby="edit-title"><form id="edit-form">
+  <div class="formhead"><h2 id="edit-title">调整排程</h2><button type="button" id="close" class="close" aria-label="关闭调整窗口">×</button></div>
+  <p id="form-context"></p>
+  <label class="field">工作日期<select id="edit-day"><option value="0">11 月 09 日 · 周一</option><option value="1">11 月 10 日 · 周二</option></select></label>
+  <label class="field">加工产线<select id="edit-line"></select></label>
+  <label class="field">开工时刻<select id="edit-start"></select></label>
+  <p class="error" id="error" role="alert" data-review-id="sched-conflict"></p>
+  <div class="formactions"><button type="button" id="cancel" class="quiet">取消</button><button type="submit" class="primary" id="save" data-review-id="sched-save">保存调整</button></div>
+</form></dialog>
+<script>
+'use strict';
+const lines = [
+  {id:'M01', name:'立式铣削', process:'铣削'}, {id:'M02', name:'卧式铣削', process:'铣削'},
+  {id:'G01', name:'精密磨削', process:'磨削'}, {id:'G02', name:'平面磨削', process:'磨削'}
+];
+const dates = ['11 月 09 日','11 月 10 日'];
+// Start and duration use half-hour slots from the 08:00 shift boundary.
+const records = [
+  ['2417','法兰基座','铣削','6061 铝合金',120,0,'M01',2,4],
+  ['2420','连接支座','铣削','45 号钢',80,0,'M01',7,4],
+  ['2421','端面压盖','铣削','6061 铝合金',64,0,'M01',12,4],
+  ['2422','定位夹块','铣削','40Cr 合金钢',96,0,'M02',1,5],
+  ['2423','导槽滑板','铣削','45 号钢',60,0,'M02',8,5],
+  ['2424','导轨垫片','磨削','GCr15 轴承钢',240,0,'G01',0,5],
+  ['2425','精密压板','磨削','40Cr 合金钢',72,0,'G01',8,4],
+  ['2426','滚轮轴套','磨削','GCr15 轴承钢',48,0,'G02',3,5],
+  ['2427','止推环','磨削','40Cr 合金钢',160,0,'G02',10,4],
+  ['2431','泵体支架','铣削','6061 铝合金',40,1,'M01',0,4],
+  ['2432','定位销座','铣削','45 号钢',80,1,'M01',7,5],
+  ['2433','端部挡块','铣削','45 号钢',160,1,'M02',4,4],
+  ['2434','轴承压环','磨削','GCr15 轴承钢',100,1,'G01',2,4],
+  ['2435','导向压条','磨削','40Cr 合金钢',60,1,'G02',6,5]
+];
+const jobs = records.map(([id,name,process,material,quantity,day,line,start,duration]) => ({
+  id:'WO-'+id,name,process,material,quantity,duration,initial:{day,line,start}
+}));
+const byId = new Map(jobs.map(job => [job.id,job]));
+const lineInfo = id => lines.find(line => line.id===id);
+const dateShort = day => ['11/09','11/10'][day];
+const clock = slot => String(8+Math.floor(slot/2)).padStart(2,'0')+(slot%2?':30':':00');
+const spanTime = (start,duration) => clock(start)+'–'+clock(start+duration);
+const hours = slots => (slots/2)+' 小时';
+const code = id => document.getElementById(id);
+const same = (a,b) => a && b && a.day===b.day && a.line===b.line && a.start===b.start;
+const folder = location.protocol==='file:'?'':new URL('.',location.href).pathname;
+const storageKey = 'diechi-schedule-v1'+(folder&&folder!=='/'?':'+folder:'');
+let memoryOnly = false;
+
+function defaultState(){
+  return {placements:Object.fromEntries(jobs.map(job => [job.id,{...job.initial}])),last:null};
+}
+function validSlot(job,slot){
+  return slot && [0,1].includes(slot.day) && lineInfo(slot.line)?.process===job.process &&
+    Number.isInteger(slot.start) && slot.start>=0 && slot.start+job.duration<=16;
+}
+function overlaps(placements,job,slot){
+  return jobs.find(other => {
+    const target=placements[other.id];
+    return other.id!==job.id && target.day===slot.day && target.line===slot.line &&
+      target.start<slot.start+job.duration && slot.start<target.start+other.duration;
+  });
+}
+function storedState(){
+  const fallback=defaultState();
+  const raw=localStorage.getItem(storageKey);
+  if(!raw)return fallback;
+  try{
+    const data=JSON.parse(raw);
+    if(!jobs.every(job=>validSlot(job,data.placements?.[job.id])) ||
+       jobs.some(job=>overlaps(data.placements,job,data.placements[job.id])))return fallback;
+    const last=data.last,job=byId.get(last?.id);
+    if(!job || !validSlot(job,last.from) || !same(last.to,data.placements[job.id]))data.last=null;
+    return data;
+  }catch{return fallback}
+}
+function readCurrent(){
+  if(memoryOnly)return state;
+  try{return storedState()}
+  catch{memoryOnly=true;code('storage-hint').textContent='浏览器存储不可用，本页调整仅在本次打开期间保留。';return state}
+}
+function persist(next){
+  if(!memoryOnly){
+    try{localStorage.setItem(storageKey,JSON.stringify(next))}
+    catch{memoryOnly=true;code('storage-hint').textContent='浏览器存储不可用，本页调整仅在本次打开期间保留。'}
+  }
+  state=next;
+}
+let state=defaultState();
+state=readCurrent();
+let selected=state.last?.id??jobs[0].id;
+let day=state.placements[selected].day;
+let editing=null;
+let feedback='';
+
+function element(tag,className,content){
+  const node=document.createElement(tag);
+  if(className)node.className=className;
+  if(content!=null)node.textContent=content;
+  return node;
+}
+function jobsFor(line,activeDay){
+  return jobs.filter(job=>state.placements[job.id].line===line && state.placements[job.id].day===activeDay)
+    .sort((a,b)=>state.placements[a.id].start-state.placements[b.id].start);
+}
+function jobButton(job){
+  const slot=state.placements[job.id], time=spanTime(slot.start,job.duration);
+  const button=element('button','job');
+  button.type='button';
+  button.dataset.job=job.id;
+  button.dataset.reviewId='sched-job-'+job.id;
+  button.setAttribute('aria-pressed',String(job.id===selected));
+  button.setAttribute('aria-label',job.id+' '+job.name+'，'+slot.line+'，'+time);
+  button.style.setProperty('--start',slot.start);
+  button.style.setProperty('--duration',job.duration);
+  button.append(element('span','job-code',job.id),element('span','job-title',job.name),element('span','job-time',time));
+  button.onclick=()=>choose(job.id);
+  return button;
+}
+function renderBoard(){
+  const root=code('lanes');
+  root.replaceChildren();
+  for(const line of lines){
+    const row=element('div','lane'),name=element('div','line-name'),track=element('div','track');
+    row.dataset.reviewId='sched-line-'+line.id;
+    name.append(element('b',null,line.id),element('small',null,line.name));
+    track.append(...jobsFor(line.id,day).map(jobButton));
+    row.append(name,track);
+    root.append(row);
+  }
+  const count=jobs.filter(job=>state.placements[job.id].day===day).length;
+  code('scope').textContent='2026 年 '+dates[day]+' · 08:00–16:00';
+  code('board-count').textContent='4 条产线 · '+count+' 张工单';
+  for(const btn of document.querySelectorAll('[data-day]'))btn.setAttribute('aria-pressed',String(Number(btn.dataset.day)===day));
+}
+function renderDetail(){
+  const job=byId.get(selected);
+  code('edit').disabled=!job;
+  code('back-to-board').hidden=!job;
+  if(!job){
+    code('ticket').textContent='本班暂无工单';code('part').textContent='请选择其他日期';
+    for(const id of ['placement','specs','neighbors'])code(id).replaceChildren();
+    return;
+  }
+  const slot=state.placements[job.id],details=code('specs');
+  code('ticket').textContent=job.id;code('part').textContent=job.name;
+  code('placement').replaceChildren(element('b','mono',slot.line),element('span','mono',spanTime(slot.start,job.duration)),element('span',null,dateShort(slot.day)));
+  details.replaceChildren();
+  for(const [label,value] of [['加工工艺',job.process],['批量',job.quantity+' 件'],['材料',job.material],['占线时长',hours(job.duration)]]){
+    details.append(element('dt',null,label),element('dd',null,value));
+  }
+  const laneJobs=jobsFor(slot.line,slot.day),index=laneJobs.findIndex(item=>item.id===job.id);
+  const list=code('neighbors');list.replaceChildren();
+  for(const [direction,adjacent] of [['上一单',laneJobs[index-1]],['下一单',laneJobs[index+1]]]){
+    if(!adjacent)continue;
+    const control=element('button','nearby-button');
+    control.append(element('small',null,direction),document.createTextNode(adjacent.name+' · '+spanTime(state.placements[adjacent.id].start,adjacent.duration)));
+    control.setAttribute('aria-label',direction+' '+adjacent.id+' '+adjacent.name);
+    control.dataset.reviewId='sched-neighbor-'+adjacent.id;
+    control.onclick=()=>choose(adjacent.id,true);list.append(control);
+  }
+  if(!list.childElementCount)list.append(element('p','empty','本班同线暂无其他工单'));
+}
+function render(){
+  renderBoard();renderDetail();
+  const last=state.last;
+  code('undo').hidden=!last;
+  code('feedback').hidden=!feedback&&!last;
+  code('feedback-copy').textContent=feedback || (last?'最近调整了 '+last.id+'。':'');
+}
+function focusJob(){document.querySelector('[data-job="'+selected+'"]')?.focus()}
+function choose(id,fromDetail=false){
+  selected=id;
+  for(const btn of document.querySelectorAll('[data-job]'))btn.setAttribute('aria-pressed',String(btn.dataset.job===id));
+  renderDetail();
+  if(fromDetail||matchMedia('(max-width:780px)').matches)code('detail-title').focus();
+  else code('live').textContent='已选择 '+id+'，工单详情已更新。';
+}
+for(const btn of document.querySelectorAll('[data-day]')){
+  btn.onclick=()=>{
+    day=Number(btn.dataset.day);
+    selected=lines.flatMap(line=>jobsFor(line.id,day))[0]?.id??null;
+    render();
+    code('live').textContent=dates[day]+'，'+code('board-count').textContent;
+  };
+}
+code('back-to-board').onclick=focusJob;
+function option(value,text){const op=element('option',null,text);op.value=value;return op}
+code('edit').onclick=()=>{
+  const job=byId.get(selected),slot=state.placements[job.id];
+  editing={id:job.id,from:{...slot}};
+  code('form-context').textContent=job.id+' · '+job.name+'，固定占线 '+hours(job.duration)+'。可用产线须支持'+job.process+'。';
+  code('edit-day').value=slot.day;
+  code('edit-line').replaceChildren(...lines.filter(line=>line.process===job.process).map(line=>option(line.id,line.id+' · '+line.name)));
+  code('edit-line').value=slot.line;
+  code('edit-start').replaceChildren(...Array.from({length:17-job.duration},(_,i)=>option(i,spanTime(i,job.duration))));
+  code('edit-start').value=slot.start;code('error').textContent='';
+  code('editor').showModal();code('edit-day').focus();
+};
+for(const id of ['close','cancel'])code(id).onclick=()=>code('editor').close();
+code('editor').addEventListener('close',()=>{editing=null;code('edit').focus()});
+for(const id of ['edit-day','edit-line','edit-start'])code(id).onchange=()=>{code('error').textContent=''};
+function announce(message){feedback=message;code('live').textContent=message}
+function commitEdit(){
+  if(!editing)return;
+  const job=byId.get(editing.id),fresh=readCurrent(),from=fresh.placements[job.id];
+  if(!same(editing.from,from)){code('error').textContent='该工单的排程已在其他页面变更。请关闭窗口并重新选择。';state=fresh;render();return}
+  const to={day:Number(code('edit-day').value),line:code('edit-line').value,start:Number(code('edit-start').value)};
+  if(!validSlot(job,to)){code('error').textContent='请选本班可用的产线和开工时刻。';return}
+  if(same(from,to)){code('error').textContent='请选择新的日期、产线或开工时刻。';return}
+  const blocked=overlaps(fresh.placements,job,to);
+  if(blocked){
+    const other=fresh.placements[blocked.id];
+    code('error').textContent='时段冲突 · '+dateShort(to.day)+' '+to.line+' 在 '+spanTime(other.start,blocked.duration)+' 已安排 '+blocked.id+' '+blocked.name+'。请选择其他时段。';
+    return;
+  }
+  persist({placements:{...fresh.placements,[job.id]:to},last:{id:job.id,from,to}});
+  selected=job.id;day=to.day;
+  announce(job.id+' 已调整至 '+dates[day]+' '+to.line+' '+spanTime(to.start,job.duration)+'。');
+  render();code('editor').close();
+}
+function undo(){
+  const expected=state.last,fresh=readCurrent(),last=fresh.last;
+  if(!expected||!last||last.id!==expected.id||!same(last.from,expected.from)||!same(last.to,expected.to)){
+    state=fresh;announce('最近的排程已变化，请核对后再操作。');render();return;
+  }
+  const job=byId.get(last.id);
+  if(overlaps(fresh.placements,job,last.from)){announce('原时段已占用，无法撤销。');render();return}
+  persist({placements:{...fresh.placements,[job.id]:last.from},last:null});
+  selected=job.id;day=last.from.day;
+  announce('已撤销调整。'+job.id+' 已恢复至 '+dateShort(day)+' '+last.from.line+' '+spanTime(last.from.start,job.duration)+'。');
+  render();focusJob();
+}
+async function write(action){
+  if(navigator.locks?.request){await navigator.locks.request(storageKey,action)}
+  else action();
+}
+code('edit-form').onsubmit=event=>{event.preventDefault();write(commitEdit)};
+code('undo').onclick=()=>write(undo);
+window.addEventListener('storage',event=>{
+  if(event.key!==storageKey&&event.key!==null)return;
+  state=readCurrent();
+  if(!selected||state.placements[selected]?.day!==day)selected=lines.flatMap(line=>jobsFor(line.id,day))[0]?.id??null;
+  feedback='';render();
+});
+render();
+</script>
+</body></html>

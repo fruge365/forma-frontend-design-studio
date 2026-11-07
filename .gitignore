@@ -1,0 +1,12 @@
+node_modules/
+coverage/
+*.log
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+
+# Browser exports can contain private review notes.
+forma-review-*.json
+forma-review-*.md

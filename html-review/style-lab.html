@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>样式实验室 · 布局与配色</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  font:16px/1.55 Inter,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  color:#252623;background:#f4f2eb;
+  --surface:#fffefa;--subtle:#edf1fa;--text:#232c40;--muted:#4e5b70;
+  --accent:#344c9a;--on:#ffffff;--border:#c7cfde;--warning:#854500
+}
+body{margin:0}
+button,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #16729a;outline-offset:3px}
+.book{max-width:1420px;margin:auto;padding:clamp(18px,3.5vw,55px)}
+.mast{border-top:6px solid #272824;display:flex;justify-content:space-between;align-items:flex-start;padding:22px 0 21px;gap:20px}
+h1{margin:0;font-size:clamp(32px,4.5vw,67px);line-height:1.12;letter-spacing:-.045em;font-weight:760}
+.intro{margin:8px 0 0;font-size:15px;color:#54544b}
+.imprint{display:flex;gap:4px;align-items:center;padding-top:5px}
+.imprint i{display:block;width:12px;height:35px;background:#344c9a;transform:skewY(-18deg)}
+.imprint i:nth-child(2){background:#146153}.imprint i:nth-child(3){background:#984424}.imprint i:nth-child(4){background:#272e36}
+.controls{display:grid;grid-template-columns:1fr auto;gap:14px 24px;align-items:end;padding:14px 0 21px;border-top:1px solid #aaa99d}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend,.setting-label{display:block;padding:0;margin:0 0 7px;font-size:13px;font-weight:650;color:#47473f}
+.options{display:flex;flex-wrap:wrap;gap:5px}
+.options button{min-height:42px;padding:6px 13px;display:inline-flex;align-items:center;gap:6px;color:#343630;background:transparent;border:1px solid #bdbcb1;border-radius:4px;font-size:14px}
+.options button[aria-pressed=true]{color:white;border-color:#292a26;background:#292a26}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--swatch);border:1px solid #ffffff70}
+.specimen{background:var(--surface);color:var(--text);border:1px solid var(--border);border-top:5px solid var(--accent);border-radius:4px;padding:clamp(16px,2.6vw,38px);box-shadow:0 8px 18px #24231d09}
+.paper-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding-bottom:19px;border-bottom:1px solid var(--border)}
+.paper-head h2{font-size:clamp(25px,2.9vw,42px);margin:0;letter-spacing:-.035em;line-height:1.2}
+.paper-head p,.help,.small{color:var(--muted)}
+.paper-head p{margin:5px 0 0;font-size:14px}
+.sample-label{font-size:12px;white-space:nowrap;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(200px,.8fr) minmax(0,1.5fr);gap:clamp(16px,3.4vw,54px);margin-top:19px}
+h3{font-size:18px;margin:0 0 10px}p{margin:0}
+.list{display:grid;align-content:start;gap:4px}
+.row{border:1px solid transparent;border-bottom-color:var(--border);min-height:52px;padding:9px 12px;text-align:left;color:var(--text);background:transparent;display:flex;justify-content:space-between;align-items:center;gap:7px}
+.row[aria-pressed=true]{border-color:var(--accent);border-left-width:4px;background:var(--subtle);padding-left:9px}
+.row b,.name{display:block;font-weight:650}
+.row small,.minor{display:block;color:var(--muted);font-size:13px}
+.warn{color:var(--warning);font-weight:650}
+.num{font:600 1em/1.4 "IBM Plex Mono",Consolas,monospace;font-variant-numeric:tabular-nums}
+.pair{display:grid;grid-template-columns:1fr 1fr;border-block:1px solid var(--border);margin:14px 0 9px}
+.pair div{padding:15px 0}.pair div+div{border-left:1px solid var(--border);padding-left:16px}
+.amount{display:block;font:600 clamp(17px,2.25vw,31px)/1.4 "IBM Plex Mono",Consolas,monospace;letter-spacing:-.045em}
+.status{display:inline-flex;align-items:center;gap:7px;color:var(--accent);font-weight:650}
+.action{background:var(--accent);color:var(--on);border:1px solid var(--accent);padding:9px 14px;min-height:44px;border-radius:4px;font-size:14px;font-weight:650}
+.entry{border-left:2px solid var(--border);margin:12px 0 0 6px;padding:0 0 8px 16px;list-style:none}
+.entry li{position:relative;padding:0 0 11px}.entry li:last-child{padding:0}
+.entry li::before{content:'';position:absolute;left:-21px;top:7px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.pick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.bin{padding:15px;border:1px solid var(--border);border-top:3px solid var(--accent);border-radius:3px;min-width:0}
+.bin .slot{font:650 clamp(18px,2.3vw,32px)/1.2 "IBM Plex Mono",Consolas,monospace;color:var(--accent)}
+.bin h3{margin:12px 0 0}.bin button{margin-top:15px}.bin.checked{background:var(--subtle)}
+.audit{margin-top:19px;border-top:1px solid #b8b7ac;padding-top:12px;color:#393a34}
+summary{cursor:pointer;font-size:14px;font-weight:650;min-height:32px}
+.readings{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:8px 0}
+.reading{background:#fffefa;border:1px solid #d2d0c5;padding:11px;font-size:13px;border-radius:4px;overflow-wrap:anywhere}
+.sample-chip{display:inline-block;padding:2px 8px;font-size:14px;margin-bottom:5px;border-radius:3px}
+.caption{font-size:12px;color:#5c5d53}
+.specimen button:focus-visible{outline-color:var(--accent)}
+@media(max-width:800px){.controls{grid-template-columns:1fr}.book{padding:16px}.mast{padding-top:17px}.imprint i{height:24px}.grid{gap:16px}}
+@media(max-width:620px){.grid,.pick,.readings{grid-template-columns:1fr}.list{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.list .row{display:block;padding:6px;font-size:12px;border:1px solid var(--border)}.list .row[aria-pressed=true]{box-shadow:inset 0 -3px var(--accent)}.list .row small{font-size:11px}.imprint{display:none}.options button{padding:7px 9px;min-height:44px}.pick{gap:6px}.bin{display:grid;grid-template-columns:1fr auto;gap:0 6px;align-items:center}.bin .slot,.bin h3,.bin p{grid-column:1}.bin h3{margin:5px 0 0}.bin button{grid-column:2;grid-row:1/4;margin:0}.sample-label{font-size:10px}.pair div+div{padding-left:9px}.paper-head{gap:6px}.intro{font-size:14px}}
+</style>
+</head>
+<body>
+<main class="book">
+  <header class="mast"><div><h1>布局与配色</h1><p class="intro">选一项工作，换一组颜色，比较信息和操作是否仍然清楚。</p></div><span class="imprint" aria-hidden="true"><i></i><i></i><i></i><i></i></span></header>
+  <div class="controls">
+    <fieldset><legend>工作布局</legend><div class="options" id="layouts">
+      <button type="button" data-layout="finance">财务对账</button><button type="button" data-layout="crm">客户档案</button><button type="button" data-layout="warehouse">仓内拣货</button>
+    </div></fieldset>
+    <fieldset><legend>配色方案</legend><div class="options" id="palettes"></div></fieldset>
+  </div>
+  <article class="specimen" aria-labelledby="task-title" data-review-id="lab-specimen">
+    <header class="paper-head"><div><h2 id="task-title"></h2><p id="subtitle"></p></div><span class="sample-label">演示数据</span></header>
+    <div id="scene"></div>
+  </article>
+  <details class="audit" data-review-id="lab-contrast"><summary>查看当前配色的文字对比度</summary><div class="readings" id="readings"></div><p class="caption">按相对亮度计算。WCAG AA 对常规字号文本的最低对比度为 4.5∶1。</p></details>
+</main>
+<script>
+'use strict';
+const palettes = {
+  indigo: {name:'靛蓝',surface:'#FFFEFA',subtle:'#EDF1FA',text:'#232C40',muted:'#4E5B70',accent:'#344C9A',on:'#FFFFFF',border:'#C7CFDE',warning:'#854500'},
+  pine: {name:'松石',surface:'#FCFEFA',subtle:'#E0F0E9',text:'#1B302B',muted:'#445D54',accent:'#146153',on:'#FFFFFF',border:'#BACCC4',warning:'#824000'},
+  clay: {name:'陶土',surface:'#FFFCF5',subtle:'#F9E9DD',text:'#35291F',muted:'#705649',accent:'#984424',on:'#FFFFFF',border:'#D6BFB0',warning:'#784000'},
+  night: {name:'墨夜',surface:'#20262E',subtle:'#323C49',text:'#F3F3E9',muted:'#B7C2CF',accent:'#B9CBFF',on:'#16274C',border:'#607083',warning:'#FFD08A'}
+};
+const layouts = {
+  finance:['应收核对','对照同一笔款项的账面金额与银行入账。'],
+  crm:['客户档案','沿跟进时间线查找当前联系人和下一次约定。'],
+  warehouse:['出库拣货','沿库位顺序核对商品与数量，再确认本单完成。']
+};
+const records = [
+  ['桥木印务','RC-1042',1680000,1668000,'银行单据注明服务费 ¥120.00，需核实费用归属。'],
+  ['禾里材料','RC-1043',820050,820050,'银行附言与应收编号一致。'],
+  ['白栈商贸','RC-1044',695000,0,'尚未匹配银行入账，需向经办人核实。']
+];
+const clients = [
+  ['桥木印务','何青 · 采购','周三 10:00 核对打样结果','交付了两份纸样','更新了年度采购计划'],
+  ['禾里材料','罗文 · 运营','周四 14:00 评审新仓方案','收到现场布局图','完成首轮访谈'],
+  ['白栈商贸','刘宁 · 渠道','周五 09:30 确认交期','发送修订报价','确认了首批清单']
+];
+const bins = [['A-03','标签纸','4 卷'],['A-09','蜂窝纸袋','8 包'],['B-02','防水封签','2 盒']];
+let layout='finance', palette='indigo', record=0, customer=0;
+const picked=new Set();
+const $=id=>document.getElementById(id);
+const money=cents=>'¥'+(cents/100).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
+function luminance(hex){
+  const rgb=hex.slice(1).match(/../g).map(value=>parseInt(value,16)/255)
+    .map(value=>value<=0.04045?value/12.92:((value+0.055)/1.055)**2.4);
+  return rgb[0]*0.2126+rgb[1]*0.7152+rgb[2]*0.0722;
+}
+function contrast(a,b){
+  const x=luminance(a),y=luminance(b);
+  return ((Math.max(x,y)+0.05)/(Math.min(x,y)+0.05)).toFixed(2);
+}
+function renderPalette(){
+  const colors=palettes[palette];
+  for(const [key,value] of Object.entries(colors)){
+    if(key!=='name')document.documentElement.style.setProperty('--'+key,value);
+  }
+  document.querySelectorAll('[data-palette]').forEach(button=>button.setAttribute('aria-pressed',button.dataset.palette===palette));
+  const pairs=[['正文',colors.text,colors.surface],['次要文字',colors.muted,colors.subtle],['主按钮',colors.on,colors.accent]];
+  $('readings').innerHTML=pairs.map(([label,fg,bg])=>
+    '<div class="reading"><span class="sample-chip" style="color:'+fg+';background:'+bg+'">'+label+'</span><br><b>'+contrast(fg,bg)+'∶1</b> · '+fg+' / '+bg+'</div>').join('');
+}
+function recordList(items,active,kind){
+  return '<nav class="list" aria-label="'+(kind==='record'?'往来款项':'客户名录')+'">'+items.map((entry,index)=>
+    '<button class="row" type="button" data-'+kind+'="'+index+'" data-review-id="lab-'+kind+'-'+index+'" aria-pressed="'+(active===index)+'"><span><b>'+entry[0]+'</b><small>'+entry[1]+'</small></span></button>').join('')+'</nav>';
+}
+function finance(){
+  const [name,id,billed,bank,note]=records[record],delta=billed-bank;
+  return '<div class="grid">'+recordList(records,record,'record')+
+    '<section data-review-id="lab-finance-detail"><h3>'+name+'</h3><span class="minor">'+id+'</span>'+
+    '<div class="pair"><div><span class="minor">账面应收</span><strong class="amount">'+money(billed)+'</strong></div><div><span class="minor">已匹配入账</span><strong class="amount">'+money(bank)+'</strong></div></div>'+
+    '<p class="'+(delta?'warn':'status')+'">'+(delta?'待核差额 '+money(delta):'✓ 金额一致')+'</p><p class="help">'+note+'</p></section></div>';
+}
+function crm(){
+  const [name,contact,next,recent,previous]=clients[customer];
+  return '<div class="grid">'+recordList(clients,customer,'customer')+
+    '<section data-review-id="lab-crm-detail"><h3>'+name+'</h3><p class="minor">主要联系人 · '+contact+'</p><p class="status" style="margin-top:9px">下次跟进 · '+next+'</p>'+
+    '<ol class="entry"><li><span class="minor">11 月 06 日</span>'+recent+'</li><li><span class="minor">11 月 03 日</span>'+previous+'</li></ol></section></div>';
+}
+function warehouse(){
+  return '<p class="status" style="margin-top:14px" role="status">'+(picked.size===bins.length?'✓ 本单拣货完成':'已拣 '+picked.size+' / '+bins.length+' 个库位')+'</p><div class="pick">'+bins.map(([slot,name,qty],index)=>{
+    const done=picked.has(index);
+    return '<section class="bin'+(done?' checked':'')+'" data-review-id="lab-bin-'+index+'"><b class="slot">'+slot+'</b><h3>'+name+'</h3><p class="minor">应拣 '+qty+'</p><button type="button" class="action" data-pick="'+index+'" aria-pressed="'+done+'" aria-label="'+name+'，'+(done?'撤销已拣':'确认已拣')+'">'+(done?'撤销已拣':'确认已拣')+'</button></section>';
+  }).join('')+'</div>';
+}
+function renderScene(focusSelector){
+  document.querySelectorAll('[data-layout]').forEach(button=>button.setAttribute('aria-pressed',button.dataset.layout===layout));
+  [$('task-title').textContent,$('subtitle').textContent]=layouts[layout];
+  $('scene').innerHTML=layout==='finance'?finance():layout==='crm'?crm():warehouse();
+  if(focusSelector)$('scene').querySelector(focusSelector)?.focus();
+}
+function makePaletteButtons(){
+  for(const [key,colors] of Object.entries(palettes)){
+    const button=document.createElement('button');button.type='button';button.dataset.palette=key;
+    const dot=document.createElement('span');dot.className='dot';dot.style.setProperty('--swatch',colors.accent);
+    button.append(dot,colors.name);$('palettes').append(button);
+  }
+}
+$('layouts').addEventListener('click',event=>{const button=event.target.closest('[data-layout]');if(button){layout=button.dataset.layout;renderScene()}});
+$('palettes').addEventListener('click',event=>{const button=event.target.closest('[data-palette]');if(button){palette=button.dataset.palette;renderPalette()}});
+$('scene').addEventListener('click',event=>{
+  const button=event.target.closest('button');if(!button)return;
+  if(button.hasAttribute('data-record')){record=Number(button.dataset.record);renderScene('[data-record="'+record+'"]')}
+  if(button.hasAttribute('data-customer')){customer=Number(button.dataset.customer);renderScene('[data-customer="'+customer+'"]')}
+  if(button.hasAttribute('data-pick')){const i=Number(button.dataset.pick);if(picked.has(i))picked.delete(i);else picked.add(i);renderScene('[data-pick="'+i+'"]')}
+});
+// The review tool restores a reproducible specimen when a reviewer follows a saved note.
+window.formaStyleLab={
+  read(){return [layout,palette,record,customer,[...picked].reduce((mask,i)=>mask|(1<<i),0),document.querySelector('.audit').open?1:0].join('/')},
+  restore(code){
+    if(typeof code!=='string'||!/^(finance|crm|warehouse)\/(indigo|pine|clay|night)\/[0-2]\/[0-2]\/[0-7]\/[01]$/.test(code))return;
+    const [newLayout,newPalette,newRecord,newCustomer,mask,open]=code.split('/');
+    layout=newLayout;palette=newPalette;record=Number(newRecord);customer=Number(newCustomer);
+    picked.clear();bins.forEach((_,i)=>{if(Number(mask)&(1<<i))picked.add(i)});
+    document.querySelector('.audit').open=open==='1';renderPalette();renderScene();
+  }
+};
+makePaletteButtons();renderPalette();renderScene();
+</script>
+</body>
+</html>

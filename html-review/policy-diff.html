@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f6f5f0">
+<title>门册 · 角色权限变更审阅</title>
+<style>
+:root{
+  color-scheme:light;
+  --ink:#24251f;--muted:#5e6156;--rule:#cdcec2;--soft:#ebece3;--paper:#f6f5f0;
+  --gold:#f3d36a;--line-dark:#35382e;--added:#31553b;--removed:#883c2c;--changed:#705316;
+  --sans:"Inter","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono","Consolas","Microsoft YaHei",monospace;
+  font:15px/1.5 var(--sans);color:var(--ink);background:var(--paper)
+}
+*{box-sizing:border-box}
+body{margin:0}
+button,summary{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+button:focus-visible,summary:focus-visible,a:focus-visible,[tabindex="-1"]:focus-visible{outline:3px solid #895d0d;outline-offset:4px}
+button:disabled{cursor:default}
+[hidden]{display:none!important}
+h1,h2,h3,p,dl,dd{margin:0}
+.wrap{width:min(1376px,calc(100% - 96px));margin-inline:auto}
+.mast{border-bottom:1px solid var(--rule);background:#fcfbf7}
+.bar{min-height:68px;display:flex;align-items:stretch;gap:42px}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0;font-size:23px;font-weight:850;letter-spacing:.03em}
+.brand-icon{display:block;position:relative;width:29px;height:30px;border:3px solid var(--ink);border-bottom-width:6px;border-radius:2px;background:var(--gold)}
+.brand-icon::before{content:"";position:absolute;left:4px;top:5px;bottom:-6px;width:12px;border:3px solid var(--ink);border-bottom:0;background:var(--paper);transform:skewY(-12deg);transform-origin:bottom}
+.tabs{display:flex;align-items:stretch;gap:24px}
+.tabs button{padding:0 1px;min-height:44px;font-size:14px;color:var(--muted);font-weight:650;position:relative}
+.tabs button[aria-current="page"]{color:var(--ink)}
+.tabs button[aria-current="page"]::after{content:"";position:absolute;bottom:-1px;left:0;right:0;height:3px;background:var(--ink)}
+.tabs button:hover,.text-btn:hover,.toggle button:hover{color:#614601}
+.demo{margin:auto 0 auto auto;color:var(--muted);font-size:12px;white-space:nowrap}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.hero{padding:43px 0 30px;border-bottom:2px solid var(--line-dark);display:flex;align-items:end;justify-content:space-between;gap:24px}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:9px}
+.hero h1{font-size:clamp(35px,4.7vw,66px);line-height:1.12;letter-spacing:-.035em;font-weight:790}
+.hero h1 .subject{font-weight:420;margin-inline-start:.1em}
+.role-line{color:var(--muted);margin-top:13px;font-size:14px}
+.revision{display:flex;align-items:center;gap:12px;flex-shrink:0;margin-bottom:3px}
+.revision div{background:#eeefe7;border:1px solid #c3c4b6;padding:9px 16px;min-width:95px}
+.revision div:last-child{background:#f7e8ad;border-color:#c4ac60}
+.revision small{font-size:11px;display:block;color:var(--muted)}
+.revision strong{font:700 22px/1.2 var(--mono)}
+.revision .arr{font-size:21px}
+.columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(266px,306px);gap:clamp(22px,3.5vw,56px);align-items:start;padding-block:34px 60px}
+.section-top,.result-line,.file-heading,.file-bottom,.record-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.section-top{flex-wrap:wrap;margin-bottom:15px}
+h2{font-size:23px;letter-spacing:-.035em;line-height:1.25}
+.toggle{display:flex;border:1px solid #b6b7aa;background:var(--paper);padding:3px;gap:2px;border-radius:3px}
+.toggle button{min-height:34px;padding:4px 11px;font-size:13px;line-height:1.2;border-radius:1px;font-weight:650}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.result-line{min-height:35px;border-top:1px solid var(--rule);color:var(--muted);font-size:12px}
+.result-line strong{font-weight:700;color:var(--ink)}
+.text-btn{min-height:36px;padding:5px 0;text-decoration:underline;text-underline-offset:4px;font-size:13px}
+.key{background:#eeefe5;padding:12px 15px;margin:0 0 12px;border-inline-start:3px solid #949980}
+.key dt{margin-top:4px;font-weight:700;font-size:13px}
+.key dd{font-size:13px;color:var(--muted)}
+.ledger{width:100%;border-spacing:0;border-collapse:collapse;table-layout:fixed;border-top:1.5px solid var(--ink)}
+.ledger th,.ledger td{text-align:left;vertical-align:middle;padding:16px 10px;border-bottom:1px solid var(--rule);overflow-wrap:anywhere}
+.ledger th:first-child,.ledger td:first-child{padding-left:0}
+.ledger thead th{background:#e9eae0;color:#484b40;padding-block:9px;font-size:12px;letter-spacing:.025em}
+.ledger thead th:first-child{padding-left:9px}
+.ledger tbody th{font-size:15px;font-weight:720;line-height:1.45}
+.ledger .code{display:block;font:11px/1.4 var(--mono);color:var(--muted);margin-top:4px;letter-spacing:.01em}
+.ledger col:nth-child(1){width:33%}.ledger col:nth-child(2),.ledger col:nth-child(3){width:23%}.ledger col:nth-child(4){width:21%}
+.ledger td{font-size:14px}
+.value-denied{color:var(--muted)}
+.delta{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border:1px solid;border-radius:2px;font:600 12px/1.4 var(--sans);white-space:nowrap}
+.delta .symbol{font:700 14px/1 var(--mono)}
+.delta.add{background:#e9f1e5;color:var(--added);border-color:#a8bea4}
+.delta.remove{background:#f7ebe6;color:var(--removed);border-color:#d5b3a4}
+.delta.change{background:#f7efd2;color:var(--changed);border-color:#d4c28a}
+.delta.equal{background:#f0f1e9;color:#585b51;border-color:#c5c7bb}
+.mobile-label{display:none}
+.file{background:#fbf2c9;border:1px solid #c0ae70;border-top:6px solid var(--gold);padding:20px 20px 16px;position:relative}
+.file::before{content:"";position:absolute;top:-6px;right:-1px;height:6px;width:32px;background:repeating-linear-gradient(120deg,#705d27 0 1px,var(--gold) 1px 5px)}
+.file-heading,.file-bottom{font-size:12px;color:#665933}
+.file h2{font-size:24px;margin:13px 0 10px}
+.file .brief{font-size:14px;color:#51482b;line-height:1.75}
+.file dl{padding:12px 0;margin:18px 0;border-block:1px solid #cfc298}
+.file dl div{display:flex;justify-content:space-between;gap:8px;margin:6px 0}
+.file dt{font-size:12px;color:#665933}
+.file dd{font-size:13px;font-weight:700;text-align:right}
+.primary,.secondary{display:inline-flex;justify-content:center;align-items:center;gap:9px;padding:10px 16px;border:1px solid var(--ink);font-weight:680;font-size:14px;min-height:44px;border-radius:2px}
+.primary{background:var(--ink);color:white}
+.primary:hover{background:#474a38}.secondary{background:#fcfbf6}.secondary:hover{background:#edeee5}
+.file .primary{width:100%}
+.file-bottom{margin-top:10px;justify-content:center;font-size:12px;text-align:center}
+.legend-note{font-size:12px;line-height:1.65;color:var(--muted);margin-top:13px}
+.back{margin:22px 0 0}
+.panel{max-width:840px;margin:20px auto 55px;border-top:3px solid var(--ink);background:#fcfbf7;padding:24px 28px;border-bottom:1px solid var(--rule)}
+.review-state{color:var(--muted);font-size:13px;margin-bottom:7px}
+.panel h2{font-size:clamp(25px,4vw,37px);margin-bottom:10px}
+.panel p{line-height:1.7}
+.list-lines{list-style:none;padding:0;border-top:1px solid var(--rule);margin:21px 0}
+.list-lines li{display:grid;grid-template-columns:minmax(140px,1fr) 2fr;gap:14px;border-bottom:1px solid var(--rule);padding:11px 0}
+.list-lines span{color:var(--muted)}
+.panel-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.record-head{padding:32px 0 20px;align-items:end;border-bottom:2px solid var(--ink)}
+.record-head p{font-size:13px;color:var(--muted);margin-top:7px}
+.empty{padding:36px 0;color:var(--muted)}
+.record-date{font:12px var(--mono);color:var(--muted);margin-block:12px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:950px){.wrap{width:calc(100% - 44px)}.columns{gap:20px;grid-template-columns:minmax(0,1fr) 247px}.file{padding-inline:15px}.ledger td,.ledger th{padding-inline:6px}.delta{padding-inline:4px}.hero{padding-top:32px}}
+@media(max-width:780px){.columns{grid-template-columns:1fr;padding-block:24px 40px}.file{max-width:none}.hero{align-items:start;flex-direction:column;gap:18px}.revision{margin:0}.revision div{display:flex;align-items:center;gap:8px;padding:6px 10px;min-width:0}.revision strong{font-size:17px}.hero h1{font-size:clamp(35px,7vw,46px)}}
+@media(max-width:560px){
+ .wrap{width:calc(100% - 32px)}.bar{gap:19px;min-height:54px}.tabs{gap:13px}.tabs button{font-size:12px}.brand{font-size:19px;gap:6px}.brand-icon{width:23px;height:25px}.brand-icon::before{width:7px}
+ .demo{font-size:11px}.hero{padding:24px 0 19px}.hero h1{font-size:34px}.role-line{font-size:13px}.section-top{gap:8px}.section-top h2{font-size:21px}.toggle button{font-size:12px;min-height:36px;padding-inline:7px}.toggle{padding:2px}
+ .ledger,.ledger tbody{display:block}.ledger colgroup{display:none}.ledger thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.ledger tbody tr{display:grid;grid-template-columns:1fr 1fr;column-gap:10px;padding:12px 0;border-bottom:1px solid var(--rule)}
+ .ledger td,.ledger tbody th{border:0;padding:0}.ledger tbody th{grid-area:1 / 1;align-self:start}.ledger .code{font-size:10px}
+ .ledger .before{grid-area:2 / 1}.ledger .after{grid-area:2 / 2}.ledger .state{grid-area:1 / 2;text-align:right}.ledger .mobile-label{display:block;margin:10px 0 2px;color:var(--muted);font:12px/1.35 var(--sans)}
+ .panel{padding:18px 14px}.list-lines li{grid-template-columns:1fr;gap:3px}.record-head{align-items:start;flex-direction:column}.legend-note{margin-top:10px}.file{margin-top:2px}
+}
+@media(max-width:350px){.bar{gap:11px}.tabs{gap:9px}.demo{font-size:10px}.hero h1{font-size:31px}.wrap{width:calc(100% - 24px)}}
+</style>
+</head>
+<body data-review-context="review" data-review-pair="CR-028-V2.4-V2.5">
+<header class="mast"><div class="wrap bar">
+  <span class="brand"><i class="brand-icon" aria-hidden="true"></i>门册</span>
+  <nav class="tabs" aria-label="权限管理"><button id="tab-review" aria-current="page">变更审阅</button><button id="tab-history">审阅记录</button></nav>
+  <span class="demo">本地演示</span>
+</div></header>
+<main class="wrap">
+  <section id="review">
+    <div class="hero">
+      <div><p class="crumb">典藏资料库 / 角色权限</p><h1 id="page-title" tabindex="-1" data-review-id="policy-title">馆藏编辑<span class="subject">权限变更</span></h1><p class="role-line">编目组 · 核对两个版本的授权范围</p></div>
+      <div class="revision" aria-label="从已生效版本 V2.4 到候选版本 V2.5"><div><small>已生效</small><strong>V2.4</strong></div><span class="arr" aria-hidden="true">→</span><div><small>候选</small><strong>V2.5</strong></div></div>
+    </div>
+    <div class="columns">
+      <section aria-labelledby="ledger-title">
+        <div class="section-top"><h2 id="ledger-title">权限明细</h2><div class="toggle" role="group" aria-label="选择显示权限">
+          <button id="filter-changes" aria-pressed="true">只看变更</button><button id="filter-all" aria-pressed="false">完整清单</button>
+        </div></div>
+        <div class="result-line"><span id="result-count" role="status"></span><button class="text-btn" id="read-scope" aria-expanded="false" aria-controls="scope-key">范围释义</button></div>
+        <dl class="key" id="scope-key" hidden><dt>本人经手</dt><dd>本人被指派编目的藏品。</dd><dt>本编目组</dt><dd>当前编目组负责的所有藏品，包含本人经手的藏品。</dd><dt>全馆</dt><dd>所有编目组负责的藏品。</dd><dt>未授权</dt><dd>该角色在此版本中没有该项能力。</dd></dl>
+        <table class="ledger" aria-labelledby="ledger-title" role="table">
+          <colgroup><col><col><col><col></colgroup><thead><tr><th scope="col">权限项</th><th scope="col">已生效 V2.4</th><th scope="col">候选 V2.5</th><th scope="col">变更</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </section>
+      <aside class="file" aria-labelledby="request-title">
+        <div class="file-heading"><span>变更申请</span><b class="mono">CR-028</b></div>
+        <h2 id="request-title">编目职责调整</h2><p class="brief">把藏品描述和词条维护交给编目组。原图导出由资料管理员统一办理。</p>
+        <dl><div><dt>申请部门</dt><dd>典藏资料部</dd></div><div><dt>适用角色</dt><dd>馆藏编辑</dd></div><div><dt>提交日期</dt><dd class="mono">2026-11-07</dd></div><div><dt>审阅状态</dt><dd id="record-status">待核对</dd></div></dl>
+        <button class="primary" id="open-confirm" data-review-id="policy-open-confirm">核对变更 <span aria-hidden="true">→</span></button><p class="file-bottom">审阅记录仅保存在此浏览器。</p>
+      </aside>
+    </div>
+  </section>
+  <section id="confirm" hidden>
+    <button class="text-btn back" id="back-review">← 返回权限明细</button>
+    <div class="panel"><div class="review-state">变更申请 <span class="mono">CR-028</span></div><h2 id="confirm-title" tabindex="-1">核对审阅记录</h2><p>馆藏编辑 · 已生效 V2.4 → 候选 V2.5</p>
+      <ul class="list-lines" id="confirm-list"></ul><p>确认后，本机将保存这四项变更的审阅记录。实际授权仍以已生效的 V2.4 为准。</p>
+      <div class="panel-actions"><button class="primary" id="confirm-record" data-review-id="policy-confirm-record">确认并记录</button><button class="secondary" id="cancel">暂不记录</button></div>
+    </div>
+  </section>
+  <section id="history" hidden>
+    <div class="record-head"><div><h2 id="history-title" tabindex="-1">审阅记录</h2><p>典藏资料库 · 当前浏览器</p></div><button class="secondary" id="return-review">返回权限明细</button></div>
+    <p class="empty" id="empty-history">尚无记录。可在变更明细核对后登记审阅结果。</p>
+    <div class="panel" id="record" hidden><div class="review-state mono">CR-028 / V2.4 → V2.5</div><h2 data-review-id="policy-record-heading">馆藏编辑 · 已审阅</h2>
+      <p class="record-date" id="record-time"></p><ul class="list-lines" id="history-list"></ul><p>该记录保存了本次核对的权限项与范围。</p>
+    </div>
+  </section>
+  <p id="storage-alert" role="status" hidden></p>
+  <p id="announce" class="sr" role="status"></p>
+</main>
+<script>
+'use strict';
+const capabilities = [
+  {id:'record.edit', name:'修订藏品描述'},
+  {id:'term.manage', name:'维护主题词条'},
+  {id:'image.export', name:'导出藏品原图'},
+  {id:'record.submit', name:'提交编目复核'},
+  {id:'record.read', name:'查阅藏品档案'},
+  {id:'image.preview', name:'预览馆藏图像'}
+];
+const effective = [
+  ['image.preview','all'], ['record.edit','self'], ['record.read','all'],
+  ['record.submit','team'], ['image.export','team']
+];
+const proposed = [
+  ['record.read','all'], ['term.manage','team'], ['image.preview','all'],
+  ['record.submit','self'], ['record.edit','team']
+];
+const scope = {none:'未授权',self:'本人经手',team:'本编目组',all:'全馆'};
+const ranks = ['none','self','team','all'];
+const beforeById = new Map(effective);
+const afterById = new Map(proposed);
+function difference(before,after){
+  if(before===after) return {kind:'equal',label:'相同',symbol:'='};
+  if(before==='none') return {kind:'add',label:'新增',symbol:'+'};
+  if(after==='none') return {kind:'remove',label:'撤销',symbol:'−'};
+  const expands=ranks.indexOf(after)>ranks.indexOf(before);
+  return {kind:'change',label:expands?'范围扩大':'范围收窄',symbol:expands?'↗':'↘'};
+}
+const permissions=capabilities.map(item=>{
+  const before=beforeById.get(item.id) || 'none';
+  const after=afterById.get(item.id) || 'none';
+  return {...item,before,after,...difference(before,after)};
+});
+const changes=permissions.filter(item=>item.kind!=='equal');
+const key='forma-policy-review-v1:'+new URL('.',location.href).pathname+':CR-028:2.4:2.5';
+const get=id=>document.getElementById(id);
+let showingAll=false;
+let saved=null;
+let persistent=true;
+
+function readRecord(){
+  try{
+    const raw=localStorage.getItem(key);
+    if(raw===null) return null;
+    const record=JSON.parse(raw);
+    if(record?.request!=='CR-028' || record.base!=='V2.4' || record.proposal!=='V2.5' ||
+       !Number.isSafeInteger(record.time) || Number.isNaN(new Date(record.time).getTime()) ||
+       !Array.isArray(record.items) || record.items.length!==changes.length) return null;
+    const seen=new Set();
+    for(const item of record.items){
+      const known=changes.find(change=>change.id===item?.id);
+      if(!known || seen.has(item.id) || known.before!==item.before || known.after!==item.after) return null;
+      seen.add(item.id);
+    }
+    return record;
+  }catch(error){
+    if(error.name!=='SyntaxError') persistent=false;
+    return null;
+  }
+}
+function appendScope(row, type, label, value){
+  const td=document.createElement('td');
+  td.className=type;
+  const caption=document.createElement('span');
+  caption.className='mobile-label';caption.textContent=label;
+  const text=document.createElement('span');
+  text.textContent=scope[value];
+  if(value==='none') text.className='value-denied';
+  td.append(caption,text);row.append(td);
+}
+function renderTable(){
+  const visible=showingAll?permissions:changes;
+  const rows=visible.map(item=>{
+    const row=document.createElement('tr');
+    const heading=document.createElement('th');
+    heading.scope='row';heading.dataset.reviewId='policy-item-'+item.id;
+    const code=document.createElement('span');
+    code.textContent=item.id;code.className='code';
+    heading.append(item.name,code);row.append(heading);
+    appendScope(row,'before','已生效 V2.4',item.before);
+    appendScope(row,'after','候选 V2.5',item.after);
+    const cell=document.createElement('td');
+    cell.className='state';
+    const status=document.createElement('span');
+    status.className='delta '+item.kind;
+    const symbol=document.createElement('span');
+    symbol.setAttribute('aria-hidden','true');symbol.className='symbol';symbol.textContent=item.symbol;
+    status.append(symbol,item.label);cell.append(status);row.append(cell);
+    [row.cells[1],row.cells[2],cell].forEach((el,i)=>el.dataset.reviewId='policy-'+['before-','after-','change-'][i]+item.id);
+    return row;
+  });
+  get('rows').replaceChildren(...rows);
+  get('result-count').textContent='显示 '+visible.length+' / '+permissions.length+' 项 · '+changes.length+' 项变更';
+  get('filter-changes').setAttribute('aria-pressed',String(!showingAll));
+  get('filter-all').setAttribute('aria-pressed',String(showingAll));
+}
+function renderItems(container,items,origin){
+  const list=items.map(item=>{
+    const known=capabilities.find(capability=>capability.id===item.id);
+    const li=document.createElement('li');
+    li.dataset.reviewId='policy-'+origin+'-'+item.id;
+    const name=document.createElement('strong');name.textContent=known.name;
+    const detail=document.createElement('span');
+    detail.textContent=scope[item.before]+' → '+scope[item.after]+' · '+difference(item.before,item.after).label;
+    li.append(name,detail);return li;
+  });
+  container.replaceChildren(...list);
+}
+function refreshRecord(){
+  get('record-status').textContent=saved?'已记录':'待核对';
+  get('open-confirm').textContent=saved?'查看审阅记录 →':'核对变更 →';
+  get('empty-history').hidden=Boolean(saved);get('record').hidden=!saved;
+  if(saved){
+    get('record-time').textContent=new Intl.DateTimeFormat('zh-CN',{dateStyle:'long',timeStyle:'medium'}).format(saved.time)+' · '+(persistent?'已保存在此浏览器':'仅本页暂存');
+    renderItems(get('history-list'),saved.items,'history');
+  }
+  get('storage-alert').hidden=persistent;
+  if(!persistent) get('storage-alert').textContent='浏览器未能保存记录。本页可继续核对，刷新将清除本次暂存。';
+}
+function show(page){
+  const focusId={review:'page-title',confirm:'confirm-title',history:'history-title'};
+  for(const section of Object.keys(focusId)) get(section).hidden=section!==page;
+  get('tab-review').toggleAttribute('aria-current',page!=='history');
+  if(page!=='history')get('tab-review').setAttribute('aria-current','page');
+  get('tab-history').toggleAttribute('aria-current',page==='history');
+  if(page==='history')get('tab-history').setAttribute('aria-current','page');
+  document.body.dataset.reviewContext=page;
+  get(focusId[page]).focus({preventScroll:true});
+  window.scrollTo(0,0);
+}
+function backToReview(){
+  show('review');get('open-confirm').focus();
+}
+function confirmReview(){
+  if(document.body.dataset.reviewContext!=='confirm')return;
+  saved=readRecord() || saved;
+  if(!saved){
+    saved={request:'CR-028',base:'V2.4',proposal:'V2.5',time:Date.now(),items:changes.map(({id,before,after})=>({id,before,after}))};
+    try{localStorage.setItem(key,JSON.stringify(saved));persistent=true;}
+    catch{persistent=false;}
+  }
+  refreshRecord();show('history');get('announce').textContent='已登记本次角色权限审阅。';
+}
+get('filter-changes').onclick=()=>{showingAll=false;renderTable();};
+get('filter-all').onclick=()=>{showingAll=true;renderTable();};
+get('read-scope').onclick=()=>{
+  const opening=get('scope-key').hidden;get('scope-key').hidden=!opening;
+  get('read-scope').setAttribute('aria-expanded',String(opening));
+};
+get('tab-review').onclick=()=>show('review');
+get('tab-history').onclick=()=>{refreshRecord();show('history');};
+get('return-review').onclick=()=>show('review');
+get('open-confirm').onclick=()=>{renderItems(get('confirm-list'),changes,'confirm');show(saved?'history':'confirm');};
+get('confirm-record').onclick=confirmReview;
+get('back-review').onclick=backToReview;
+get('cancel').onclick=backToReview;
+window.addEventListener('storage',event=>{
+  if(event.key!==null && event.key!==key)return;
+  saved=readRecord();refreshRecord();
+  if(saved && document.body.dataset.reviewContext==='confirm')show('history');
+});
+saved=readRecord();renderTable();refreshRecord();
+</script>
+</body>
+</html>

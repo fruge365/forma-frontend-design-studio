@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#c8b5ed">
+<title>声场 · 室内乐周节目单</title>
+<style>
+:root {
+  --paper: #f8f6ee;
+  --ink: #291a2e;
+  --muted: #665d67;
+  --rule: #c9c2c4;
+  --lilac: #c8b5ed;
+  --purple: #62428a;
+  --sans: Inter, "Microsoft YaHei", "PingFang SC", sans-serif;
+  --serif: "DM Serif Text", "Noto Serif CJK SC", SimSun, serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+  font: 16px/1.5 var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+}
+* { box-sizing: border-box; }
+body, h1, h2, h3, h4, p, ul, ol, figure { margin: 0; }
+button, a { color: inherit; font: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .56; cursor: default; }
+:focus-visible { outline: 3px solid #8c4329; outline-offset: 3px; }
+.wrap { width: min(1392px, calc(100% - clamp(40px, 8vw, 130px))); margin-inline: auto; }
+[hidden] { display: none !important; }
+.screen-reader, .skip:not(:focus) {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.skip:focus { position: absolute; top: 5px; left: 5px; z-index: 4; padding: 7px; background: white; }
+.site-head { border-bottom: 1px solid var(--ink); }
+.head-inner { min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 800 24px/1 var(--sans); letter-spacing: -.06em; }
+.brand-mark { display: inline-flex; gap: 3px; align-items: center; height: 29px; }
+.brand-mark i { display: block; width: 4px; height: 26px; background: var(--ink); transform: skewY(-24deg); }
+.brand-mark i:first-child { height: 13px; }
+.brand-mark i:last-child { height: 19px; }
+.nav-mine { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; color:var(--ink); text-decoration: none; font-size: 14px; }
+.nav-count { border: 1px solid currentColor; border-radius: 100%; min-width: 22px; height: 22px; text-align: center; font: 13px/20px var(--mono); }
+.hero { position: relative; isolation: isolate; overflow: hidden; background: var(--lilac); border-bottom: 1px solid var(--ink); }
+.hero canvas { position: absolute; width: 61%; height: 100%; inset: 0 0 0 auto; z-index: -1; pointer-events: none; }
+.hero-inner { min-height: clamp(270px, 22vw, 360px); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding-block: 28px; }
+.overline { display: flex; gap: 12px; align-items: center; font-size: 14px; font-weight: 650; }
+.overline::before { content: ""; width: 24px; height: 3px; background: currentColor; }
+.hero h1 { font: 900 clamp(68px, 7.4vw, 118px)/1.13 var(--serif); letter-spacing: -.065em; margin: 12px 0 13px; }
+.hero-date { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; font-size: 14px; }
+.hero-date time { font: 550 clamp(26px, 2.65vw, 44px)/1 var(--mono); letter-spacing: -.1em; }
+.hero-date .dash { align-self: center; width: clamp(26px, 3vw, 48px); border-top: 2px solid; }
+.content { padding-top: 34px; padding-bottom: 36px; display: grid; grid-template-columns: minmax(0,1fr) minmax(240px, 28%); gap: clamp(28px, 4vw, 72px); align-items: start; }
+.agenda-head { display:flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px 20px; padding-bottom: 16px; border-bottom: 2px solid var(--ink); }
+.agenda-head h2, .mine h2 { font: 800 26px/1.3 var(--serif); }
+.date-choices { display: flex; gap: 6px; }
+.date-choices button, .scope-button { border: 1px solid var(--rule); background: transparent; min-height: 42px; padding: 6px 12px; border-radius: 2px; }
+.date-choices button { font-size: 14px; }
+.date-choices button[aria-pressed=true], .scope-button[aria-pressed=true] { border-color: var(--ink); color: var(--paper); background: var(--ink); }
+.day-caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; min-height: 51px; padding: 4px 0; }
+.day-caption h3 { font: 600 15px/1.5 var(--sans); }
+.text-button { border: 0; background: transparent; padding: 7px 1px; min-height: 40px; color: var(--purple); font-weight: 650; font-size: 14px; text-decoration: underline; text-underline-offset: .22em; }
+.items { list-style: none; padding: 0; }
+.entry { display: grid; grid-template-columns: 99px minmax(0,1fr) auto; align-items: start; gap: 17px; border-top: 1px solid var(--rule); padding-block: 18px 20px; }
+.entry:last-child { border-bottom: 1px solid var(--rule); }
+.entry-time { padding-top: 1px; }
+.start { display: block; font: 600 27px/1.15 var(--mono); letter-spacing: -.075em; }
+.duration, .ensemble { font-size: 13px; color: var(--muted); }
+.duration { display: inline-block; margin-top: 5px; }
+.event-name { margin: 0 0 4px; font: 750 clamp(20px,1.8vw,28px)/1.23 var(--serif); }
+.venue { margin-top: 7px; font-size: 13px; }
+.save { padding: 4px 10px; min-height: 40px; min-width: 72px; background: transparent; border: 1px solid var(--rule); border-radius: 2px; font-size: 13px; white-space: nowrap; }
+.save[aria-pressed=true] { border-color: var(--purple); color: var(--purple); background: #efe8f7; }
+.glyph { margin-right: 5px; font-family: var(--sans); font-weight: 650; }
+.mine { background: #ede6f1; border-top: 4px solid var(--purple); padding: 21px clamp(16px, 2vw, 30px) 22px; scroll-margin-top: 16px; }
+.mine-title { display:flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.mine-count { color: var(--purple); font: 600 24px var(--mono); }
+.mine-list { list-style: none; padding: 0; margin: 17px 0 7px; }
+.mine-list li { padding: 10px 0; display:flex; gap: 10px; justify-content:space-between; align-items:center; border-top:1px solid #b9adbf; }
+.mine-list b, .mine-list small {display:block}
+.mine-list b {font:650 16px var(--serif)}
+.mine-list small {margin-top:4px; font-size:12px; color: var(--muted)}
+.remove {background:transparent;border:0;min-width:42px;min-height:42px;font-size:14px;color:var(--purple);text-decoration:underline;text-underline-offset:.2em}
+.empty-mine, .storage { color: var(--muted); font-size: 13px; line-height: 1.8; }
+.empty-mine { padding: 16px 0 20px; }
+.storage { margin-top: 9px; }
+.primary { border:1px solid var(--ink); background: var(--ink); color: var(--paper); min-height: 44px; padding: 8px 16px; font-weight: 650; font-size: 14px; border-radius: 2px; }
+.mine .primary { width:100%; }
+.footer { display: flex; flex-wrap: wrap; gap: 5px 28px; justify-content: space-between; padding-block: 15px 25px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--rule); }
+.preview-tools { background: var(--paper); border-bottom: 1px solid var(--rule); }
+.tools-inner { display:flex; flex-wrap: wrap; align-items:center; justify-content: space-between; gap:12px 24px; padding-block:13px; }
+.scope-controls {display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.scope-button { font-size:14px; }
+.paper-stage { padding: 28px 16px; background: #e8e4e7; min-height: calc(100vh - 70px); }
+.sheet { margin: 0 auto; max-width: 780px; padding: clamp(20px,5vw,68px); color:#201b22; background:white; border:1px solid #ccc5ca; }
+.paper-head { border-top:4px solid #201b22; border-bottom:1.5px solid #201b22; padding-block: 16px; }
+.paper-kicker, .paper-meta, .paper-foot { font-size:13px; }
+.paper-head h1 { font:750 clamp(28px,4vw,46px)/1.28 var(--serif); margin:7px 0; }
+.paper-day { margin-top:23px; }
+.paper-day h2 { font:700 20px/1.5 var(--serif); margin-bottom:6px; }
+.paper-event { display:grid; grid-template-columns:100px 1fr; gap:14px; padding: 10px 0; border-top:1px solid #a79fa7; }
+.paper-time { font:650 15px/1.6 var(--mono); white-space:nowrap; }
+.paper-event h3 { font:700 18px/1.45 var(--serif); }
+.paper-event p {font-size:13px;line-height:1.65}
+.paper-foot { border-top:1px solid #201b22; padding-top:10px; margin-top:18px; }
+.paper-empty { margin:22px 0; }
+@media(max-width:880px){
+  .content {grid-template-columns:minmax(0,1fr) 230px;gap:22px}
+  .entry {grid-template-columns:68px minmax(0,1fr) auto;gap:10px}
+  .start {font-size:22px}
+  .hero canvas {width:55%}
+}
+@media(max-width:690px){
+  .wrap {width:calc(100% - 36px)}
+  .head-inner {min-height:49px}
+  .brand {font-size:21px}
+  .brand-mark {transform:scale(.86);transform-origin:left center;margin-right:-2px}
+  .hero-inner {min-height:234px; padding-block:27px; justify-content:space-between}
+  .hero canvas {width:48%;height:68%;top:auto;bottom:0;right:-9%}
+  .overline {font-size:12px}
+  .hero h1 {font-size:clamp(48px,12vw,78px);margin:10px 0 20px}
+  .hero-date {gap:7px}
+  .hero-date time {font-size:27px}
+  .hero-date .dash {width:20px}
+  .content {display:flex; flex-direction:column; align-items:stretch;gap:27px;padding-block:24px}
+  .agenda-head {gap:9px;padding-bottom:12px}
+  .agenda-head h2, .mine h2 {font-size:23px}
+  .date-choices {gap:4px}
+  .date-choices button {font-size:12px;padding:5px 8px;min-height:44px}
+  .entry {grid-template-columns:61px minmax(0,1fr) 61px;gap:9px;padding:15px 0}
+  .event-name {font-size:19px}
+  .save {min-width:0;padding:4px 3px;min-height:44px}
+  .ensemble,.venue {font-size:12px}
+  .ensemble-join {display:none}
+  .instruments {display:block; text-wrap:balance}
+  .day-caption h3,.text-button {font-size:13px}
+  .tools-inner {gap:8px; justify-content:space-between}
+  .scope-controls {order:3;width:100%}
+  .paper-stage {padding:12px 8px}
+  .paper-event {grid-template-columns:78px 1fr;gap:8px}
+  .paper-time {font-size:12px}
+}
+@media(max-width:365px) {
+  .hero canvas {right:-14%}
+  .entry {grid-template-columns:55px minmax(0,1fr) 58px;gap:7px}
+  .date-choices button {padding-inline:6px}
+}
+@page {size:A4 portrait; margin:14mm 17mm;}
+@media print {
+  html, body { background:white !important; color:black; margin:0; padding:0; }
+  #browse, .preview-tools, .skip, .screen-reader, [data-forma], .screen-only {display:none!important}
+  #print-view[hidden], #print-view {display:block!important}
+  .paper-stage, .sheet { min-height:0; width:auto; max-width:none; margin:0; padding:0; border:0; background:white; color:black; }
+  .paper-head {padding:3mm 0; border-color:black;}
+  .paper-kicker, .paper-meta, .paper-foot {font-size:10pt}
+  .paper-head h1 {font-size:24pt; margin:1.7mm 0}
+  .paper-day {margin-top:5mm}
+  .paper-day h2 {font-size:14pt; margin:0 0 1mm; break-after:avoid; page-break-after:avoid}
+  .paper-event {display:grid; grid-template-columns:31mm 1fr; gap:5mm; padding:2.5mm 0; break-inside:avoid; page-break-inside:avoid; border-color:#666}
+  .paper-time {font:600 10.5pt/1.5 var(--mono)}
+  .paper-event h3 {font-size:12pt;line-height:1.4}
+  .paper-event p {font-size:10pt;line-height:1.5}
+  .paper-foot {margin-top:4mm;padding-top:2mm; break-before:avoid}
+}
+</style>
+</head>
+<body data-review-context="browse">
+<div id="browse">
+  <a class="skip" href="#agenda">跳至演出日程</a>
+  <header class="site-head">
+    <div class="wrap head-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>声场</div>
+      <a class="nav-mine" href="#mine">我的节目 <span id="nav-count" class="nav-count">0</span></a>
+    </div>
+  </header>
+  <section class="hero" aria-labelledby="festival-name">
+    <canvas id="strings" aria-hidden="true"></canvas>
+    <div class="wrap hero-inner">
+      <p class="overline">2026 年 · 澄江音乐厅</p>
+      <h1 id="festival-name" data-review-id="programme-hero">室内乐周</h1>
+      <p class="hero-date" aria-label="11 月 14 日至 11 月 15 日">
+        <time datetime="2026-11-14">11.14</time><span class="dash" aria-hidden="true"></span><time datetime="2026-11-15">11.15</time>
+      </p>
+    </div>
+  </section>
+  <main class="wrap content">
+    <section id="agenda" aria-labelledby="agenda-title">
+      <header class="agenda-head">
+        <h2 id="agenda-title">演出日程</h2>
+        <div class="date-choices" role="group" aria-label="浏览演出日期">
+          <button type="button" data-day="D1" data-review-id="programme-date-D1" aria-pressed="true">14 日 周六</button>
+          <button type="button" data-day="D2" data-review-id="programme-date-D2" aria-pressed="false">15 日 周日</button>
+        </div>
+      </header>
+      <div class="day-caption"><h3 id="day-title"></h3><button type="button" class="text-button" id="preview-day" data-review-id="programme-preview-day">预览当日节目单</button></div>
+      <ul class="items" id="schedule"></ul>
+    </section>
+    <aside class="mine" id="mine" aria-labelledby="mine-title">
+      <div class="mine-title"><h2 id="mine-title" tabindex="-1">我的节目</h2><span aria-hidden="true" class="mine-count" id="mine-count"></span></div>
+      <p class="empty-mine" id="empty-mine">在演出旁点「加入」，两天选中的场次会列在这里。</p>
+      <ul class="mine-list" id="mine-list" aria-labelledby="mine-title"></ul>
+      <button type="button" class="primary" id="preview-mine" data-review-id="programme-preview-mine">预览我的节目单</button>
+      <p class="storage" id="storage">选择保存在当前浏览器。</p>
+    </aside>
+  </main>
+  <footer class="wrap footer">
+    <span>虚构音乐节 · 演出与场馆均为演示资料</span><span>在日程页面直接打印将输出当前日全部节目。</span>
+  </footer>
+</div>
+<main id="print-view" hidden>
+  <nav class="preview-tools" aria-label="节目单打印预览">
+    <div class="wrap tools-inner">
+      <button class="text-button" type="button" id="back">返回日程</button>
+      <div class="scope-controls" role="group" aria-label="打印范围">
+        <button class="scope-button" type="button" id="scope-day">当前日全部</button>
+        <button class="scope-button" type="button" id="scope-mine">我的节目</button>
+      </div>
+      <button class="primary" id="print-now" type="button" data-review-id="programme-print-button">打印节目单</button>
+    </div>
+  </nav>
+  <div class="paper-stage">
+    <article class="sheet" id="print-sheet" aria-labelledby="paper-title">
+      <header class="paper-head">
+        <p class="paper-kicker">声场 · 2026 室内乐周</p>
+        <h1 id="paper-title" tabindex="-1"></h1>
+        <p class="paper-meta" id="paper-meta"></p>
+      </header>
+      <div id="paper-events"></div>
+      <p class="paper-foot">澄江音乐厅 · 虚构演出资料</p>
+    </article>
+  </div>
+</main>
+<p id="feedback" class="screen-reader" role="status" aria-live="polite"></p>
+<script>
+'use strict';
+const days = {
+  D1: {long: '11 月 14 日 · 周六', short: '11.14'},
+  D2: {long: '11 月 15 日 · 周日', short: '11.15'}
+};
+const concerts = [
+  {id:'P01', day:'D1', start:'10:30', end:'11:15', length:45, name:'弦上的晨光', group:'拾弦四重奏', form:'两把小提琴、中提琴与大提琴', hall:'琥珀厅'},
+  {id:'P02', day:'D1', start:'13:30', end:'14:20', length:50, name:'木与风的对话', group:'林间木管五重奏', form:'长笛、双簧管、单簧管、圆号与巴松', hall:'小剧场'},
+  {id:'P03', day:'D1', start:'16:00', end:'16:45', length:45, name:'三人之间', group:'微澜三重奏', form:'钢琴、小提琴与大提琴', hall:'琥珀厅'},
+  {id:'P04', day:'D1', start:'19:30', end:'20:30', length:60, name:'月下的六根弦', group:'白露双吉他', form:'双古典吉他', hall:'回声厅'},
+  {id:'P05', day:'D2', start:'10:00', end:'10:50', length:50, name:'风穿过簧片', group:'渡口三重奏', form:'单簧管、中提琴与钢琴', hall:'回声厅'},
+  {id:'P06', day:'D2', start:'13:00', end:'13:50', length:50, name:'与琴弓同行', group:'山麓弦乐团', form:'弦乐五重奏', hall:'琥珀厅'},
+  {id:'P07', day:'D2', start:'15:30', end:'16:15', length:45, name:'两架琴的回信', group:'潮汐钢琴组合', form:'双钢琴', hall:'小剧场'},
+  {id:'P08', day:'D2', start:'19:00', end:'20:00', length:60, name:'余响未尽', group:'晚风室内乐团', form:'弦乐四重奏与单簧管', hall:'琥珀厅'}
+];
+const byId = new Map(concerts.map(item => [item.id, item]));
+const get = id => document.getElementById(id);
+const storageRoot = 'forma-programme/v1/' + location.pathname + '/';
+const selected = new Set();
+let day = 'D1';
+let previewScope = '';
+let originButton;
+let browseScroll = 0;
+let persistent = true;
+
+function readChoices() {
+  try {
+    const stored = concerts.filter(item => localStorage.getItem(storageRoot + item.id) === '1');
+    selected.clear();
+    for (const item of stored) selected.add(item.id);
+  } catch { persistent = false; }
+}
+function make(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text) node.textContent = text;
+  return node;
+}
+function buildSchedule() {
+  const rows = concerts.map(item => {
+    const row = make('li', 'entry');
+    row.dataset.date = item.day;
+    const time = make('div', 'entry-time');
+    time.append(make('span','start',item.start), make('span','duration',item.length + ' 分钟'));
+    const description = make('div', 'event-description');
+    const title = make('h3','event-name',item.name);
+    title.dataset.reviewId = 'programme-title-' + item.id;
+    const ensemble = make('p','ensemble');
+    ensemble.append(make('span','',item.group),make('span','ensemble-join',' · '),make('span','instruments',item.form));
+    description.append(title, ensemble, make('p','venue',item.hall));
+    const button = make('button','save');
+    button.type = 'button';
+    button.dataset.save = item.id;
+    button.dataset.reviewId = 'programme-save-' + item.id;
+    button.addEventListener('click', () => toggle(item));
+    row.append(time,description,button);
+    return row;
+  });
+  get('schedule').replaceChildren(...rows);
+}
+function toggle(item) {
+  const add = !selected.has(item.id);
+  if (add) selected.add(item.id); else selected.delete(item.id);
+  try {
+    if (add) localStorage.setItem(storageRoot + item.id, '1');
+    else localStorage.removeItem(storageRoot + item.id);
+  } catch { persistent = false; }
+  render();
+  get('feedback').textContent = item.name + (add ? '已加入我的节目。' : '已从我的节目移出。');
+}
+function renderMine() {
+  const rows = concerts.filter(item => selected.has(item.id)).map(item => {
+    const row = make('li');
+    const text = make('div');
+    text.append(make('b','',item.name), make('small','',days[item.day].short + ' · ' + item.start + ' · ' + item.hall));
+    const remove = make('button','remove','移出');
+    remove.type = 'button';
+    remove.dataset.reviewId = 'programme-remove-' + item.id;
+    remove.setAttribute('aria-label', '移出' + item.name);
+    remove.addEventListener('click', () => {
+      toggle(item);
+      const next = get('mine-list').querySelector('button') || get('mine-title');
+      next.focus();
+    });
+    row.append(text,remove);
+    return row;
+  });
+  get('mine-list').replaceChildren(...rows);
+  get('mine-list').hidden = !rows.length;
+  get('empty-mine').hidden = rows.length > 0;
+  get('nav-count').textContent = String(rows.length);
+  get('mine-count').textContent = rows.length + ' 场';
+  get('storage').textContent = persistent ? '选择保存在当前浏览器。' : '当前浏览器无法保存，选择仅在本页有效。';
+}
+function renderPaper() {
+  const mine = previewScope === 'mine';
+  const entries = concerts.filter(item => mine ? selected.has(item.id) : item.day === day);
+  get('paper-title').textContent = mine ? '我的节目单' : '当日节目单';
+  get('paper-meta').textContent = (mine ? '个人选择 · 两日合计' : days[day].long + ' · 当日全部') + ' ' + entries.length + ' 场';
+  const sections = [];
+  for (const date of Object.keys(days)) {
+    const dayEntries = entries.filter(item => item.day === date);
+    if (!dayEntries.length) continue;
+    const section = make('section', 'paper-day');
+    section.append(make('h2','',days[date].long));
+    for (const item of dayEntries) {
+      const row = make('article','paper-event');
+      const detail = make('div');
+      const title = make('h3','',item.name);
+      title.dataset.reviewId = 'programme-proof-' + item.id;
+      detail.append(title,make('p','',item.hall + ' · ' + item.group + ' · ' + item.form));
+      row.append(make('span','paper-time',item.start + '–' + item.end),detail);
+      section.append(row);
+    }
+    sections.push(section);
+  }
+  if (!entries.length) {
+    const empty = make('p','paper-empty','尚未选择演出。');
+    empty.append(make('span','screen-only','返回日程加入场次后，可打印我的节目单。'));
+    sections.push(empty);
+  }
+  get('paper-events').replaceChildren(...sections);
+  get('print-now').disabled = !entries.length;
+  get('scope-day').setAttribute('aria-pressed', String(!mine));
+  get('scope-mine').setAttribute('aria-pressed', String(mine));
+  if (previewScope) {
+    document.body.dataset.reviewProof = mine ? 'MINE/' + (entries.map(item => item.id).join(',') || 'EMPTY') : 'DAY/' + day;
+  } else {
+    delete document.body.dataset.reviewProof;
+  }
+}
+function render() {
+  for (const button of document.querySelectorAll('[data-day]')) {
+    button.setAttribute('aria-pressed', String(button.dataset.day === day));
+  }
+  for (const row of get('schedule').children) {
+    row.hidden = row.dataset.date !== day;
+    const button = row.querySelector('[data-save]');
+    const item = byId.get(button.dataset.save);
+    const active = selected.has(item.id);
+    const glyph = make('span','glyph',active ? '✓' : '+');
+    glyph.setAttribute('aria-hidden','true');
+    button.replaceChildren(glyph, document.createTextNode(active ? '已加入' : '加入'));
+    button.setAttribute('aria-label', (active ? '移出' : '加入') + item.name);
+    button.setAttribute('aria-pressed', String(active));
+  }
+  get('day-title').textContent = days[day].long + ' · 4 场';
+  renderMine();
+  renderPaper();
+}
+function showPreview(scope, source) {
+  if (!previewScope) { originButton = source; browseScroll = scrollY; }
+  previewScope = scope;
+  document.body.dataset.reviewContext = 'print';
+  renderPaper();
+  get('browse').hidden = true;
+  get('print-view').hidden = false;
+  get('paper-title').focus({preventScroll:true});
+  window.scrollTo(0,0);
+}
+function returnToSchedule() {
+  previewScope = '';
+  document.body.dataset.reviewContext = 'browse';
+  get('print-view').hidden = true;
+  get('browse').hidden = false;
+  renderPaper();
+  originButton?.focus({preventScroll:true});
+  window.scrollTo(0,browseScroll);
+}
+for (const button of document.querySelectorAll('[data-day]')) {
+  button.addEventListener('click', () => { day = button.dataset.day; render(); });
+}
+get('preview-day').addEventListener('click', e => showPreview('day',e.currentTarget));
+get('preview-mine').addEventListener('click', e => showPreview('mine',e.currentTarget));
+get('scope-day').addEventListener('click', () => showPreview('day'));
+get('scope-mine').addEventListener('click', () => showPreview('mine'));
+get('back').addEventListener('click',returnToSchedule);
+get('print-now').addEventListener('click', () => { if (!get('print-now').disabled) window.print(); });
+document.addEventListener('keydown', event => {
+  if (previewScope && event.key === 'Escape' && !event.defaultPrevented) returnToSchedule();
+});
+window.addEventListener('storage', event => {
+  if (event.key === null || event.key.startsWith(storageRoot)) { readChoices(); render(); }
+});
+// A family of standing string waves, engraved at a succession of phases.
+// The canvas is purely decorative and stays out of the paper programme.
+function drawStrings() {
+  const canvas = get('strings');
+  const box = canvas.getBoundingClientRect();
+  if (!box.width || !box.height) return;
+  const ratio = Math.min(devicePixelRatio || 1,2);
+  canvas.width = Math.round(box.width * ratio);
+  canvas.height = Math.round(box.height * ratio);
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  ctx.scale(ratio,ratio);
+  ctx.strokeStyle = '#39203e';
+  ctx.lineWidth = box.width > 350 ? 1.5 : 1.1;
+  for (let line = 0; line < 58; line++) {
+    const t = line / 57;
+    ctx.beginPath();
+    for (let step = 0; step <= 220; step++) {
+      const x = step / 220;
+      const phase = x * Math.PI * 2.3 - 1.05;
+      const wave = Math.sin(phase);
+      const spread = .53 * (t - .5) * Math.sin(1.31 * phase + .14)
+        + .17 * (Math.sin(phase + t * 2.4) - wave);
+      const y = .56 - .06 * wave + Math.min(1, x / .16) * spread;
+      const px = x * 1.18 * box.width;
+      const py = (y - .04) * box.height;
+      if (!step) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+  }
+}
+readChoices();
+buildSchedule();
+render();
+new ResizeObserver(drawStrings).observe(get('strings'));
+</script>
+</body>
+</html>

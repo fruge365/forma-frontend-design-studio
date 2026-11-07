@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>物样 · 材料样本馆</title>
+<style>
+:root{color-scheme:light;--paper:#f3f1ea;--white:#fcfbf7;--ink:#262a22;--muted:#595e52;--edge:#c8c8bc;--brand:#823f2e;--sans:Inter,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;--serif:"Baskervville","Songti SC",SimSun,Georgia,serif;--mono:"IBM Plex Mono",Consolas,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--sans)}
+button,input,select{font:inherit;color:inherit}
+button,a,summary{touch-action:manipulation}
+button{cursor:pointer}
+button:disabled{cursor:default}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+a{color:inherit}
+[hidden]{display:none!important}
+.top{border-bottom:1px solid #d2d2c7;background:var(--white)}
+.topin,.page{width:min(1540px,100%);margin:auto;padding-inline:clamp(20px,4vw,64px)}
+.topin{height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.identity{display:flex;align-items:center;gap:11px;letter-spacing:-.04em;font-size:23px;font-weight:750}
+.mark{width:23px;height:26px;position:relative;display:inline-block;background:var(--brand);clip-path:polygon(0 0,41% 12%,41% 78%,51% 82%,51% 15%,68% 20%,68% 87%,78% 90%,78% 24%,100% 30%,100% 100%,0 70%)}
+.brand-extra{font:500 13px/1.2 var(--sans);letter-spacing:.04em;color:var(--muted);border-left:1px solid var(--edge);padding-left:14px}
+.btn{border:1px solid var(--edge);background:var(--white);border-radius:4px;padding:9px 14px;min-height:42px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.btn:hover,.pick:hover{border-color:var(--ink)}
+.primary{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.top .btn{min-height:36px;font-size:13px;padding:6px 11px}
+.count{font:600 13px/1.3 var(--mono);background:#e7e5d9;color:var(--ink);padding:2px 6px;border-radius:3px}
+.page{padding-bottom:48px}
+.mast{display:grid;grid-template-columns:1fr minmax(280px,380px);align-items:end;gap:30px;padding-block:36px 27px;border-bottom:2px solid var(--ink)}
+h1,h2,h3,p{margin:0}
+.mast h1,.view-title{font:650 clamp(35px,4.3vw,64px)/1.12 var(--serif);letter-spacing:-.055em}
+.mast p,.intro{margin-top:9px;color:var(--muted)}
+.search-label{display:block;color:var(--muted);font-size:13px;margin-bottom:5px}
+.search-box{display:flex;min-width:0;border:1px solid #aaa99e;border-radius:4px;background:var(--white)}
+.search-box input{background:transparent;border:0;min-width:0;flex:1;padding:9px 12px;border-radius:4px}
+.search-box button{border-radius:0 3px 3px 0;padding-inline:17px;min-height:43px}
+.catalog{display:grid;grid-template-columns:minmax(150px,190px) minmax(0,1fr);gap:clamp(24px,3.4vw,56px);margin-top:23px}
+.facets{align-self:start}
+.facet-head{margin-bottom:7px;display:flex;align-items:baseline;justify-content:space-between}
+.facet-head h2,.facet-head h3{font-size:17px}
+.fieldset{border:0;border-top:1px solid var(--edge);margin:17px 0 0;padding:12px 0 0;min-width:0}
+.fieldset legend{float:left;width:100%;margin-bottom:6px;font-size:13px;font-weight:700}
+.option{clear:both;display:flex;align-items:center;gap:10px;cursor:pointer;min-height:36px;color:#414539}
+.option input{appearance:auto;accent-color:var(--brand);width:16px;height:16px;margin:0}
+.option:has(:checked){color:var(--brand);font-weight:650}
+.results-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;min-height:32px}
+.results-header h2{font-size:18px;font-weight:665;letter-spacing:-.018em}
+.results-header .n{font:600 16px/1.3 var(--mono);color:var(--brand);margin-left:5px}
+.mobile-actions{display:none}
+.active-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.active-filters:empty{display:none}
+.filter-chip{border:1px solid #bbbbae;border-radius:3px;background:#e9e8df;font-size:13px;padding:4px 8px;min-height:32px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 17px}
+.card{min-width:0;position:relative;border-bottom:1px solid var(--edge);padding-bottom:11px}
+.card-link{display:block;text-decoration:none}
+.sample{width:100%;aspect-ratio:1.56;overflow:hidden;background:#deddd3;position:relative}
+.sample img,.sample canvas{display:block;width:100%;height:100%;object-fit:cover}
+.code{position:absolute;bottom:8px;left:8px;background:#fcfbf1eb;color:#30342d;font:600 11px/1.3 var(--mono);letter-spacing:.045em;padding:3px 5px;border-radius:2px}
+.card-name{font:600 clamp(19px,1.65vw,25px)/1.25 var(--serif);margin-top:10px;letter-spacing:-.035em}
+.card-link:hover .card-name{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.card-bottom{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;gap:5px}
+.pick{border:1px solid transparent;background:transparent;padding:4px 5px;min-height:32px;white-space:nowrap;color:var(--brand);border-radius:3px}
+.pick[aria-pressed=true]{background:#ebe4d9;border-color:#c8b09e}
+.pick:disabled{opacity:.57}
+.zero{padding:38px clamp(16px,4vw,54px);border:1px solid var(--edge);background:var(--white);border-left:4px solid var(--brand)}
+.zero h3{font:600 27px/1.2 var(--serif);margin-bottom:9px}
+.zero p{color:var(--muted);margin-bottom:14px}
+.zero .btn{margin:4px 6px 4px 0}
+.note{font-size:12px;color:var(--muted);margin-top:24px}
+.viewbar{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--edge);padding-block:18px}
+.link-button{border:0;background:transparent;padding:7px 0;font-weight:650;min-height:38px;text-decoration:underline;text-underline-offset:4px}
+.detail-grid{margin-top:25px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.8fr);gap:clamp(22px,5vw,80px);align-items:start}
+.detail-grid .sample{aspect-ratio:1.24}
+.detail-info{padding-top:10px}
+.detailspec{margin:22px 0;display:grid;grid-template-columns:95px 1fr}
+.detailspec dt,.detailspec dd{border-top:1px solid var(--edge);padding:9px 0;margin:0}
+.detailspec dt{color:var(--muted)}
+.compare-intro{margin:25px 0 15px}
+.compare-deck{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:0;border:1px solid var(--edge);background:var(--white)}
+.comp{padding:clamp(10px,2vw,25px);min-width:0}.comp+.comp{border-left:1px solid var(--edge)}
+.comp h2{font:650 clamp(15px,2vw,30px)/1.35 var(--serif);margin-top:8px;overflow-wrap:anywhere}
+.comp .detailspec{display:block;margin:12px 0 6px}.comp .detailspec dt{font-size:12px;padding-bottom:0}.comp .detailspec dd{border:0;padding:0 0 9px;font-size:17px;font-weight:600}
+.comp .sample{aspect-ratio:1.8}
+dialog{width:min(420px,calc(100% - 24px));border:1px solid var(--edge);background:var(--white);border-radius:8px;padding:0;max-height:88vh;max-height:88dvh;color:var(--ink)}
+dialog::backdrop{background:#22261fa3}
+.sheet-body{padding:20px}.sheet-header,.sheet-foot{padding:15px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sheet-header{border-bottom:1px solid var(--edge)}.sheet-header h2{font-size:22px}.sheet-foot{position:sticky;bottom:0;background:var(--white);border-top:1px solid var(--edge)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:1050px){.grid{gap:17px 12px}.catalog{grid-template-columns:150px 1fr;gap:22px}.card-bottom{font-size:12px}.card-name{font-size:20px}}
+@media(max-width:800px){.catalog{grid-template-columns:minmax(0,1fr)}.facets{display:none}.mobile-actions{display:flex}.mast{grid-template-columns:1fr minmax(200px,300px)}.detail-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.topin,.page{padding-inline:16px}.topin{height:54px}.identity{font-size:20px}.brand-extra{font-size:11px;padding-left:9px}.mast{grid-template-columns:1fr;gap:12px;padding-block:20px 16px}.mast p{font-size:13px}.search-label{font-size:12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 12px}.catalog{margin-top:12px}.card-name{font-size:19px}.card-bottom{align-items:flex-start;flex-wrap:wrap;gap:0}.card-bottom .pick{margin-left:auto;min-height:36px}.detail-grid{grid-template-columns:1fr;gap:10px}.detail-grid .sample{aspect-ratio:1.7}.detail-info{padding-top:0}.viewbar{padding-block:9px}.comp{padding:7px}.comp .code{display:none}.comp .detailspec dd{font-size:15px}.comp .link-button{font-size:12px}dialog .option{min-height:44px}}
+@media(max-width:360px){.topin,.page{padding-inline:12px}.grid{gap:14px 9px}.brand-extra{display:none}.card-name{font-size:18px}.card-bottom{display:block}.card-bottom .pick{display:block;margin-left:0;padding-left:0;min-height:32px}.compare-deck .detailspec dt{font-size:11px}}
+@media(max-width:800px){
+  .card-bottom .pick{min-width:44px;min-height:44px}
+}
+</style>
+</head>
+<body data-review-context="list">
+<header class="top"><div class="topin"><div class="identity"><span class="mark" aria-hidden="true"></span>物样<span class="brand-extra">材料样本馆</span></div><button type="button" class="btn" id="open-compare" data-review-id="material-compare">对比夹 <span class="count" id="pick-count">0</span></button></div></header>
+<main class="page">
+<div id="list-view">
+  <div class="mast"><div><h1>饰面材料样本馆</h1><p>为室内项目挑选石材、木饰面、织物与釉陶。</p></div>
+    <form id="search-form" role="search"><label class="search-label" for="query">搜索名称或样本编号</label><div class="search-box"><input id="query" name="q" type="search" maxlength="80" autocomplete="off" placeholder="例如：洞石、WD-01"><button type="submit" class="btn primary" data-review-id="material-search">搜索</button></div></form>
+  </div>
+  <div class="catalog">
+    <aside class="facets" aria-label="材料筛选"><div class="facet-head"><h2>筛选条件</h2></div><div id="desktop-facets"></div></aside>
+    <section aria-labelledby="result-title"><div class="results-header"><h2 id="result-title" tabindex="-1">馆藏样本 <span class="n" id="result-count">12</span></h2><div class="mobile-actions"><button type="button" class="btn" id="open-filters" data-review-id="material-filter-open">筛选条件</button></div></div>
+    <div class="active-filters" id="chips"></div><div class="grid" id="wall"></div><div class="zero" id="empty" hidden></div>
+    <p class="note">材质纹理为程序绘制示意，规格与参考价为本馆演示数据。</p></section>
+  </div>
+</div>
+<section id="item-view" hidden></section>
+<section id="compare-view" hidden></section>
+</main>
+<dialog id="filter-dialog" aria-labelledby="filter-title"><header class="sheet-header"><h2 id="filter-title">筛选条件</h2><button class="link-button" type="button" id="cancel-filters" data-review-id="material-filter-cancel">取消</button></header><div class="sheet-body" id="draft-facets"></div><footer class="sheet-foot"><button type="button" class="link-button" id="reset-draft">清除筛选项</button><button type="button" class="btn primary" id="apply-filters" data-review-id="material-filter-apply">应用筛选</button></footer></dialog>
+<p class="sr" role="status" id="announcement"></p>
+<script>
+'use strict';
+const families={stone:'石材',wood:'木饰面',fabric:'织物',tile:'釉陶'};
+const tones={warm:'暖调',neutral:'中性',cool:'冷调'};
+const catalog=[
+  ['ST-01','沙丘洞石','stone','warm','横切孔纹',18,360,'#c8b79c','travertine'],
+  ['WD-01','烟熏胡桃','wood','warm','哑光木皮',12,280,'#80543b','wood'],
+  ['TX-01','燕麦亚麻','fabric','neutral','平纹织面',3,146,'#c3bba6','linen'],
+  ['CR-01','铁锈陶','tile','warm','细砂陶面',9,178,'#a65d45','clay'],
+  ['ST-02','青岚纹石','stone','cool','柔光细脉',20,428,'#526962','marble'],
+  ['TX-02','靛岸粗纺','fabric','cool','篮纹织面',5,196,'#546b79','basket'],
+  ['WD-02','麦芽白橡','wood','warm','开放木孔',15,326,'#b99b72','wood'],
+  ['CR-02','苔青釉','tile','cool','半哑细釉',10,216,'#839a89','glaze'],
+  ['ST-03','雾银花岗','stone','neutral','细晶磨面',16,305,'#999b97','granite'],
+  ['WD-03','银灰栓皮','wood','neutral','直纹木皮',12,248,'#9a9789','wood'],
+  ['TX-03','杏褐灯芯','fabric','warm','纵向绒条',6,184,'#a48367','rib'],
+  ['CR-03','象牙斑釉','tile','neutral','颗粒釉面',8,162,'#d3c6a9','glaze']
+].map(([id,name,family,tone,finish,thick,price,color,pattern],index)=>({id,name,family,tone,finish,thick,price,color,pattern,seed:(index+1)*7589}));
+const items=new Map(catalog.map(item=>[item.id,item]));
+const grainNotes={
+  'ST-01':'浅沙色横层，细长孔隙顺着石纹分布。','WD-01':'暖褐底，深棕年轮形成舒展的弧形木纹。',
+  'TX-01':'浅燕麦色经纬纱交替，细密的平纹织面。','CR-01':'赤褐陶面散布不规则细砂和浅色斑点。',
+  'ST-02':'灰绿色石面上有浅色弯曲细脉。','TX-02':'深靛蓝经纬纱交错，纹理颗粒较粗。',
+  'WD-02':'麦芽色底，疏密交替的褐色木孔。','CR-02':'灰青釉面带有深浅不均的细小矿物斑点。',
+  'ST-03':'银灰色基底中分布深浅不同的细晶。','WD-03':'灰棕底色，细木纹沿板面长边展开。',
+  'TX-03':'杏褐色纵向绒条，条间有清晰的明暗起伏。','CR-03':'暖象牙色釉面上散落褐色和浅米色斑点。'
+};
+const $=id=>document.getElementById(id);
+const small=matchMedia('(max-width:800px)');
+const textureCache=new Map();
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const baseFilters=()=>({q:'',family:[],tone:[]});
+const copyFilters=f=>({q:f.q,family:[...f.family],tone:[...f.tone]});
+let filters=baseFilters(),draft=null,view='list',itemId='',chosen=[];
+const stash='materials:compare:'+new URL('.',location.href).pathname;
+function cleanIds(value){return [...new Set(value)].filter(id=>items.has(id)).slice(0,3)}
+try{chosen=cleanIds(JSON.parse(sessionStorage.getItem(stash)||'[]'))}catch{}
+function retain(){try{sessionStorage.setItem(stash,JSON.stringify(chosen))}catch{}}
+function parse(){
+  const p=new URLSearchParams(location.hash.slice(1));
+  const filter={q:(p.get('q')||'').trim().slice(0,80),family:[],tone:[]};
+  for(const [group,values] of Object.entries({family:families,tone:tones})){
+    filter[group]=[...new Set(p.getAll(group))].filter(key=>Object.hasOwn(values,key));
+  }
+  const id=p.get('sample');
+  return {filter,view:id?'detail':p.has('compare')?'compare':'list',id,comparison:p.has('compare')?cleanIds((p.get('compare')||'').split(',')):null};
+}
+function routeHash(filter,next='list',id=''){
+  const p=new URLSearchParams();
+  if(filter.q)p.set('q',filter.q);
+  for(const group of ['family','tone'])filter[group].forEach(key=>p.append(group,key));
+  if(next==='detail')p.set('sample',id);
+  if(next==='compare')p.set('compare',chosen.join(','));
+  return '#'+p.toString();
+}
+function hit(item,f){
+  const text=[item.id,item.name,item.finish,families[item.family],tones[item.tone]].join(' ').toLowerCase();
+  return (!f.q||text.includes(f.q.toLowerCase()))&&(!f.family.length||f.family.includes(item.family))&&(!f.tone.length||f.tone.includes(item.tone));
+}
+function matches(f){return catalog.filter(item=>hit(item,f))}
+function makeTexture(material){
+  if(textureCache.has(material.id))return textureCache.get(material.id);
+  const canvas=document.createElement('canvas'),w=480,h=330;canvas.width=w;canvas.height=h;
+  const ctx=canvas.getContext('2d');if(!ctx)return '';
+  let seed=material.seed;
+  function random(){seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}
+  const lens=64,noise=Array.from({length:lens*lens},random);
+  function field(x,y){
+    const x0=Math.floor(x),y0=Math.floor(y);
+    let sx=x-x0,sy=y-y0;sx=sx*sx*(3-2*sx);sy=sy*sy*(3-2*sy);
+    const ix=x0&63,iy=y0&63,nx=(ix+1)&63,ny=(iy+1)&63;
+    return (noise[iy*lens+ix]*(1-sx)+noise[iy*lens+nx]*sx)*(1-sy)+(noise[ny*lens+ix]*(1-sx)+noise[ny*lens+nx]*sx)*sy;
+  }
+  const rgb=material.color.slice(1).match(/../g).map(x=>parseInt(x,16)),bitmap=ctx.createImageData(w,h);
+  const type=material.pattern;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const broad=field(x*.012,y*.012)-.5,fine=field(x*.064,y*.064)-.5,grain=random()-.5;
+    let light=broad*18+fine*5+grain*11;
+    if(type==='wood'){
+      const wave=y*.39+x*.042+field(x*.005,y*.009)*8+10*Math.sin(x*.009+y*.003);
+      const knot=Math.sin(Math.hypot((x-w*.6)*.38,y-h*.72)*.24+wave*.28);
+      light=28*broad-20*Math.pow((1+Math.sin(wave+knot*2))/2,8)+15*field(x*.015,y*.19)+grain*13-6;
+    }else if(type==='travertine'){
+      const band=field(x*.006,y*.087+1.3*Math.sin(x*.009));light+=band*29+Math.sin(y*.14+3*broad)*5-14;
+    }else if(type==='marble'){
+      const vein=Math.abs(Math.sin(x*.015-y*.016+3.7*field(x*.012,y*.011)+.5*field(x*.056,y*.05)));
+      light+=broad*32+Math.max(0,1-vein*13)*88+Math.max(0,1-vein*3)*18;
+    }else if(type==='linen'||type==='basket'){
+      const pitch=type==='linen'?4.6:6.6,tx=x+field(x*.01,y*.02)*2,ty=y+field(x*.013,y*.014)*2;
+      const warp=((Math.floor(tx/pitch)+Math.floor(ty/pitch))&1)===0;
+      light+=(Math.sin((warp?tx:ty)*Math.PI*2/pitch)-.3)*17+grain*11+(warp?4:-4);
+    }else if(type==='rib'){
+      light+=Math.cos((x+y*.045)*.66+broad)*27+grain*18;
+    }else if(type==='granite'){light+=grain*29+(field(x*.28,y*.21)-.5)*35}
+    else if(type==='clay'){light+=broad*15+(field(x*.11,y*.13)-.5)*12}
+    else{light+=broad*23+fine*9}
+    const i=(y*w+x)*4;
+    for(let c=0;c<3;c++)bitmap.data[i+c]=rgb[c]+light;
+    bitmap.data[i+3]=255;
+  }
+  ctx.putImageData(bitmap,0,0);
+  if(['travertine','clay','glaze','granite'].includes(type)){
+    const count=type==='granite'?4300:type==='travertine'?620:1150;
+    for(let i=0;i<count;i++){
+      const x=random()*w,y=random()*h,r=Math.pow(random(),3)*2.2+.25;
+      ctx.fillStyle=random()>.4?'rgba(54,42,28,'+(.1+random()*.28)+')':'rgba(255,252,233,'+(.1+random()*.36)+')';
+      ctx.beginPath();ctx.ellipse(x,y,r*(type==='travertine'?4:1),r*(type==='travertine'?.53:.85),random()*.25,0,Math.PI*2);ctx.fill();
+    }
+  }
+  const src=canvas.toDataURL('image/jpeg',.88);textureCache.set(material.id,src);return src;
+}
+function texture(item){
+  return '<div class="sample" style="background-color:'+item.color+'"><img src="'+makeTexture(item)+'" alt="'+grainNotes[item.id]+'"><span class="code">'+item.id+'</span></div>';
+}
+function facetsMarkup(f,prefix){
+  return Object.entries({family:families,tone:tones}).map(([group,values])=>
+    '<fieldset class="fieldset"><legend>'+(group==='family'?'材质分类':'表面色调')+'</legend>'+Object.entries(values).map(([key,name])=>
+      '<label class="option" for="'+prefix+'-'+key+'"><input type="checkbox" id="'+prefix+'-'+key+'" data-facet="'+group+'" value="'+key+'" '+(f[group].includes(key)?'checked':'')+'>'+name+'</label>').join('')+'</fieldset>').join('');
+}
+function pickButton(item){
+  const selected=chosen.includes(item.id),full=!selected&&chosen.length===3;
+  return '<button type="button" data-pick="'+item.id+'" data-review-id="material-pick-'+item.id+'" class="pick" aria-pressed="'+selected+'" aria-label="'+item.name+'，'+(selected?'移出对比':'加入对比')+'" '+(full?'disabled title="最多对比三个样本"':'')+'>'+(selected?'✓ 已选':full?'对比夹已满':'＋ 对比')+'</button>';
+}
+function renderList(){
+  $('query').value=filters.q;
+  $('desktop-facets').innerHTML=facetsMarkup(filters,'desk');
+  const found=matches(filters);
+  $('result-count').textContent=found.length;
+  const chips=[];
+  if(filters.q)chips.push(['q','',filters.q]);
+  for(const [group,opts] of Object.entries({family:families,tone:tones}))for(const key of filters[group])chips.push([group,key,opts[key]]);
+  $('chips').innerHTML=chips.map(([group,key,label])=>'<button type="button" class="filter-chip" data-clear="'+group+'" data-key="'+key+'" aria-label="移除'+esc(label)+'">'+esc(label)+' ×</button>').join('');
+  $('wall').innerHTML=found.map(item=>'<article class="card"><a class="card-link" href="'+esc(routeHash(filters,'detail',item.id))+'" data-item="'+item.id+'" data-review-id="material-open-'+item.id+'">'+texture(item)+'<h3 class="card-name">'+item.name+'</h3></a><div class="card-bottom"><span>'+families[item.family]+' · '+tones[item.tone]+'</span>'+pickButton(item)+'</div></article>').join('');
+  $('empty').hidden=!!found.length;
+  if(!found.length){
+    const reasons=[];
+    if(filters.q)reasons.push(['q','关键词']);
+    if(filters.family.length)reasons.push(['family','材质分类']);
+    if(filters.tone.length)reasons.push(['tone','表面色调']);
+    const rescue=reasons.map(([group,name])=>{const one=copyFilters(filters);one[group]=group==='q'?'':[];return {group,name,n:matches(one).length}}).filter(x=>x.n>0);
+    $('empty').innerHTML='<h3>没有符合条件的样本</h3><p>'+(rescue.length?'可放宽一个条件，保留其余选择。':'可以移除上方条件或重新输入搜索词。')+'</p>'+rescue.map(x=>'<button type="button" class="btn" data-relax="'+x.group+'">放宽'+x.name+' · '+x.n+' 款</button>').join('');
+  }
+}
+function properties(m){
+  return '<dl class="detailspec"><dt>材质</dt><dd>'+families[m.family]+'</dd><dt>表面处理</dt><dd>'+m.finish+'</dd><dt>厚度</dt><dd>'+m.thick+' mm</dd><dt>参考单价</dt><dd>¥'+m.price+' / ㎡</dd></dl>';
+}
+function backBar(){return '<div class="viewbar"><button type="button" id="return-list" class="link-button" data-review-id="material-return">← 返回样本列表</button></div>'}
+function renderDetail(){
+  const item=items.get(itemId);
+  if(!item){$('item-view').innerHTML=backBar()+'<h1 class="view-title compare-intro" id="detail-title" tabindex="-1">未收录此样本</h1><p>可返回列表继续查找。</p>';return}
+  $('item-view').innerHTML=backBar()+'<div class="detail-grid">'+texture(item)+'<div class="detail-info"><p class="intro">'+families[item.family]+' / '+tones[item.tone]+'</p><h1 class="view-title" id="detail-title" tabindex="-1" data-review-id="material-detail-'+item.id+'">'+item.name+'</h1>'+properties(item)+pickButton(item)+'<p class="note">放大纹理为示意。选材前请以实际样板核对色差与触感。</p></div></div>';
+}
+function renderCompare(){
+  $('compare-view').innerHTML=backBar()+'<div class="compare-intro"><h1 class="view-title" id="compare-title" tabindex="-1">材料对比</h1><p class="intro">'+(chosen.length>=2?'并排核对 '+chosen.length+' 款饰面的表面处理、厚度与单价。':chosen.length?'还需加入一个样本即可对比。':'回到样本列表加入 2 至 3 个样本。')+'</p></div>'+
+    (chosen.length?'<div class="compare-deck" style="--cols:'+chosen.length+'">'+chosen.map(id=>{const item=items.get(id);return '<section class="comp" data-review-id="material-compare-'+id+'">'+texture(item)+'<h2>'+item.name+'</h2>'+properties(item)+'<button type="button" class="link-button" data-remove="'+id+'" aria-label="移出'+item.name+'">移出对比</button></section>'}).join('')+'</div>':'')+
+    '<p class="note">金额和厚度采用相同单位；参考价不含安装。</p>';
+}
+function display(){
+  $('list-view').hidden=view!=='list';$('item-view').hidden=view!=='detail';$('compare-view').hidden=view!=='compare';
+  if(view!=='detail')$('item-view').replaceChildren();
+  if(view!=='compare')$('compare-view').replaceChildren();
+  document.body.dataset.reviewContext=view;
+  if(view==='detail'&&items.has(itemId))document.body.dataset.reviewObject=itemId;
+  else delete document.body.dataset.reviewObject;
+  $('pick-count').textContent=chosen.length;
+  if(view==='detail')renderDetail();else if(view==='compare')renderCompare();else renderList();
+}
+function loadRoute(){
+  const r=parse();filters=r.filter;view=r.view;itemId=r.id;
+  if(view==='compare'&&r.comparison){chosen=r.comparison;retain()}
+  display();
+}
+function putEntry(state,url,replace){
+  try{history[replace?'replaceState':'pushState'](state,'',url)}catch{location.hash=url}
+}
+function openPage(next,id='',trigger=''){
+  if(view===next&&itemId===id)return;
+  const fromList=view==='list';
+  putEntry({...history.state,scrollY:window.scrollY,focus:trigger},location.hash||'#',true);
+  putEntry({internal:true,fromList},routeHash(filters,next,id),false);
+  loadRoute();window.scrollTo(0,0);
+  $(next==='detail'?'detail-title':'compare-title')?.focus({preventScroll:true});
+}
+function apply(f,focus){
+  filters=copyFilters(f);putEntry({...history.state,focus:'',scrollY:0},routeHash(filters),true);
+  renderList();
+  if(focus){const node=$(focus)||$('result-title');node.focus({preventScroll:true})}
+  $('announcement').textContent=matches(filters).length+' 款匹配样本。';
+}
+function switchFacet(f,input){
+  const group=input.dataset.facet,key=input.value;
+  f[group]=input.checked?[...new Set([...f[group],key])]:f[group].filter(v=>v!==key);
+}
+function focusResult(){
+  const saved=history.state||{},target=saved.focus?document.querySelector('[data-item="'+(items.has(saved.focus)?saved.focus:'')+'"]'):null;
+  (target||(saved.focus==='compare' && $('open-compare'))||$('result-title')).focus({preventScroll:true});
+  window.scrollTo(0,saved.scrollY||0);
+}
+function toList(){
+  if(history.state?.fromList){history.back();return}
+  putEntry({},routeHash(filters),true);loadRoute();focusResult();
+}
+function updateBasket(id){
+  chosen=chosen.includes(id)?chosen.filter(key=>key!==id):cleanIds([...chosen,id]);
+  retain();if(view==='compare')putEntry(history.state,routeHash(filters,'compare'),true);
+  display();
+  const activeRoot=$(view==='compare'?'compare-view':view==='detail'?'item-view':'list-view');
+  const target=activeRoot.querySelector((view==='compare'?'[data-remove="':'[data-pick="')+id+'"]')||
+    $('compare-view').querySelector('button[data-remove]')||$('return-list');
+  target?.focus({preventScroll:true});$('announcement').textContent='对比夹中有 '+chosen.length+' 款样本。';
+}
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[data-item]');
+  if(a&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey){e.preventDefault();openPage('detail',a.dataset.item,a.dataset.item);return}
+  const b=e.target.closest('button');if(!b)return;
+  if(b.id==='return-list'){toList();return}
+  if(b.dataset.pick||b.dataset.remove){updateBasket(b.dataset.pick||b.dataset.remove);return}
+  if(b.hasAttribute('data-clear')||b.dataset.relax){
+    const f=copyFilters(filters),g=b.dataset.clear||b.dataset.relax;
+    if(g==='q')f.q='';else if(b.dataset.relax)f[g]=[];else f[g]=f[g].filter(k=>k!==b.dataset.key);
+    apply(f,'result-title');
+  }
+});
+$('search-form').addEventListener('submit',e=>{e.preventDefault();const f=copyFilters(filters);f.q=$('query').value.trim();apply(f,'query')});
+$('desktop-facets').addEventListener('change',e=>{const f=copyFilters(filters);switchFacet(f,e.target);apply(f,e.target.id)});
+$('open-compare').onclick=()=>openPage('compare','','compare');
+function renderDraft(){
+  $('draft-facets').innerHTML=facetsMarkup(draft,'mob');
+  $('apply-filters').textContent='查看 '+matches(draft).length+' 款样本';
+}
+$('open-filters').onclick=()=>{draft=copyFilters(filters);renderDraft();document.body.dataset.reviewContext='filters';$('filter-dialog').showModal()};
+$('draft-facets').addEventListener('change',e=>{switchFacet(draft,e.target);$('apply-filters').textContent='查看 '+matches(draft).length+' 款样本'});
+$('reset-draft').onclick=()=>{draft.family=[];draft.tone=[];renderDraft()};
+function closeFilters(){
+  if($('filter-dialog').open)$('filter-dialog').close();
+  draft=null;
+  document.body.dataset.reviewContext=view;
+}
+$('cancel-filters').onclick=closeFilters;
+$('apply-filters').onclick=()=>{const confirmed=copyFilters(draft);closeFilters();apply(confirmed,'open-filters')};
+$('filter-dialog').addEventListener('cancel',event=>{event.preventDefault();closeFilters()});
+small.addEventListener('change',()=>{if(!small.matches&&$('filter-dialog').open)closeFilters()});
+window.formaOpenReviewObject=id=>{
+  if(!items.has(id))return false;
+  if($('filter-dialog').open)closeFilters();
+  openPage('detail',id,id);return true;
+};
+window.addEventListener('popstate',()=>{if($('filter-dialog').open)closeFilters();loadRoute();if(view==='list')focusResult();else window.scrollTo(0,0)});
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+loadRoute();
+</script>
+</body>
+</html>

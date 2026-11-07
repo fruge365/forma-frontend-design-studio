@@ -1,0 +1,16 @@
+{
+  "name": "forma-frontend-design-studio",
+  "version": "10.0.0",
+  "private": true,
+  "description": "覆盖官网、业务系统、数据大屏、App 与小程序的前端 UI/UX skill 和 HTML 标注评审台",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node serve-review.cjs",
+    "test": "node --test scripts/release.test.cjs",
+    "test:spatial": "node scripts/spatial-browser.cjs",
+    "test:paper": "node scripts/paper-browser.cjs",
+    "test:comparison": "node scripts/comparison-browser.cjs"
+  }
+}

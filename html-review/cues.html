@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="system" data-palette="light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>候场 · 舞台提示台</title>
+<style>
+:root{
+  color-scheme:light;--bg:#F1F3EE;--surface:#FBFCF8;--panel:#E8EDE6;--ink:#172820;--sub:#495B51;--rule:#C1CCC1;
+  --current:#135E47;--current-panel:#E2EDE4;--next:#794000;--next-panel:#FAEFDC;--button:#814200;--button-ink:#FFFFFF;
+  --selected:#273D51;--selected-panel:#E2E9EE;--focus:#164C9B;
+  --sans:"Inter","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"IBM Plex Mono","Cascadia Mono",Consolas,monospace;
+}
+:root[data-palette="dark"]{
+  color-scheme:dark;--bg:#141A20;--surface:#1C252B;--panel:#253137;--ink:#F4F3EC;--sub:#B4C1BF;--rule:#435159;
+  --current:#B6E6BA;--current-panel:#21352F;--next:#FFD399;--next-panel:#352E26;--button:#FFD399;--button-ink:#292218;
+  --selected:#CBDBEB;--selected-panel:#2C3A46;--focus:#9BCDFF;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans)}
+button,select{color:inherit;font:inherit}
+button{cursor:pointer}button:disabled{cursor:default;opacity:.53}
+button:focus-visible,select:focus-visible,[tabindex="-1"]:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.shell{width:min(1560px,100%);margin:auto;padding-inline:clamp(16px,3.6vw,58px)}
+.bar{border-bottom:1px solid var(--rule);background:var(--surface)}
+.bar .shell,.word,.view-switch,.bar-tools,.status-line,.info-head,.foot,.section-heading,.nav-links{display:flex;align-items:center}
+.bar .shell{min-height:55px;justify-content:space-between;gap:15px}
+.word{font-weight:750;gap:9px;font-size:20px;white-space:nowrap}
+.mark{position:relative;display:inline-block;width:26px;height:22px;background:var(--current);clip-path:polygon(0 0,30% 0,30% 33%,65% 33%,65% 0,100% 0,100% 100%,70% 100%,70% 68%,35% 68%,35% 100%,0 100%)}
+.role{font-size:13px;color:var(--sub);font-weight:450;border-left:1px solid var(--rule);padding-left:12px;margin-left:3px}
+.bar-tools{gap:16px}.theme-label{color:var(--sub);font-size:13px}.theme-label select{margin-left:6px;font-size:13px;padding:5px 16px 5px 7px;background:var(--surface);border:1px solid var(--rule);border-radius:3px;min-height:36px}
+.view-switch{gap:2px;padding:2px;background:var(--bg);border:1px solid var(--rule);border-radius:4px}
+.view-switch button{padding:5px 13px;background:none;border:0;font-size:13px;min-height:31px}
+.view-switch button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-radius:2px}
+.mast{padding:clamp(14px,2.4vh,28px) 0 13px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+h1,h2,h3,p{margin:0}h1{font-size:clamp(28px,2.8vw,46px);line-height:1.15;letter-spacing:-.035em}
+.mast p{color:var(--sub);font-size:14px}
+.live-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cue-card{border:1px solid var(--rule);border-radius:3px;padding:14px clamp(14px,1.8vw,28px);display:grid;grid-template-rows:auto 1fr;gap:8px;min-width:0}
+.current-card{background:var(--current-panel);border-top:3px solid var(--current)}
+.next-card{background:var(--next-panel);border-top:3px dashed var(--next)}
+.status-line{gap:9px;font-size:14px;line-height:1.25;font-weight:700}
+.current-card .status-line,.current-card .big-id{color:var(--current)}.next-card .status-line,.next-card .big-id{color:var(--next)}
+.shape-current{width:10px;height:10px;display:inline-block;border-radius:50%;background:currentColor}.shape-next{width:0;height:0;border-left:9px solid currentColor;border-block:6px solid transparent}
+.cardbody{display:flex;align-items:center;gap:clamp(10px,1.5vw,24px);min-width:0}
+.big-id{font:750 clamp(33px,4.5vw,74px)/1.05 var(--mono);letter-spacing:-.08em;font-variant-numeric:tabular-nums;flex-shrink:0}
+.card-info{min-width:0}.card-info strong{font-size:clamp(18px,1.65vw,28px);line-height:1.2;display:block;letter-spacing:-.025em}
+.card-info small{font-size:13px;line-height:1.35;color:var(--sub);display:block;margin-top:5px}
+.go{margin-left:auto;white-space:nowrap;min-height:44px;padding:8px 13px;border:0;border-radius:3px;color:var(--button-ink);background:var(--button);font-weight:750}
+.go::before{content:"▶";font-size:12px;margin-right:6px}
+.work{margin-top:16px;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(275px,.85fr);gap:16px;align-items:start}
+.pane{background:var(--surface);border:1px solid var(--rule);border-radius:3px;min-width:0}
+.section-heading,.info-head{justify-content:space-between;gap:10px;padding:11px 15px;border-bottom:1px solid var(--rule)}
+h2{font-size:18px;line-height:1.3}.section-heading small,.info-head small{color:var(--sub);font:12px var(--mono)}
+.sequence{list-style:none;margin:0;padding:0}
+.cue-row{width:100%;display:grid;grid-template-columns:57px 68px minmax(0,1fr) 72px;align-items:center;gap:6px;padding:7px 13px 7px 11px;min-height:43px;text-align:left;border:0;border-bottom:1px solid var(--rule);border-left:4px solid transparent;background:transparent}
+.sequence li:last-child .cue-row{border-bottom:0}
+.cue-row:hover{background:var(--panel)}.cue-row[aria-pressed="true"]{background:var(--selected-panel);border-left-color:var(--selected)}
+.cue-code{font:650 15px var(--mono)}.cue-type{color:var(--sub);font-size:13px}
+.cue-name{font-weight:650;font-size:15px}.row-status{text-align:right;color:var(--sub);font-size:12px;font-weight:600;white-space:nowrap}
+.row-status.current{color:var(--current)}.row-status.next{color:var(--next)}
+.preview-body{padding:15px}.preview-head{display:flex;align-items:baseline;gap:10px;margin-bottom:11px}
+.preview-head .cue-code{color:var(--sub)}h3{font-size:clamp(19px,1.7vw,28px);line-height:1.25}
+.facts{margin:0}.facts div{display:grid;grid-template-columns:61px 1fr;gap:9px;padding:5px 0;border-top:1px solid var(--rule)}
+.facts dt{color:var(--sub);font-size:13px}.facts dd{margin:0;font-size:14px}
+.secondary{min-height:40px;border:1px solid var(--sub);background:transparent;border-radius:3px;padding:5px 13px;font-weight:600;font-size:14px}
+.secondary:not(:disabled):hover{background:var(--panel)}
+.preview-actions{margin-top:10px;display:grid;justify-items:start;gap:5px}.hint{min-height:18px;color:var(--sub);font-size:12px}
+.row-return{display:none}
+.foot{gap:13px;justify-content:space-between;padding:12px 0;color:var(--sub);font-size:12px}
+.nav-links{gap:10px;flex-wrap:wrap}.link{background:transparent;border:0;text-decoration:underline;text-underline-offset:4px;font-size:13px;padding:4px 0}
+.log{margin-top:1px}.log-list{list-style:none;margin:0;padding:0 15px}.log-list li{display:grid;grid-template-columns:88px minmax(0,1fr);gap:15px;padding:12px 0;border-bottom:1px solid var(--rule)}.log-list li:last-child{border:0}
+.log-list time{font:13px/1.6 var(--mono);color:var(--sub)}.log-list strong{display:block}.log-list small{display:block;color:var(--sub);font-size:13px}
+.message{color:var(--ink);font-size:13px;line-height:1.4}.message:empty{display:none}
+.local{margin-left:auto;text-align:right}
+@media(min-width:1500px) and (min-height:900px){.cue-row{min-height:56px}.preview-body,.cue-card{padding:22px}.section-heading,.info-head{padding:15px 22px}.facts div{padding:9px 0}.work{margin-top:22px}.cue-name,.facts dd{font-size:17px}.cue-type,.row-status,.card-info small{font-size:15px}}
+@media(max-width:1000px){.cue-card{padding:12px}.cardbody{flex-wrap:wrap;gap:8px 15px}.go{margin:0}.next-card .go{min-height:38px}.work{grid-template-columns:minmax(0,1.25fr) minmax(246px,.8fr);gap:10px}.cue-row{grid-template-columns:45px 48px minmax(0,1fr) 58px;padding-inline:8px}}
+@media(max-width:720px){.role{display:none}.bar-tools{gap:8px}.view-switch button{padding-inline:8px;min-height:39px}.theme-label select{min-height:43px}.theme-lead{display:none}
+ .mast{gap:4px 12px}.live-pair{gap:8px}.cue-card{gap:4px;padding:10px}.cardbody{display:grid;grid-template-columns:1fr;align-items:start;align-content:start;gap:5px}.big-id{font-size:30px}.card-info strong{font-size:17px}.card-info small{font-size:12px}.status-line{font-size:12px}.next-card .go{min-height:44px}
+ .work{display:flex;flex-direction:column;gap:12px;margin-top:12px}.pane{width:100%}.cue-row{min-height:46px;grid-template-columns:44px 39px minmax(0,1fr) 57px}
+ .foot{align-items:start;flex-wrap:wrap}.local{width:100%;margin:0;text-align:left}.secondary,.link{min-height:44px}
+ .row-return{display:inline}
+}
+@media(max-width:375px){.shell{padding-inline:12px}.word{font-size:17px;gap:5px}.mark{width:18px;height:17px}.bar .shell{gap:4px}.bar-tools{gap:4px}.view-switch button{padding-inline:6px}.theme-label select{padding-inline:2px;margin:0}.cue-row{grid-template-columns:39px 31px minmax(0,1fr) 55px;gap:3px}.cue-name{font-size:14px}.mast{display:grid}}
+@media(forced-colors:active){.mark{background:CanvasText}.cue-row[aria-pressed=true]{border-left-color:Highlight;outline:1px solid Highlight;outline-offset:-2px}.current-card,.next-card{border-color:CanvasText}.go{border:1px solid ButtonText}.shape-current{background:CanvasText}}
+</style>
+</head>
+<body data-review-context="desk">
+<header class="bar"><div class="shell">
+  <div class="word"><span class="mark" aria-hidden="true"></span>候场<span class="role">舞台监督台</span></div>
+  <div class="bar-tools">
+    <nav class="view-switch" aria-label="台面视图"><button id="open-desk" data-review-id="cues-desk" aria-pressed="true">提示台</button><button id="open-log" data-review-id="cues-log" aria-pressed="false">操作记录</button></nav>
+    <label class="theme-label"><span class="theme-lead">外观</span><select id="theme" data-review-id="cues-theme" aria-label="外观主题"><option value="system">跟随系统</option><option value="light">明亮</option><option value="dark">暗色</option></select></label>
+  </div>
+</div></header>
+<main class="shell">
+<div class="mast"><h1 id="show-title" data-review-id="cues-show-title">《洄游》联排</h1><p>折岸小剧场 · 第一幕</p></div>
+<section id="desk" aria-label="舞台提示台">
+  <div class="live-pair">
+    <section class="cue-card current-card" data-review-id="cues-current"><h2 class="status-line"><i aria-hidden="true" class="shape-current"></i>当前已执行</h2>
+      <div class="cardbody"><b class="big-id" id="current-id"></b><div class="card-info"><strong id="current-name"></strong><small id="current-meta"></small></div></div>
+    </section>
+    <section class="cue-card next-card" data-review-id="cues-next"><h2 class="status-line"><i aria-hidden="true" class="shape-next"></i><span id="next-label">下一条待发</span></h2>
+      <div class="cardbody"><b class="big-id" id="next-id"></b><div class="card-info"><strong id="next-name"></strong><small id="next-meta"></small></div><button id="go" class="go" data-review-id="cues-go"></button></div>
+    </section>
+  </div>
+  <div class="work">
+    <section class="pane" aria-labelledby="sequence-title"><div class="section-heading"><h2 id="sequence-title">提示序列</h2><small>7 条提示</small></div><ol class="sequence" id="sequence"></ol></section>
+    <section class="pane" data-review-id="cues-preview"><div class="info-head"><h2 id="preview-title" tabindex="-1">条目预览</h2><small id="preview-state"></small></div>
+      <div class="preview-body"><header class="preview-head"><span class="cue-code" id="preview-id"></span><h3 id="preview-name"></h3></header>
+      <dl class="facts"><div><dt>岗位</dt><dd id="operator"></dd></div><div><dt>触发点</dt><dd id="trigger"></dd></div><div><dt>执行内容</dt><dd id="instruction"></dd></div></dl>
+      <div class="preview-actions"><button class="secondary" id="arm" data-review-id="cues-arm"></button><p class="hint" id="arm-hint"></p><button class="link row-return" id="back-row" data-review-id="cues-back-row">返回已选条目</button></div></div>
+    </section>
+  </div>
+</section>
+<section class="pane log" id="log" aria-labelledby="log-title" hidden><div class="section-heading"><h2 id="log-title" tabindex="-1" data-review-id="cues-log-title">操作记录</h2><small id="log-count"></small></div><ol id="log-list" class="log-list"></ol></section>
+<footer class="foot"><div class="nav-links"><button class="link" id="undo" data-review-id="cues-undo" disabled>撤销最近操作</button><span id="message" class="message" role="status"></span></div><span class="local" id="local-note">本机演示 · 记录仅保存在当前浏览器</span></footer>
+</main>
+<script>
+'use strict';
+const cues=[
+  {id:'Q01',name:'观众席半暗',type:'灯光',who:'灯光台',when:'舞台监督确认观众入座',do:'观众席照度渐降至半暗，保留两侧走道光。'},
+  {id:'Q02',name:'潮声入场',type:'音响',who:'音响台',when:'前幕边缘开始移动',do:'海岸环境声淡入，4 秒内建立底噪。'},
+  {id:'Q03',name:'侧幕开启',type:'舞台',who:'舞台左侧',when:'第一遍远处汽笛结束',do:'向侧台平稳收幕，等待演员通过安全线。'},
+  {id:'Q04',name:'岸线侧光',type:'灯光',who:'灯光台',when:'演员停在码头标记处',do:'点亮舞台右侧冷色侧光，3 秒内到位。'},
+  {id:'Q05',name:'船钟两响',type:'音响',who:'音响台',when:'台词“还有一班船”结束',do:'播放一组双声船钟，保留自然余响。'},
+  {id:'Q06',name:'移入长椅',type:'舞台',who:'舞台右侧',when:'双声船钟余响结束',do:'推入长椅至中央定位线，锁定脚轮。'},
+  {id:'Q07',name:'第一幕切黑',type:'灯光',who:'灯光台',when:'演员合上手中的旧地图',do:'主舞台光在 2 秒内切黑，走道光保持。'}
+];
+const $=id=>document.getElementById(id);
+const directory=location.protocol==='file:'?location.pathname:new URL('.',location.href).pathname;
+const key='forma-cues-v1:'+directory;
+const themeKey=key+':theme';
+const palette=matchMedia('(prefers-color-scheme: dark)');
+let theme='system',storeReady=true;
+try{const pref=localStorage.getItem(themeKey);if(['system','light','dark'].includes(pref))theme=pref}catch{storeReady=false}
+function syncTheme(){
+  document.documentElement.dataset.theme=theme;
+  document.documentElement.dataset.palette=theme==='system'?(palette.matches?'dark':'light'):theme;
+  $('theme').value=theme;
+}
+window.formaAppearance={read:()=>({theme,resolved:document.documentElement.dataset.palette})};
+syncTheme();
+palette.addEventListener('change',syncTheme);
+$('theme').addEventListener('change',()=>{
+  theme=$('theme').value;syncTheme();
+  try{localStorage.setItem(themeKey,theme)}catch{$('local-note').textContent='本机演示 · 外观仅在本次打开期间生效'}
+});
+const getCue=id=>cues.find(c=>c.id===id);
+const indexOf=id=>cues.findIndex(c=>c.id===id);
+const initial=()=>({current:'Q01',next:'Q02',fired:['Q01']});
+// Replaying this event stream supplies both the desk and history, including reversals.
+function replay(events){
+  let desk=initial();const stack=[],log=[];
+  for(const event of events){
+    if(!event||!Number.isFinite(event.at)||Math.abs(event.at)>8.64e15||!['arm','go','undo'].includes(event.kind))throw Error('Invalid event');
+    if(event.kind==='undo'){
+      if(!stack.length)throw Error('Invalid undo');
+      const last=stack.pop();desk=last.before;
+      log.push({at:event.at,title:'已撤销 · '+last.title,detail:describe(desk)});
+      continue;
+    }
+    const cue=getCue(event.id);
+    if(!cue||indexOf(cue.id)<=indexOf(desk.current))throw Error('Invalid sequence');
+    if((event.kind==='arm'&&event.id===desk.next)||(event.kind==='go'&&event.id!==desk.next))throw Error('Invalid pending cue');
+    const before=desk;
+    let title;
+    if(event.kind==='arm'){desk={...desk,next:cue.id};title='设置待发 '+cue.id}
+    else{desk={current:cue.id,next:cues[indexOf(cue.id)+1]?.id||null,fired:[...desk.fired,cue.id]};title='执行 '+cue.id}
+    stack.push({before,title});log.push({at:event.at,title,detail:cue.name+' · '+describe(desk)});
+  }
+  return {desk,stack,log};
+}
+function describe(state){return '当前 '+state.current+'，'+(state.next?'待发 '+state.next:'本幕结束')}
+function read(){
+  const raw=localStorage.getItem(key);if(raw===null)return [];
+  const parsed=JSON.parse(raw);if(!Array.isArray(parsed))throw Error('Invalid history');
+  replay(parsed);return parsed;
+}
+let events=[];
+try{events=read()}catch{storeReady=false}
+let model=replay(events),selected=model.desk.next||model.desk.current,view='desk';
+function stage(id){return id===model.desk.current?'● 当前':id===model.desk.next?'▷ 待发':model.desk.fired.includes(id)?'✓ 已执行':indexOf(id)<indexOf(model.desk.current)?'已略过':'未执行'}
+function renderDesk(){
+  const {desk}=model,current=getCue(desk.current),next=getCue(desk.next),preview=getCue(selected);
+  // A review of one cue should follow that cue when the desk moves on.
+  for(const id of ['current-id','current-name','current-meta'])$(id).dataset.reviewId='cues-'+id+'-'+current.id;
+  for(const id of ['next-id','next-label','next-name','next-meta'])$(id).dataset.reviewId='cues-'+id+'-'+(next?.id||'end');
+  for(const id of ['preview-title','preview-id','preview-name','preview-state','operator','trigger','instruction','arm','arm-hint','back-row'])$(id).dataset.reviewId='cues-'+id+'-'+preview.id;
+  $('preview-title').closest('.pane').dataset.reviewId='cues-preview-'+preview.id;
+  $('current-id').closest('.cue-card').dataset.reviewId='cues-current-'+current.id;
+  $('next-id').closest('.cue-card').dataset.reviewId='cues-next-'+(next?.id||'end');
+  $('go').dataset.reviewId='cues-execute-'+(next?.id||'end');
+  $('current-id').textContent=current.id;$('current-name').textContent=current.name;$('current-meta').textContent=current.type+' · '+current.who;
+  $('next-label').textContent=next?'下一条待发':'本幕结束';
+  $('next-id').textContent=next?next.id:'—';$('next-name').textContent=next?next.name:'提示序列结束';
+  const skipped=next?indexOf(next.id)-indexOf(current.id)-1:0;
+  $('next-meta').textContent=next?(skipped?'执行时将略过 '+skipped+' 条提示':next.type+' · 按序待发'):'当前停在最后一条提示';
+  $('go').textContent=next?'执行 '+next.id:'已结束';$('go').disabled=!next;
+  for(const cue of cues){
+    const button=$('cue-'+cue.id),status=button.querySelector('.row-status');
+    button.setAttribute('aria-pressed',String(selected===cue.id));status.textContent=stage(cue.id);
+    status.className='row-status'+(cue.id===current.id?' current':cue.id===next?.id?' next':'');
+  }
+  $('preview-id').textContent=preview.id;$('preview-name').textContent=preview.name;$('preview-state').textContent=stage(preview.id);
+  $('operator').textContent=preview.who;$('trigger').textContent=preview.when;$('instruction').textContent=preview.do;
+  const future=indexOf(preview.id)>indexOf(current.id),pending=preview.id===next?.id;
+  $('arm').disabled=!future||pending;$('arm').textContent=pending?'已设为待发':('将 '+preview.id+' 设为待发');
+  $('arm-hint').textContent=pending?'在待发区执行此条提示。':future?'设置待发后，当前提示保持不变。':'已走过的条目可在此核对内容。';
+  const last=model.stack.at(-1);$('undo').disabled=!last;$('undo').textContent=last?'撤销'+last.title:'撤销最近操作';
+  if(!storeReady)$('local-note').textContent='本机演示 · 存储不可用，操作仅在本次页面内保留';
+}
+function renderLog(){
+  $('log-count').textContent=model.log.length+' 次操作';
+  const initialEvent={at:null,title:'联排起点 · Q01 观众席半暗',detail:'初始提示已执行，Q02 按序待发'};
+  const fragment=document.createDocumentFragment();
+  for(const item of [...model.log].reverse().concat(initialEvent)){
+    const li=document.createElement('li'),time=document.createElement('time'),body=document.createElement('div'),title=document.createElement('strong'),detail=document.createElement('small');
+    if(item.at!==null){const date=new Date(item.at);time.dateTime=date.toISOString();time.textContent=date.toLocaleTimeString('zh-CN',{hour12:false})}else time.textContent='起点';
+    title.textContent=item.title;detail.textContent=item.detail;body.append(title,detail);li.append(time,body);fragment.append(li);
+  }
+  $('log-list').replaceChildren(fragment);
+}
+function render(){renderDesk();if(view==='log')renderLog()}
+function note(text){$('message').textContent=text}
+function setView(next,moveFocus=true){
+  view=next;document.body.dataset.reviewContext=view;
+  $('desk').hidden=view!=='desk';$('log').hidden=view!=='log';
+  $('open-log').setAttribute('aria-pressed',String(view==='log'));$('open-desk').setAttribute('aria-pressed',String(view==='desk'));
+  if(view==='log')renderLog();
+  if(moveFocus)(view==='log'?$('log-title'):$('sequence-title')).focus({preventScroll:true});
+}
+let busy=false;
+async function record(kind,id){
+  if(busy)return;busy=true;
+  const expected=events;
+  const armedByKey=kind==='arm' && document.activeElement===$('arm');
+  const run=()=>{
+    let latest;
+    if(storeReady){
+      try{latest=read()}catch{storeReady=false}
+      if(latest&&JSON.stringify(latest)!==JSON.stringify(expected)){
+        events=latest;model=replay(events);selected=model.desk.next||model.desk.current;render();note('另一页已更改提示，请核对当前与待发后重试。');return;
+      }
+    }
+    const next=[...events,{kind,id,at:Date.now()}],updated=replay(next);
+    if(storeReady){try{localStorage.setItem(key,JSON.stringify(next))}catch{storeReady=false}}
+    events=next;model=updated;
+    if(kind==='go'||kind==='undo')selected=model.desk.next||model.desk.current;
+    render();note(model.log.at(-1).title+'。'+describe(model.desk)+'。');
+    if(armedByKey)$('go').focus();
+    if(kind==='go'&&!model.desk.next)$('undo').focus();
+    if(kind==='undo'&&$('undo').disabled)(view==='log'?$('log-title'):$('go')).focus();
+  };
+  try{if(navigator.locks?.request&&storeReady)await navigator.locks.request(key,run);else run()}
+  catch{note('当前提示已变化，请重新核对待发条目。')}
+  finally{busy=false}
+}
+for(const cue of cues){
+  const li=document.createElement('li'),button=document.createElement('button');
+  button.type='button';button.className='cue-row';button.id='cue-'+cue.id;button.dataset.reviewId='cues-row-'+cue.id;
+  for(const [type,value] of [['cue-code',cue.id],['cue-type',cue.type],['cue-name',cue.name],['row-status','']]){
+    const span=document.createElement('span');span.className=type;span.textContent=value;button.append(span);
+  }
+  button.onclick=()=>{selected=cue.id;renderDesk();note('');if(matchMedia('(max-width:720px)').matches)$('preview-title').focus()};
+  li.append(button);$('sequence').append(li);
+}
+$('sequence-title').tabIndex=-1;
+$('go').onclick=()=>{if(model.desk.next)record('go',model.desk.next)};
+$('arm').onclick=()=>{if(!$('arm').disabled)record('arm',selected)};
+$('undo').onclick=()=>{if(model.stack.length)record('undo',null)};
+$('back-row').onclick=()=>$('cue-'+selected).focus();
+$('open-log').onclick=()=>setView('log');$('open-desk').onclick=()=>setView('desk');
+window.addEventListener('storage',event=>{
+  if(event.key===themeKey){theme=['light','dark'].includes(event.newValue)?event.newValue:'system';syncTheme()}
+  if(event.key===key&&storeReady){
+    try{events=read();model=replay(events);render();note('已更新另一页的操作，请核对当前与待发。')}catch{note('无法读取另一页的操作记录。')}
+  }
+});
+render();setView('desk',false);
+</script>
+</body>
+</html>

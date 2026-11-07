@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>汀印 · 版画装裱室</title>
+<style>
+:root{color-scheme:light;--bg:#faf8f1;--ink:#252923;--soft:#5b5e53;--line:#cfcdc0;--red:#af472f;--blue:#274c68;--serif:"Baskervville","Noto Serif CJK SC","Songti SC",SimSun,serif;--sans:"Inter","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-family:var(--sans);color:var(--ink);background:var(--bg)}
+*{box-sizing:border-box}
+body{margin:0}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+[hidden]{display:none!important}
+.mast{min-height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(16px,4.2vw,72px)}
+.signature{display:flex;align-items:center;gap:12px;font-weight:750;letter-spacing:.05em}
+.mark{display:inline-flex;align-items:flex-end;gap:3px;background:var(--red);width:28px;height:28px;padding:5px;overflow:hidden}
+.mark i{width:4px;height:13px;background:var(--bg);transform:skewY(-28deg)}.mark i:nth-child(2){height:18px}.mark i:last-child{height:10px}
+.sigtext{font:700 24px/1 var(--serif);letter-spacing:.12em}
+.sigdesc{font-weight:500;font-size:13px;border-left:1px solid var(--line);padding-left:13px;color:var(--soft)}
+.text-btn{border:0;border-bottom:1px solid #999a8d;background:transparent;color:var(--ink);padding:7px 1px;min-height:40px;font-size:13px}
+.page{max-width:1590px;margin:auto;padding:clamp(19px,3vw,52px) clamp(16px,4.2vw,72px) 34px}
+.columns{display:grid;grid-template-columns:minmax(0,1.33fr) minmax(310px,.8fr);align-items:start;gap:clamp(24px,5vw,85px)}
+.gallery{margin:0;position:sticky;top:14px;min-width:0}
+.wall{background-color:#d8d8c9;background-image:linear-gradient(120deg,#ffffff38 3%,transparent 52%,#6a71651c);aspect-ratio:1.22;min-height:260px;display:grid;place-items:center;padding:clamp(27px,3vw,55px);container-type:inline-size}
+.picture{width:61%;max-width:442px;aspect-ratio:4/5;background:var(--stock,#f0e6ca);box-shadow:1px 2px 2px #171e1c30,8px 14px 17px #343a2b27;position:relative;border:0 solid transparent;display:grid;align-items:stretch}
+.picture.large{width:73%}.picture[data-frame=ash]{border:clamp(4px,.61vw,9px) solid #be9d73;box-shadow:inset 0 0 3px #3a292c70,3px 6px 3px #50503f30,11px 15px 16px #53513e36}
+.picture[data-frame=walnut]{border:clamp(4px,.61vw,9px) solid #614738;box-shadow:inset 0 0 3px #27181599,3px 6px 3px #50503f30,11px 15px 16px #53513e36}
+canvas{width:100%;height:100%;min-width:0;display:block}
+figcaption{padding:10px 0 0;display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--soft)}
+.num,.money{font-variant-numeric:tabular-nums}
+.head{margin-bottom:14px}.head h1,.step h2,dialog h2{font-family:var(--serif);font-weight:650;letter-spacing:-.04em;line-height:1.15;margin:0}
+.head h1{font-size:clamp(34px,4.6vw,69px)}
+.head p{color:var(--soft);font-size:14px;line-height:1.65;margin:11px 0 0}
+fieldset{padding:10px 0 13px;border:0;border-bottom:1px solid var(--line);margin:0;min-width:0}
+legend{width:100%;padding:9px 0 0;display:flex;align-items:baseline;justify-content:space-between;gap:6px;font-size:14px;font-weight:650}
+.options{display:flex;flex-wrap:wrap;gap:6px}
+.choice{display:inline-flex;align-items:center;position:relative;min-height:42px;border:1px solid var(--line);border-radius:2px;gap:6px;padding:7px 10px;cursor:pointer;font-size:13px}
+.choice:has(input:checked){border:1.5px solid var(--ink);background:#eeede2;box-shadow:inset 0 -2px var(--ink)}
+.choice:has(input:focus-visible){outline:3px solid var(--blue);outline-offset:2px}
+.choice input{position:absolute;opacity:0;width:1px;height:1px;left:8px;bottom:8px}
+.tile{width:14px;height:14px;border:1px solid #61604e6e;border-radius:50%;background:var(--tile)}
+.mini{font-size:12px;color:var(--soft)}
+.address{display:block;margin:13px 0 2px;font-size:14px;font-weight:650}
+textarea{width:100%;max-width:100%;min-height:62px;resize:vertical;background:#fffefa;border:1px solid #929384;color:var(--ink);padding:10px;border-radius:2px;line-height:1.5}
+.error{margin:6px 0 0;color:#8c2c1e;font-size:13px}
+.summary{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:18px}
+.total{font:650 clamp(25px,2.8vw,36px)/1.1 var(--serif);margin-top:2px}
+.primary{background:var(--ink);color:var(--bg);font-weight:650;border:1px solid var(--ink);padding:11px 20px;min-height:46px;border-radius:2px;letter-spacing:.035em}
+.primary:hover{background:#3a4038}.fine{font-size:12px;color:var(--soft);margin:12px 0 0;line-height:1.5}
+.step h2,dialog h2{font-size:clamp(27px,3.4vw,44px)}.step p.lead{font-size:14px;color:var(--soft);line-height:1.65}
+.sheet{margin:16px 0;line-height:1.5}.sheet div{display:grid;grid-template-columns:75px 1fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.sheet dt{color:var(--soft)}.sheet dd{margin:0;text-align:right;overflow-wrap:anywhere}
+.actions{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.badge{color:var(--red);font-weight:700;font-size:14px;margin:0 0 10px}.step h2:focus{outline:none}
+dialog{width:min(480px,calc(100vw - 28px));color:var(--ink);border:1px solid #777767;border-radius:3px;background:var(--bg);padding:22px;max-height:83vh}
+dialog::backdrop{background:#22282283}.dialog-head{display:flex;justify-content:space-between;align-items:center;gap:9px}
+.archive-list{padding:0;list-style:none;margin-bottom:0}.archive-list li+li{border-top:1px solid var(--line)}
+.entry-btn{display:flex;align-items:center;justify-content:space-between;gap:12px;background:transparent;border:0;text-align:left;color:var(--ink);width:100%;padding:13px 0;min-height:48px}
+.entry-btn span,.entry-btn b{display:block}.entry-btn b{font-weight:650}.entry-btn span{font-size:12px;color:var(--soft)}
+@media(max-width:850px){.columns{grid-template-columns:minmax(0,1fr) minmax(290px,.86fr);gap:22px}.wall{aspect-ratio:.91}.picture{width:76%}.picture.large{width:90%}.choice{padding-inline:8px}}
+@media(max-width:660px){.mast{min-height:52px}.page{padding-top:13px}.columns{display:flex;flex-direction:column;gap:18px}.gallery{width:100%;position:static}.details{width:100%}.wall{aspect-ratio:1.48;min-height:0;padding:16px}.picture{width:auto;height:100%;max-height:calc(62vw - 29px);aspect-ratio:4/5}.picture.large{width:auto;height:100%;max-height:calc(67vw - 29px)}.wall{grid-template-rows:minmax(0,1fr)}figcaption{padding-top:6px}.head h1{font-size:36px}.head p{margin-top:6px}.head{margin-bottom:9px}fieldset{padding:6px 0 10px}legend{padding-top:7px}.choice{min-height:44px}.sigtext{font-size:21px}.sigdesc{font-size:12px;padding-left:9px}.signature{gap:8px}}
+@media(max-width:360px){.sigdesc{display:none}.summary,.actions{gap:8px}.primary{padding-inline:14px}.picture{max-height:calc(61vw - 27px)}}
+@media(max-width:660px){.wall{aspect-ratio:1.3;padding:12px}.picture{height:89%;max-height:none}.picture.large{height:100%;max-height:none}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body data-review-context="configure">
+<header class="mast">
+  <div class="signature"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span class="sigtext">汀印</span><span class="sigdesc">版画装裱室</span></div>
+  <button type="button" id="collection" class="text-btn" data-review-id="ed-collection">我的清单 <span id="count" class="num">0</span></button>
+</header>
+<main class="page"><div class="columns">
+  <figure class="gallery" data-review-id="ed-gallery">
+    <div class="wall"><div class="picture" id="picture"><canvas id="print" width="600" height="750" role="img" aria-label="《潮间》版画，朱砂日轮、远岸与深蓝水纹"></canvas></div></div>
+    <figcaption><span>《潮间》 · 叠色版画</span><span id="caption" class="num"></span></figcaption>
+  </figure>
+  <div class="details">
+    <section id="configure" aria-labelledby="work-title">
+      <header class="head"><h1 id="work-title" tabindex="-1">潮间</h1><p>朱砂日轮沉入远岸，刀痕沿蓝色潮水铺开。</p></header>
+      <form id="options-form" novalidate>
+        <fieldset data-review-id="ed-paper"><legend>纸色</legend><div class="options" id="paper-options"></div></fieldset>
+        <fieldset data-review-id="ed-size"><legend>画纸尺寸 <span class="mini">宽 × 高</span></legend><div class="options" id="size-options"></div></fieldset>
+        <fieldset data-review-id="ed-frame"><legend>画框</legend><div class="options" id="frame-options"></div></fieldset>
+        <fieldset data-review-id="ed-method"><legend>取件方式</legend><div class="options" id="method-options"></div>
+          <p id="pickup-hint" class="fine">店取点 · 汀印工作室</p>
+          <div id="shipping" hidden>
+            <label class="address" for="address">演示收件地点 <span class="mini">必填</span></label>
+            <textarea id="address" maxlength="120" rows="2" aria-describedby="address-hint address-error"></textarea>
+            <p class="fine" id="address-hint">可填写示例地点，如“东岸园区 2 号楼”。</p>
+            <p class="error" id="address-error" hidden>请填写收件地点，或改选到店自取。</p>
+          </div>
+        </fieldset>
+        <div class="summary" data-review-id="ed-config-total"><div><div class="mini">配置合计</div><div class="total" id="price" aria-live="polite"></div></div><button type="submit" class="primary" id="next" data-review-id="ed-next">核对清单 →</button></div>
+        <p class="fine" id="storage-hint">本机演示 · 清单只保存在当前浏览器。</p>
+      </form>
+    </section>
+    <section id="check" class="step" hidden aria-labelledby="check-title">
+      <h2 id="check-title" tabindex="-1">核对装裱清单</h2><p class="lead">核对《潮间》的用纸、装裱和取件方式。</p>
+      <dl id="review-sheet" class="sheet" data-review-id="ed-review-sheet"></dl>
+      <div class="actions"><button id="edit" type="button" class="text-btn" data-review-id="ed-edit">← 返回改选</button><button id="save" type="button" class="primary" data-review-id="ed-save">保存本机清单</button></div>
+      <p id="save-error" class="error" role="alert" hidden></p>
+    </section>
+    <section id="receipt" class="step" hidden aria-labelledby="receipt-title">
+      <p class="badge">✓ 已保存至本机</p><h2 id="receipt-title" tabindex="-1">《潮间》装裱清单</h2>
+      <dl class="sheet" id="receipt-sheet" data-review-id="ed-receipt-sheet"></dl>
+      <div class="actions"><button id="restart" type="button" class="text-btn" data-review-id="ed-restart">新建配置</button><button id="all-plans" type="button" class="primary" data-review-id="ed-all-plans">查看我的清单</button></div>
+    </section>
+  </div>
+</div></main>
+<dialog id="archive" aria-labelledby="archive-title"><div class="dialog-head"><h2 id="archive-title">我的清单</h2><button type="button" class="text-btn" id="close" data-review-id="ed-close">关闭</button></div><ul id="entries" class="archive-list"></ul></dialog>
+<script>
+'use strict';
+const paper={
+  ivory:{name:'暖象牙',color:'#EFE5CF'},
+  mist:{name:'雾蓝灰',color:'#CFDDDC'}
+};
+const sizes={small:{name:'24 × 30 cm',price:198},large:{name:'32 × 40 cm',price:278}};
+const frames={
+  none:{name:'无框',color:'#EEEAE0',small:0,large:0},
+  ash:{name:'白蜡木',color:'#BE9D73',small:80,large:120},
+  walnut:{name:'胡桃木',color:'#614738',small:110,large:150}
+};
+const methods={pickup:{name:'到店自取',price:0},ship:{name:'快递配送',price:18}};
+const $=id=>document.getElementById(id);
+const folder=location.protocol==='file:'?'/':new URL('.',location.href).pathname;
+const prefix='forma-editions-v1:'+folder+':';
+const yen=value=>'¥'+value.toLocaleString('zh-CN');
+const defaults=()=>({paper:'ivory',size:'small',frame:'none',method:'pickup',address:''});
+function validChoice(value){
+  return value && Object.hasOwn(paper,value.paper) && Object.hasOwn(sizes,value.size) &&
+    Object.hasOwn(frames,value.frame) && Object.hasOwn(methods,value.method);
+}
+function snapshot(value){
+  const result={paper:value.paper,size:value.size,frame:value.frame,method:value.method};
+  if(value.method==='ship')result.address=String(value.address||'').trim().slice(0,120);
+  return result;
+}
+const total=value=>sizes[value.size].price+frames[value.frame][value.size]+methods[value.method].price;
+function data(key){const raw=localStorage.getItem(prefix+key);return raw?JSON.parse(raw):null}
+function readList(){
+  const rows=data('receipts')||[];
+  if(!Array.isArray(rows)||!rows.every(r=>r&&typeof r.id==='string'&&typeof r.date==='string'&&validChoice(r.choice)))throw Error('清单数据不可读');
+  return rows;
+}
+function identifier(){return globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9)}
+let choice=defaults(),step='configure',activeReceipt=null,planId=identifier(),storageFailed=false;
+try{
+  const draft=data('draft');
+  if(draft&&validChoice(draft.choice)&&typeof draft.id==='string'){
+    choice={...defaults(),...snapshot(draft.choice)};planId=draft.id;
+  }
+}catch{storageFailed=true}
+function saveDraft(){
+  try{localStorage.setItem(prefix+'draft',JSON.stringify({id:planId,choice:snapshot(choice)}));storageFailed=false}
+  catch{storageFailed=true}
+  $('storage-hint').textContent=storageFailed?'浏览器未能保存草稿，离开页面可能丢失本次选择。':'本机演示 · 清单只保存在当前浏览器。';
+}
+function count(){
+  try{$('count').textContent=readList().length}
+  catch{$('count').textContent='—'}
+}
+function options(group,definition){
+  const container=$(group+'-options');
+  for(const [id,item] of Object.entries(definition)){
+    const label=document.createElement('label');label.className='choice';
+    const input=document.createElement('input');input.type='radio';input.name=group;input.value=id;input.id=group+'-'+id;
+    input.dataset.reviewId='ed-'+group+'-'+id;
+    label.dataset.reviewId='ed-'+group+'-option-'+id;
+    label.append(input);
+    if(item.color){const tile=document.createElement('i');tile.className='tile';tile.style.setProperty('--tile',item.color);tile.setAttribute('aria-hidden','true');label.append(tile)}
+    label.append(item.name);
+    const price=document.createElement('span');price.className='mini';price.dataset.supplement=id;label.append(price);
+    container.append(label);
+  }
+}
+// Two fixed ink layers and horizontal knife marks form a shore print on differently tinted paper.
+function drawPrint(variant){
+  const canvas=$('print'),c=canvas.getContext('2d');
+  if(!c)return;
+  const ground=paper[variant].color;
+  let seed=601128;
+  function noise(){seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}
+  c.clearRect(0,0,600,750);c.fillStyle=ground;c.fillRect(0,0,600,750);
+  c.save();c.beginPath();c.rect(34,36,532,654);c.clip();
+  c.fillStyle='#e5ceb0';c.globalAlpha=.72;c.fillRect(34,36,532,654);c.globalAlpha=1;
+  c.fillStyle='#BC533D';c.beginPath();c.arc(357,195,83,0,Math.PI*2);c.fill();
+  function ridge(color,start,points){
+    c.fillStyle=color;c.beginPath();c.moveTo(12,start);
+    for(const p of points)c.bezierCurveTo(...p);
+    c.lineTo(600,720);c.lineTo(12,720);c.closePath();c.fill();
+  }
+  ridge('#959883',319,[[91,287,144,329,207,282],[257,251,278,266,342,236],[408,207,470,234,600,171]]);
+  ridge('#697c73',345,[[104,314,150,371,239,312],[293,286,333,333,388,287],[460,225,511,247,600,211]]);
+  ridge('#264E58',324,[[79,301,121,333,164,357],[229,390,253,373,298,389],[371,421,473,386,600,406]]);
+  ridge('#C1C1A0',385,[[79,359,130,384,191,405],[271,429,339,418,377,409],[432,396,484,403,600,365]]);
+  ridge('#2C5671',425,[[80,398,149,438,207,447],[293,466,355,407,415,420],[478,430,525,404,600,414]]);
+  // Broken horizontal cuts follow the rising and falling tide without crossing the shore.
+  for(let row=0;row<37;row++){
+    const y=448+row*7.1,shift=Math.sin(row*.28)*18;
+    for(let x=-20+shift;x<600;){
+      const length=8+noise()*90, height=.8+noise()*1.9,phase=x*.015+row*.33;
+      c.strokeStyle=row%5===0?'#B8C7B0':'#86A7A5';c.lineWidth=height;c.beginPath();
+      c.moveTo(x,y+Math.sin(phase)*3.5);c.quadraticCurveTo(x+length*.45,y-3+Math.cos(phase)*2,x+length,y+Math.sin(phase+.6)*3.5);c.stroke();
+      x+=length+4+noise()*43;
+    }
+  }
+  c.fillStyle='#1E3B43';c.beginPath();c.moveTo(34,538);c.bezierCurveTo(108,529,142,530,199,510);c.bezierCurveTo(244,494,267,485,324,485);c.bezierCurveTo(280,495,264,498,223,521);c.bezierCurveTo(147,563,95,551,34,581);c.closePath();c.fill();
+  for(let i=0;i<15000;i++){c.globalAlpha=noise()*.21;c.fillStyle=noise()>.45?ground:'#193A40';const r=noise()*1.3+.28;c.fillRect(34+noise()*532,36+noise()*654,r,r*.68)}
+  c.restore();c.globalAlpha=1;
+  for(let i=0;i<3700;i++){c.fillStyle=noise()>.45?'#67574313':'#fff9df46';c.fillRect(noise()*600,noise()*750,.6+noise()*1.2,.65)}
+  // Registration signature printed in the paper margin.
+  c.fillStyle='#A8402D';c.fillRect(531,704,23,22);c.strokeStyle=ground;c.lineWidth=1.4;
+  for(const s of [[536,709,548,709],[540,708,540,721],[536,715,549,715],[547,709,547,721]]){c.beginPath();c.moveTo(s[0],s[1]);c.lineTo(s[2],s[3]);c.stroke()}
+}
+let lastPaper='';
+function renderPreview(value){
+  const picture=$('picture');picture.classList.toggle('large',value.size==='large');
+  picture.dataset.frame=value.frame;picture.style.setProperty('--stock',paper[value.paper].color);
+  if(lastPaper!==value.paper){drawPrint(value.paper);lastPaper=value.paper}
+  $('caption').textContent=sizes[value.size].name+' · '+frames[value.frame].name;
+  $('print').setAttribute('aria-label','《潮间》版画，朱砂日轮、远岸与深蓝水纹，'+paper[value.paper].name+'纸，'+frames[value.frame].name);
+}
+function renderConfig(){
+  for(const group of ['size','paper','frame','method']){
+    $(group+'-'+choice[group]).checked=true;
+    for(const label of $(group+'-options').querySelectorAll('[data-supplement]')){
+      const id=label.dataset.supplement;
+      if(group==='size')label.textContent=yen(sizes[id].price);
+      if(group==='frame')label.textContent='+'+yen(frames[id][choice.size]);
+      if(group==='method')label.textContent=methods[id].price?'+'+yen(methods[id].price):'免费';
+    }
+  }
+  const shipping=choice.method==='ship';
+  $('shipping').hidden=!shipping;$('pickup-hint').hidden=shipping;$('address').disabled=!shipping;$('address').required=shipping;
+  $('address').value=choice.address||'';$('price').textContent=yen(total(choice));renderPreview(choice);
+}
+function clearError(){
+  $('address-error').hidden=true;$('address').removeAttribute('aria-invalid');$('save-error').hidden=true;
+}
+function renderSheet(id,value,receipt){
+  const rows=[
+    ['纸色',paper[value.paper].name],
+    ['画纸',sizes[value.size].name+' · '+yen(sizes[value.size].price)],
+    ['画框',frames[value.frame].name+' · '+yen(frames[value.frame][value.size])],
+    ['取件',methods[value.method].name+' · '+yen(methods[value.method].price)],
+    value.method==='ship'?['收件地点',value.address]:['取件地点','汀印工作室'],
+    ['合计',yen(total(value))]
+  ];
+  if(receipt)rows.push(['清单编号',receipt.id.slice(0,8).toUpperCase()],['生成时间',new Date(receipt.date).toLocaleString('zh-CN',{hour12:false})]);
+  const destination=$(id);destination.replaceChildren();
+  for(const [label,value] of rows){const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;row.append(dt,dd);destination.append(row)}
+}
+function show(next,focus=true){
+  step=next;document.body.dataset.reviewContext=next;
+  for(const name of ['configure','check','receipt'])$(name).hidden=name!==next;
+  if(next==='configure')renderConfig();
+  if(next==='check'){renderPreview(choice);renderSheet('review-sheet',snapshot(choice))}
+  if(next==='receipt'&&activeReceipt){renderPreview(activeReceipt.choice);renderSheet('receipt-sheet',activeReceipt.choice,activeReceipt)}
+  if(focus)$(next==='configure'?'work-title':next+'-title').focus();
+}
+function collection(){
+  const target=$('entries');target.replaceChildren();
+  let list;
+  try{list=readList()}catch{list=null}
+  if(!list?.length){const item=document.createElement('li');item.textContent=list?'还没有本机清单。':'当前浏览器无法读取清单。';target.append(item)}
+  for(const record of list||[]){
+    const item=document.createElement('li'),button=document.createElement('button'),info=document.createElement('div'),title=document.createElement('b'),meta=document.createElement('span');
+    button.type='button';button.className='entry-btn';button.dataset.reviewId='ed-entry-'+record.id;
+    title.textContent='潮间 · '+sizes[record.choice.size].name;
+    meta.textContent=frames[record.choice.frame].name+' · '+methods[record.choice.method].name+' · '+yen(total(record.choice))+' · '+record.id.slice(0,8).toUpperCase();
+    info.append(title,meta);button.append(info,'查看 →');item.append(button);target.append(item);
+    button.onclick=()=>{$('archive').close();activeReceipt=record;show('receipt')};
+  }
+  $('archive').showModal();document.body.dataset.reviewContext='archive';
+}
+function change(event){
+  const input=event.target;
+  if(input.id==='address'){choice.address=input.value;clearError();saveDraft();return}
+  if(input.type!=='radio')return;
+  choice[input.name]=input.value;clearError();renderConfig();saveDraft();
+}
+function submitConfig(event){
+  event.preventDefault();clearError();
+  if(choice.method==='ship'&&!choice.address.trim()){
+    $('address-error').hidden=false;$('address').setAttribute('aria-invalid','true');$('address').focus();return;
+  }
+  show('check');
+}
+async function saveReceipt(){
+  const button=$('save');button.disabled=true;
+  function commit(){
+    const list=readList(),exists=list.find(record=>record.id===planId);
+    if(exists){activeReceipt=exists;return}
+    const record={id:planId,date:new Date().toISOString(),choice:snapshot(choice)};
+    localStorage.setItem(prefix+'receipts',JSON.stringify([record,...list]));activeReceipt=record;
+  }
+  try{
+    if(navigator.locks?.request)await navigator.locks.request(prefix+'receipts',commit);else commit();
+    try{const draft=data('draft');if(draft?.id===planId)localStorage.removeItem(prefix+'draft')}catch{}
+    count();show('receipt');
+  }catch{$('save-error').textContent='清单未能保存到当前浏览器。可返回改选，或保留此页后重试。';$('save-error').hidden=false}
+  finally{button.disabled=false}
+}
+for(const [group,items] of Object.entries({paper,size:sizes,frame:frames,method:methods}))options(group,items);
+$('options-form').addEventListener('change',event=>{if(event.target.type==='radio')change(event)});
+$('address').addEventListener('input',change);$('options-form').onsubmit=submitConfig;
+$('edit').onclick=()=>show('configure');$('save').onclick=saveReceipt;
+$('restart').onclick=()=>{choice=defaults();planId=identifier();clearError();saveDraft();show('configure')};
+$('collection').onclick=collection;$('all-plans').onclick=collection;$('close').onclick=()=>$('archive').close();
+$('archive').addEventListener('close',()=>{document.body.dataset.reviewContext=step});
+addEventListener('storage',event=>{if(event.key===prefix+'receipts')count()});
+if(storageFailed)$('storage-hint').textContent='当前浏览器无法读取旧草稿，可重新选择配置。';
+count();show('configure',false);
+</script>
+</body></html>

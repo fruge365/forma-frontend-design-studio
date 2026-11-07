@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#192a47">
+<title>接力 · 设备交班</title>
+<style>
+:root {
+  --ink:#192a47; --navy:#1e3657; --paper:#f4f2ec; --sheet:#fffefa; --line:#c9cdc9;
+  --muted:#546272; --amber:#be7c27; --pale:#f8edd2; --blue:#496d98;
+  --sans:"Inter","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono","Consolas",monospace;
+  font:15px/1.55 var(--sans); color:var(--ink); background:var(--paper);
+}
+*{box-sizing:border-box} body{margin:0} h1,h2,h3,p,ol,dl,dd{margin:0}
+button,select,textarea{font:inherit;color:inherit} button{cursor:pointer} button,select,textarea{border-radius:3px}
+button:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #a54915;outline-offset:3px}
+button:disabled{cursor:default} [hidden]{display:none!important}
+.sr,.skip:not(:focus){position:absolute;width:1px;height:1px;padding:0;margin:-1px;clip-path:inset(50%);overflow:hidden;white-space:nowrap}
+.skip:focus{position:absolute;z-index:5;padding:8px 16px;background:white}
+.page{width:min(1352px,calc(100% - 80px));margin-inline:auto}
+.mast{background:var(--ink);color:white}
+.mastline{min-height:59px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.identity{display:flex;align-items:center;gap:12px}.logo{width:37px;height:26px;position:relative}
+.logo::before,.logo::after{content:"";position:absolute;width:21px;height:11px;border:3px solid #edbc72;border-radius:9px}
+.logo::before{left:0;bottom:2px}.logo::after{right:0;top:2px;border-color:#f0f4f8}
+.wordmark{font-size:23px;font-weight:820;letter-spacing:.06em}.site{border-left:1px solid #637188;padding-left:14px;color:#e2e8ed;font-size:13px}
+.archive-link{border:1px solid #8793a3;background:transparent;color:white;padding:6px 12px;min-height:38px;display:flex;align-items:center;gap:8px}.archive-link:hover{background:#304866}
+.count{font:600 12px var(--mono);border-left:1px solid #8793a3;padding-left:8px}
+.intro{display:flex;justify-content:space-between;align-items:end;gap:20px;padding:27px 0 21px}
+.location{color:var(--muted);font-size:13px;margin-bottom:3px}.intro h1{font-size:clamp(35px,4.2vw,61px);letter-spacing:-.055em;line-height:1.12;font-weight:790}
+.shift-select{display:grid;gap:5px;min-width:210px;font-weight:650;font-size:12px}
+select{min-height:42px;padding:6px 31px 6px 10px;background:var(--sheet);border:1px solid #919caa;font-weight:500;font-size:14px}
+.workspace{display:grid;grid-template-columns:minmax(0,1.83fr) minmax(288px,.86fr);align-items:start;gap:22px}
+.left,.right{min-width:0}
+.route{background:var(--navy);color:#fff;position:relative;overflow:hidden;border-left:8px solid #e6af57;padding:18px 24px 21px}
+.route::after{content:"";position:absolute;right:-51px;bottom:-75px;width:215px;height:250px;border:1px solid #77879d;transform:rotate(32deg);pointer-events:none;opacity:.3}
+.route-meta{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #52657e;padding-bottom:11px;margin-bottom:15px}
+.route-meta strong{font-size:14px}.code,.route-code,time,.fig{font-family:var(--mono);font-variant-numeric:tabular-nums}.route-code{font-size:12px;letter-spacing:.04em;color:#d2dce7}
+.route-times{position:relative;z-index:1;display:grid;grid-template-columns:1fr 66px 1fr;align-items:center;max-width:600px;gap:14px}
+.route-times b{font-size:clamp(29px,3.2vw,47px);letter-spacing:-.04em;line-height:1.15;display:block}.route-times span{display:block;color:#e1e5eb;font-size:14px;margin-top:5px}
+.arrowline{height:2px;background:#e6af57;position:relative;width:90%}.arrowline::after{content:"";width:13px;height:13px;position:absolute;right:0;top:-6px;border:solid #e6af57;border-width:2px 2px 0 0;transform:rotate(45deg)}
+.part{margin-top:24px}.part-head,.side-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+.part-head{padding:0 0 9px;border-bottom:2px solid var(--ink)} h2{font-size:23px;line-height:1.35;letter-spacing:-.035em}.part-head small,.side-head small{font-size:12px;color:var(--muted)}
+.issues{list-style:none;padding:0}.issue{display:grid;grid-template-columns:76px minmax(0,1fr) 64px;gap:11px;align-items:start;border-bottom:1px solid var(--line);padding:15px 0}
+.level{font-weight:700;font-size:12px;display:inline-flex;gap:5px;align-items:center;justify-content:center;width:max-content;border:1px solid #a8b7c6;color:#35577b;padding:2px 6px;background:#ecf0f3}
+.level.urgent{border-color:#ab742c;color:#794613;background:var(--pale)}
+.issue h3{font-size:17px;line-height:1.45}.issue p{font-size:13px;color:var(--muted);line-height:1.7;margin-top:3px}
+.due{color:var(--muted);font-size:12px;text-align:right}.due time{color:var(--ink);display:block;font-size:16px}
+.checks{margin:19px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#eeeee7}
+.checks summary{cursor:pointer;padding:11px 13px;font-size:14px;font-weight:650}.checklist{padding:0 13px 12px;list-style:none}
+.checklist li{border-top:1px solid var(--line);display:flex;align-items:baseline;gap:11px;padding:8px 0;font-size:13px}
+.checklist li span{color:var(--muted)}.checklist .code{font-weight:650;color:var(--ink)}
+.editor{border:1px solid #abb4bd;background:var(--sheet);padding:0 21px 18px}
+.side-head{border-bottom:1px solid var(--line);padding:16px 0 11px}.side-head h2{font-size:21px}
+.draft-tag,.doc-tag{border:1px solid #8d7152;background:#fff8e6;color:#684b28;padding:2px 8px;font-size:12px;font-weight:650;white-space:nowrap}
+.meta-line{display:grid;grid-template-columns:69px minmax(0,1fr);gap:9px;padding:10px 0;border-bottom:1px solid #dbdedb;font-size:14px}
+.meta-line dt{color:var(--muted)}.meta-line dd{font-weight:650}
+.note-label{display:block;font-weight:650;margin:16px 0 5px}
+textarea{display:block;resize:vertical;width:100%;min-height:108px;background:#fbfaf5;border:1px solid #a8b1b6;padding:9px;line-height:1.65}
+.durability,.mini-help,.footnote{color:var(--muted);font-size:12px;line-height:1.65}.durability{margin:5px 0 16px;min-height:20px}
+.primary,.secondary{border:1px solid var(--navy);border-radius:3px;min-height:43px;padding:8px 16px;font-weight:650;background:var(--navy);color:white}.primary:hover{background:#2d4a72}.secondary{color:var(--ink);background:var(--sheet);border-color:#9aa8b4}.secondary:hover{background:#e9edf0}
+.wide{width:100%;display:flex;align-items:center;justify-content:space-between}.mini-help{margin-top:8px}.footnote{padding:14px 0 27px}
+.proof,.archive{display:none}.panel-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0}.panel-top .mini-help{margin:5px 0 0}.actions{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.paper{background:white;color:#172332;max-width:920px;margin:0 auto 26px;padding:40px 42px;border:1px solid #b9bfc4;box-shadow:0 4px 15px #1e2c3d0a;overflow-wrap:anywhere}
+.paper table{border-collapse:collapse;width:100%;table-layout:fixed}.paper .c-id{width:14%}.paper .c-name{width:25%}
+.paper th,.paper td{font-size:14px;text-align:left;vertical-align:top;padding:9px 8px;border-bottom:1px solid #b3b8bc;line-height:1.58}
+.paper thead th{color:#253344;background:#e9edf0}.paper .identity-cell{background:white;padding:0 0 12px;border-bottom:2px solid #222d38}
+.doc-head{display:flex;align-items:start;justify-content:space-between;gap:10px}.doc-head h2{font-size:30px}
+.doc-meta{font-weight:500;font-size:13px;margin-top:4px}.doc-tag{border-color:#46515c;color:#253344;background:white}
+.paper tbody th{font-family:var(--mono);font-size:13px;letter-spacing:.01em}.paper .group td{font-weight:750;padding:12px 7px 5px;border-bottom:1.5px solid #56616a}.paper .paper-note{white-space:pre-wrap}
+.paper .end{font-size:12px;color:#394650;text-align:right;margin-top:14px}.paper .doc-code{font-family:var(--mono);font-size:12px}
+.archive h1{font-size:36px}.archive .context{color:var(--muted);margin:5px 0 17px}.doc-list{display:grid;gap:8px;list-style:none;padding:0}
+.doc-list li{padding:15px 18px;border:1px solid var(--line);background:var(--sheet);display:flex;gap:15px;align-items:center;justify-content:space-between}
+.doc-list strong,.doc-list span{display:block}.doc-list span{color:var(--muted);font-size:13px}.doc-list .code{font-size:14px}.empty{padding:25px 0;border-block:1px solid var(--line)}
+[data-review-context="preview"] .desk,[data-review-context="issued"] .desk,[data-review-context="archive"] .desk{display:none}
+[data-review-context="preview"] .proof,[data-review-context="issued"] .proof,[data-review-context="archive"] .archive{display:block}
+@media(max-width:920px){.page{width:calc(100% - 40px)}.workspace{gap:15px;grid-template-columns:minmax(0,1.55fr) minmax(245px,.88fr)}.editor{padding-inline:14px}.issue{grid-template-columns:64px minmax(0,1fr) 50px;gap:7px}}
+@media(max-width:690px){
+  .page{width:calc(100% - 28px)}.mastline{min-height:49px}.identity{gap:7px}.wordmark{font-size:20px}.site{padding-left:8px;font-size:12px}
+  .workspace{display:block}.intro{align-items:start;flex-direction:column;gap:12px;padding:20px 0 15px}
+  .shift-select{display:flex;align-items:center;gap:10px}select{min-height:39px}
+  .route{padding:12px 13px 15px;border-left-width:5px}.route-times{grid-template-columns:1fr 34px 1fr;gap:10px}
+  .route-meta{margin-bottom:12px}.route-times span{font-size:12px}.part{margin-top:17px}h2{font-size:20px}
+  .issue{grid-template-columns:52px minmax(0,1fr) 42px;gap:4px;padding:12px 0}.issue h3{font-size:16px}.issue p{font-size:13px}
+  .level{font-size:11px;padding:1px 3px}.due time{font-size:14px}.checks{margin:14px 0}
+  .editor{margin:15px 0 0}.panel-top{flex-wrap:wrap}.paper{padding:15px 9px}.paper th,.paper td{padding:5px 4px;font-size:12px}
+  .paper tbody th,.paper .doc-code{font-size:11px}.paper .c-id{width:17%}.paper .c-name{width:26%}.doc-head h2{font-size:24px}
+  .doc-meta{font-size:12px}.doc-list li{padding:12px 8px;gap:5px}.doc-list .secondary{padding:6px;min-height:39px}
+}
+@media(max-width:340px){.site{font-size:11px}.page{width:calc(100% - 20px)}.archive-link{padding:5px 7px}.route-times b{font-size:26px}.paper .doc-code{font-size:10px}}
+@page{
+  margin:14mm 14mm 15mm;
+  @bottom-right{content:"第 " counter(page) " 页 / 共 " counter(pages) " 页";font:8pt "Microsoft YaHei",sans-serif;color:#333}
+}
+@media print{
+  :root,body{font-family:"Microsoft YaHei",sans-serif!important;color:#111!important;background:#fff!important;font-size:10pt}
+  .mast,.skip,.desk,.panel-top,.footnote,.sr,[data-forma]{display:none!important}
+  .page{width:100%;max-width:none;margin:0}
+  body:not([data-review-context="archive"]) .proof{display:block!important}
+  body[data-review-context="archive"] .proof{display:none!important}
+  .paper{padding:0;border:0;margin:0;max-width:none;box-shadow:none;color:#000}
+  .paper table{width:100%}.paper thead{display:table-header-group}.paper tr{break-inside:avoid;page-break-inside:avoid}
+  .paper th,.paper td,.paper .doc-code{font-size:9.5pt;line-height:1.5;padding:2.4mm 2mm;color:#111;background:white!important;border-color:#888}
+  .paper thead th{color:#111}
+  .paper tbody th{font-size:9pt}.paper .identity-cell{padding:0 0 3mm}
+  .paper .c-id{width:14%}.paper .c-name{width:25%}.doc-head h2{font-size:20pt}.doc-meta{font-size:9pt}
+  .doc-tag{border:1px solid #111;color:#111;background:white;font-size:9pt}.paper .group{break-after:avoid;page-break-after:avoid}
+  .paper .group td{padding:4mm 2mm 1mm;border-bottom:1.3pt solid black}.paper .end{font-size:9pt}
+  .archive .secondary{display:none}.doc-list li{background:white;break-inside:avoid}.archive .context{color:#333}
+}
+</style>
+</head>
+<body data-review-context="desk">
+<a class="skip" href="#main">跳至交班内容</a>
+<header class="mast">
+  <div class="mastline page">
+    <div class="identity"><span class="logo" aria-hidden="true"></span><b class="wordmark">接力</b><span class="site">北麓文化中心</span></div>
+    <button id="open-archive" class="archive-link" data-review-id="handover-archive">单据记录 <span id="archive-count" class="count">0</span></button>
+  </div>
+</header>
+<main id="main" class="page" tabindex="-1">
+  <section class="desk">
+    <div class="intro">
+      <div><p class="location">演艺楼 / 设备运行组</p><h1 data-review-id="handover-work-title">设备交班</h1></div>
+      <label class="shift-select">交接班次<select id="shift" data-review-id="handover-shift"></select></label>
+    </div>
+    <div class="workspace">
+      <div class="left">
+        <section class="route" aria-label="交班与接班班次" data-review-id="handover-shift-route">
+          <div class="route-meta"><strong>11 月 07 日 · 星期六</strong><span class="route-code" id="shift-code"></span></div>
+          <div class="route-times"><div><b id="depart"></b><span id="depart-meta"></span></div><i class="arrowline" aria-hidden="true"></i><div><b id="arrive"></b><span id="arrive-meta"></span></div></div>
+        </section>
+        <section class="part"><div class="part-head"><h2>未结事项</h2><small id="issue-total"></small></div><ol class="issues" id="issues"></ol></section>
+        <details class="checks" id="check-details"><summary id="check-summary"></summary><ol class="checklist" id="checklist"></ol></details>
+      </div>
+      <aside class="right editor" aria-labelledby="editor-heading">
+        <div class="side-head"><h2 id="editor-heading">本班交接单</h2><strong class="draft-tag">草稿</strong></div>
+        <dl><div class="meta-line"><dt>交班人</dt><dd id="outgoing"></dd></div><div class="meta-line"><dt>接班人</dt><dd id="incoming"></dd></div><div class="meta-line"><dt>范围</dt><dd id="area"></dd></div></dl>
+        <label class="note-label" for="draft-note">补充说明</label><textarea id="draft-note" maxlength="480" rows="3" placeholder="填写接班时需要补充核对的内容"></textarea>
+        <p class="durability" id="storage-state"></p>
+        <button id="preview-draft" class="primary wide">预览交接草稿 <span aria-hidden="true">→</span></button>
+        <p class="mini-help">直接打印使用本班草稿。生成单据后可从记录找回原件。</p>
+      </aside>
+    </div>
+  </section>
+  <section class="proof">
+    <div class="panel-top">
+      <button class="secondary" id="back-desk">← 返回工作台</button>
+      <div class="actions"><button class="secondary" id="print-document">打印草稿</button><button class="primary" id="issue-document">生成交接单</button></div>
+    </div>
+    <article class="paper" id="document-face" aria-labelledby="doc-title"></article>
+  </section>
+  <section class="archive">
+    <div class="panel-top"><button id="exit-archive" class="secondary">← 返回工作台</button></div>
+    <h1 id="archive-title" tabindex="-1">单据记录</h1>
+    <p class="context">北麓文化中心 · 设备运行组 · 本机生成记录</p>
+    <p id="archive-empty" class="empty">尚未生成交接单。</p><ol class="doc-list" id="doc-list"></ol>
+  </section>
+  <p class="footnote">本机交班演示 · 设备状态为 2026 年 11 月 7 日的班次样本。</p>
+</main>
+<p id="announce" class="sr" role="status"></p>
+<script>
+'use strict';
+const shifts=[
+  {
+    id:'JC-1107-A',time:'14:00',depart:'早班',arrive:'中班',hours:'06:00–14:00',nextHours:'14:00–22:00',
+    outgoing:'陈澍',incoming:'周聆',area:'演艺楼 · 主厅及排练翼',
+    note:'下午场联排 14:30 入场。对讲机充电座移到侧台值班桌，已与舞台监督核对。',
+    issues:[
+      ['Y-04','优先','侧台对讲机','左侧台','14:15','接班后先试通 3 号对讲机，确认与舞台监督双向通话。'],
+      ['L-12','跟进','观众厅廊灯','二层东廊','15:00','廊灯第三组调光有延时。复查时记下回亮时长，随照明记录交回。'],
+      ['F-07','跟进','排练厅滤网备件','排练翼','16:30','替换滤网在库房待领取，核对规格后补记领用编号。']
+    ]
+  },
+  {
+    id:'JC-1107-B',time:'22:00',depart:'中班',arrive:'晚班',hours:'14:00–22:00',nextHours:'22:00–次日 06:00',
+    outgoing:'周聆',incoming:'沈川',area:'演艺楼 · 主厅及卸货区',
+    note:'散场后北侧通道保留一条装卸通路。巡查结束将钥匙交还中控室。',
+    issues:[
+      ['M-08','优先','卸货区对讲分机','北装卸口','22:10','卸货组收工后进行通话复核，由北门岗记录回声是否消失。'],
+      ['D-06','跟进','侧台道具柜门磁','右侧台','23:00','柜门检修后需再做一次开闭检查，回写控制台编号。']
+    ]
+  }
+];
+// The full descriptions travel with the issued record along with its shift metadata.
+const inspections=[
+  ['P-01','东门值班钟','东门厅','已与中控主钟对时，值班记录的交接时刻一致。'],
+  ['P-02','设备间钥匙板','中控室','按柜位逐一核对，备用钥匙封签完整。'],
+  ['P-03','监听音箱','录音间','左右声道轮流试音，监听控制器回到值班电平。'],
+  ['P-04','提示灯总控','舞台监督台','台口、左右侧台共三处回执灯均可确认。'],
+  ['P-05','电缆收纳架','左侧台','移动话筒线按编号收回，接头盖完整。'],
+  ['P-06','排练镜灯','排练翼','逐组点亮后恢复日常场景，面板回到本地控制。'],
+  ['P-07','投影信号切换器','放映间','主机与备用输入分别切换，预览端图像均稳定。'],
+  ['P-08','观众厅导向牌','一层门厅','两处入口显示今日场次，回读节目编号一致。'],
+  ['P-09','台口拾音器','台口','检查固定夹与防风罩，收线标签仍可辨认。'],
+  ['P-10','后台呼叫屏','后台走廊','测试消息从监督台送达后已清除，恢复候场画面。'],
+  ['P-11','风机面板','西设备间','读数登记至本班台账，运行指示与面板状态一致。'],
+  ['P-12','随身工作灯','灯具柜','四支工作灯归位，充电座供电指示正常。'],
+  ['P-13','票台显示终端','前厅票台','节目数据已更新，正面屏与柜台预览一致。'],
+  ['P-14','库房标签机','器材库','已补充标签卷，试打一张设备编号清晰。'],
+  ['P-15','侧幕操作面板','右侧台','面板按键标签可读，备用控制盒已放回收纳位。'],
+  ['P-16','排练室时钟','小排练室','指示时间与东门厅值班钟一致，外壳固定完整。'],
+  ['P-17','后台信息屏','演员通道','播出窗口显示当日排练安排，备用输入端口已标识。'],
+  ['P-18','录音机存储卡','录音间','备用卡装入卡盒，交班标签写明可录容量。'],
+  ['P-19','装台手推车','道具间','车轮和刹车逐辆试过，停放位置留出门口通行空间。'],
+  ['P-20','移动返听箱','侧台器材区','两只返听箱与推车编号相符，音频线单独盘好。'],
+  ['P-21','器材签出册','器材库','交还的备用接收机已销账，页末留有签入记录。'],
+  ['P-22','中控值班电话','中控室','内线呼叫成功，接听与转接均已回测。']
+];
+const dateLabel='2026 年 11 月 7 日';
+const pathScope=location.protocol==='file:'?location.pathname:new URL('.',location.href).pathname;
+const prefix='forma-handover-v1:'+pathScope+':';
+const archivePrefix=prefix+'document:';
+const byId=new Map(shifts.map(shift=>[shift.id,shift]));
+const byElement=id=>document.getElementById(id);
+const documents=new Map();
+const drafts=new Map();
+let active=shifts[0];
+let context='desk';
+let viewed=null;
+let cameFromArchive=false;
+let canSave=true;
+const escapeText=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function proofHash(value){
+  let hash=2166136261;
+  for(let i=0;i<value.length;i++) hash=Math.imul(hash^value.charCodeAt(i),16777619);
+  return (hash>>>0).toString(36).toUpperCase()+value.length.toString(36).toUpperCase();
+}
+function writeLocal(key,value){
+  try {localStorage.setItem(key,value);canSave=true;}
+  catch {canSave=false;}
+}
+function readDraft(shift){
+  if(drafts.has(shift.id)) return drafts.get(shift.id);
+  let note=shift.note;
+  try {note=localStorage.getItem(prefix+'draft:'+shift.id)??note;}catch{canSave=false;}
+  drafts.set(shift.id,note);
+  return note;
+}
+function validDocument(doc,key){
+  const stringRows=(rows,n)=>Array.isArray(rows)&&rows.every(row=>Array.isArray(row)&&row.length===n&&row.every(v=>typeof v==='string'));
+  return doc && doc.id===key && /^JD-1107-[A-F0-9]{12}$/.test(key)
+    && byId.has(doc.shiftId) && typeof doc.createdAt==='number' && Number.isFinite(doc.createdAt)
+    && ['date','area','depart','arrive','hours','nextHours','outgoing','incoming','note'].every(k=>typeof doc[k]==='string')
+    && stringRows(doc.issues,6) && stringRows(doc.checks,4);
+}
+function readArchive(){
+  try {
+    for(let i=0;i<localStorage.length;i++){
+      const key=localStorage.key(i);
+      if(!key?.startsWith(archivePrefix))continue;
+      const id=key.slice(archivePrefix.length);
+      let doc;
+      try {doc=JSON.parse(localStorage.getItem(key));}catch{continue;}
+      if(validDocument(doc,id))documents.set(id,doc);
+    }
+  }catch{canSave=false;}
+  byElement('archive-count').textContent=documents.size;
+}
+function captureDraft(){
+  return {shiftId:active.id,date:dateLabel,area:active.area,depart:active.depart,arrive:active.arrive,
+    hours:active.hours,nextHours:active.nextHours,outgoing:active.outgoing,incoming:active.incoming,
+    note:readDraft(active),issues:active.issues.map(row=>row.slice()),
+    checks:(active===shifts[0]?inspections:inspections.slice(8)).map(row=>row.slice())};
+}
+function documentFingerprint(doc){
+  const {id,createdAt,...content}=doc;
+  return proofHash(JSON.stringify(content));
+}
+function announce(message){byElement('announce').textContent=message;}
+function updateStorage(){
+  byElement('storage-state').textContent=canSave?'草稿自动保存在本浏览器':'草稿仅保留至本页关闭';
+}
+function renderDesk(){
+  const draft=captureDraft();
+  byElement('shift').value=active.id;
+  byElement('shift-code').textContent=active.id;
+  byElement('depart').textContent=active.depart;
+  byElement('arrive').textContent=active.arrive;
+  byElement('depart-meta').textContent='交班 '+active.hours;
+  byElement('arrive-meta').textContent='接班 '+active.nextHours;
+  for(const name of ['outgoing','incoming','area'])byElement(name).textContent=active[name];
+  byElement('issue-total').textContent=active.issues.length+' 项 · 按接手时刻';
+  byElement('issues').innerHTML=active.issues.map(([code,level,title,place,due,note])=>`
+    <li class="issue" data-review-id="handover-issue-${active.id}-${code}">
+      <span class="level ${level==='优先'?'urgent':''}">${level==='优先'?'▲':'●'} ${level}</span>
+      <div><h3>${title}</h3><p>${place} · ${note}</p></div>
+      <div class="due"><time>${due}</time>接手</div>
+    </li>`).join('');
+  byElement('check-summary').textContent='已核对设备 · '+draft.checks.length+' 个点位';
+  byElement('checklist').innerHTML=draft.checks.map(([code,title,place])=>`<li data-review-id="handover-check-${active.id}-${code}"><span class="code">${code}</span><b>${title}</b><span>${place}</span></li>`).join('');
+  byElement('draft-note').value=draft.note;
+  byElement('draft-note').dataset.reviewId='handover-note-'+active.id;
+  byElement('preview-draft').dataset.reviewId='handover-preview-'+active.id;
+  readArchive();
+  updateStorage();
+}
+function headerRow(text){return `<tr class="group"><td colspan="3">${escapeText(text)}</td></tr>`;}
+function infoRow(code,name,text){
+  return `<tr><th scope="row">${escapeText(code)}</th><td>${escapeText(name)}</td><td class="paper-note">${escapeText(text)}</td></tr>`;
+}
+function formatTimestamp(value){
+  return new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(value);
+}
+function renderPaper(doc){
+  const issued=Boolean(doc.id);
+  const kind=issued?'已生成':'草稿 · 未生成';
+  const record=issued?doc.id:'草稿，无单号';
+  const proof=issued?'ISSUED/'+doc.id:'DRAFT/'+doc.shiftId+'/'+documentFingerprint(doc);
+  if(context==='preview'||context==='issued')document.body.dataset.reviewProof=proof;
+  const records=[...doc.issues.map(([id,level,title,area,time,note])=>infoRow(id,title,level+' · '+area+' · '+time+' 接手\n'+note)),
+    headerRow('已核对设备 · '+doc.checks.length+' 个点位'),
+    ...doc.checks.map(([id,title,area,note])=>infoRow(id,title,area+' · '+note))];
+  const scope=issued?doc.id:doc.shiftId;
+  byElement('document-face').innerHTML=`<table>
+    <colgroup><col class="c-id"><col class="c-name"><col></colgroup>
+    <thead><tr><th colspan="3" class="identity-cell">
+      <div class="doc-head"><h2 id="doc-title" tabindex="-1" data-review-id="handover-proof-title-${scope}">设备交接单</h2><strong class="doc-tag">${kind}</strong></div>
+      <p class="doc-meta">北麓文化中心（演示） · ${escapeText(doc.area)} · ${escapeText(doc.date)}</p>
+      <p class="doc-meta"><span class="doc-code">${escapeText(doc.shiftId)}</span> · ${escapeText(doc.depart)}（${escapeText(doc.hours)}）→ ${escapeText(doc.arrive)}（${escapeText(doc.nextHours)}）</p>
+      <p class="doc-meta">单据编号 <b class="doc-code" id="paper-id">${escapeText(record)}</b></p>
+    </th></tr><tr><th scope="col">点位</th><th scope="col">项目</th><th scope="col">交接内容</th></tr></thead>
+    <tbody>
+      ${infoRow('—','交接人员',doc.outgoing+' 交班 → '+doc.incoming+' 接班')}
+      ${infoRow('—','补充说明',doc.note||'无补充说明')}
+      ${headerRow('未结事项 · '+doc.issues.length+' 项')}${records.join('')}
+    </tbody></table><p class="end">清单结束 · ${escapeText(record)} · ${issued?'本机生成 '+escapeText(formatTimestamp(doc.createdAt))+'（北京时间）':'交班草稿'}</p>`;
+}
+function switchContext(next){
+  context=next;
+  document.body.dataset.reviewContext=next;
+  delete document.body.dataset.reviewProof;
+  window.scrollTo(0,0);
+}
+function showProof(doc,issued){
+  viewed=doc;
+  switchContext(issued?'issued':'preview');
+  byElement('issue-document').hidden=issued;
+  byElement('print-document').textContent=issued?'打印原单':'打印草稿';
+  byElement('back-desk').textContent=cameFromArchive?'← 返回单据记录':'← 返回工作台';
+  renderPaper(doc);
+  byElement('doc-title').focus({preventScroll:true});
+}
+function startPreview(){
+  cameFromArchive=false;
+  showProof(captureDraft(),false);
+}
+function backDesk(){
+  const focusBack=context==='archive'?'open-archive':'preview-draft';
+  viewed=null;cameFromArchive=false;
+  switchContext('desk');renderDesk();renderPaper(captureDraft());
+  byElement(focusBack).focus({preventScroll:true});
+}
+function newId(){
+  let id;
+  do {
+    const bytes=crypto.getRandomValues(new Uint8Array(6));
+    id='JD-1107-'+Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('').toUpperCase();
+  }while(documents.has(id));
+  return id;
+}
+function issueDocument(){
+  if(context!=='preview'||!viewed||viewed.id)return;
+  readArchive();
+  const doc={...viewed,id:newId(),createdAt:Date.now()};
+  writeLocal(archivePrefix+doc.id,JSON.stringify(doc));
+  documents.set(doc.id,doc);
+  byElement('archive-count').textContent=documents.size;
+  showProof(doc,true);
+  if(!canSave)byElement('document-face').querySelector('.end').append(' · 本页暂存，关闭后清除');
+  announce(canSave?'已生成并保存在本机的交接单':'已生成交接单，本页关闭后清除');
+}
+function renderArchive(){
+  readArchive();
+  const entries=[...documents.values()].sort((a,b)=>b.createdAt-a.createdAt||b.id.localeCompare(a.id));
+  byElement('archive-empty').hidden=entries.length>0;
+  byElement('doc-list').innerHTML=entries.map(doc=>`<li>
+    <div><strong>${escapeText(doc.depart)} → ${escapeText(doc.arrive)} · ${escapeText(doc.area)}</strong>
+    <span class="code">${escapeText(doc.id)}</span><span>${escapeText(formatTimestamp(doc.createdAt))} 生成 · ${escapeText(doc.shiftId)}</span></div>
+    <button class="secondary" data-document="${doc.id}" data-review-id="handover-archive-${doc.id}" aria-label="查看原单 ${doc.id}">查看原单</button></li>`).join('');
+}
+function openArchive(){
+  viewed=null;cameFromArchive=true;
+  switchContext('archive');renderArchive();byElement('archive-title').focus({preventScroll:true});
+}
+byElement('shift').replaceChildren(...shifts.map(shift=>new Option(shift.time+' · '+shift.depart+'交'+shift.arrive,shift.id)));
+byElement('shift').addEventListener('change',event=>{
+  active=byId.get(event.target.value);byElement('check-details').open=false;
+  renderDesk();renderPaper(captureDraft());announce('已切换到'+active.depart+'交'+active.arrive);
+});
+byElement('draft-note').addEventListener('input',event=>{
+  const note=event.target.value;
+  drafts.set(active.id,note);writeLocal(prefix+'draft:'+active.id,note);
+  updateStorage();renderPaper(captureDraft());
+});
+byElement('preview-draft').addEventListener('click',startPreview);
+byElement('issue-document').addEventListener('click',issueDocument);
+byElement('print-document').addEventListener('click',()=>window.print());
+byElement('open-archive').addEventListener('click',openArchive);
+byElement('back-desk').addEventListener('click',()=>cameFromArchive?openArchive():backDesk());
+byElement('exit-archive').addEventListener('click',backDesk);
+byElement('doc-list').addEventListener('click',event=>{
+  const button=event.target.closest('button[data-document]');
+  if(button&&documents.has(button.dataset.document))showProof(documents.get(button.dataset.document),true);
+});
+window.addEventListener('storage',event=>{
+  if(!event.key||event.key.startsWith(archivePrefix)){
+    if(context==='archive')renderArchive();else readArchive();
+  }
+  if(event.key?.startsWith(prefix+'draft:')){
+    const shift=byId.get(event.key.slice((prefix+'draft:').length));if(!shift)return;
+    drafts.set(shift.id,event.newValue??shift.note);
+    if(shift===active&&context==='desk'){renderDesk();renderPaper(captureDraft());}
+  }
+});
+renderDesk();renderPaper(captureDraft());
+</script>
+</body>
+</html>

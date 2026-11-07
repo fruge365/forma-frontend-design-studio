@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>沿江阅读季 · 阅川图书馆</title>
+<style>
+:root{--brand:#1f5748;--ink:#202923;--muted:#5e695f;--paper:#f4f0e4;--line:#bfc4b4;--print:#b64c2c;--serif:"Songti SC","Noto Serif CJK SC","STSong","SimSun",serif;--sans:Inter,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:18px}body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}button,a,summary{touch-action:manipulation}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--print);outline-offset:4px}.skip{position:absolute;left:12px;top:-100px;background:white;padding:10px;z-index:10}.skip:focus{top:8px}
+.container{width:min(1392px,92%);margin:auto}.masthead{border-bottom:1px solid var(--line)}.masthead .container{display:flex;align-items:center;justify-content:space-between;min-height:70px;gap:18px}.brand{display:flex;gap:9px;align-items:center;color:var(--brand);font-weight:650;letter-spacing:.06em;font-size:17px}.brand svg{width:25px;height:25px}.nav{display:flex;align-items:center;gap:28px;font-size:14px}.nav a:hover{text-decoration:underline;text-underline-offset:4px}.plan-open{min-height:42px;padding:7px 15px;border:1px solid var(--brand);border-radius:3px;background:transparent;color:var(--brand);display:inline-flex;gap:11px;align-items:center}.plan-count{font-variant-numeric:tabular-nums;color:var(--brand);padding-left:10px;border-left:1px solid #9cb1a4}
+.hero{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,76px);align-items:center;padding:clamp(32px,4.6vw,73px) 0 36px}.kicker{font-size:13px;letter-spacing:.14em;color:var(--brand);display:flex;align-items:center;gap:12px}.kicker:before{content:"";width:34px;height:2px;background:var(--print)}h1,h2,h3,p{margin:0}h1{font:600 clamp(58px,6.8vw,106px)/1.06 var(--serif);letter-spacing:-.075em;margin:23px 0 22px}h1 span{display:block}.intro{color:#425348;line-height:1.9;max-width:30em}.hero .lead{max-width:29em;font-size:clamp(15px,1.04vw,17px)}.date-line{display:flex;gap:14px;align-items:center;margin:23px 0 22px;color:var(--muted);font-size:13px}.date-line time{font-variant-numeric:tabular-nums;font-size:16px;letter-spacing:.025em;color:var(--ink)}.cta{display:inline-flex;align-items:center;justify-content:space-between;gap:40px;background:var(--brand);color:white;border:1px solid var(--brand);padding:11px 18px;min-height:46px;border-radius:2px;font-size:14px}.cta:hover{background:#174a3a}.cta:disabled{opacity:.58;cursor:default}.print{margin:0;min-width:0;position:relative}.print svg{width:100%;height:auto;display:block;background:#d7dfc7;border:1px solid #a8b39e}.print figcaption{display:flex;justify-content:space-between;gap:15px;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.03em}
+.schedule{border-top:1.5px solid var(--brand);padding:32px 0 38px}.schedule-head{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;margin-bottom:23px}.section-title{font:600 clamp(27px,2.8vw,39px)/1.25 var(--serif);letter-spacing:-.035em}.schedule-head p{font-size:13px;color:var(--muted);margin-top:8px}.date-tabs{display:flex;gap:6px}.day{background:none;border:1px solid var(--line);min-height:44px;padding:8px 14px;border-radius:2px;font-variant-numeric:tabular-nums;font-size:14px}.day[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:white}.listing{border-top:1px solid var(--line)}.session{display:grid;grid-template-columns:minmax(100px,.42fr) minmax(170px,1.33fr) minmax(105px,.6fr) auto;align-items:center;gap:24px;padding:24px 0;border-bottom:1px solid var(--line)}.time{font-size:19px;font-variant-numeric:tabular-nums;color:var(--brand)}.time small{display:block;font-size:12px;color:var(--muted)}.session h3{font:600 23px/1.5 var(--serif);letter-spacing:-.015em}.session p,.venue{font-size:13px;color:var(--muted);line-height:1.7}.venue span{display:block}.type{color:var(--print);font-size:12px;letter-spacing:.04em}.flat{border:0;background:transparent;padding:9px 0;min-height:44px;color:var(--brand);font-size:14px;text-decoration:underline;text-decoration-color:#95ab9a;text-underline-offset:5px}.flat:hover{text-decoration-color:var(--brand)}.added{color:var(--brand);font-weight:600}.visit{display:grid;grid-template-columns:.6fr 1.4fr;gap:40px;border-top:1.5px solid var(--brand);padding:29px 0 54px}.visit dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:14px 22px;font-size:14px}.visit dt{font-weight:550;color:var(--brand)}.visit dd{margin:0;color:var(--muted)}footer{border-top:1px solid var(--line);padding:18px 0 24px;font-size:12px;color:var(--muted)}footer .container{display:flex;justify-content:space-between;gap:16px}
+dialog{border:1px solid var(--line);border-radius:7px;background:#fbf9ef;color:var(--ink);padding:0;width:min(535px,calc(100% - 30px));max-height:86dvh;box-shadow:0 18px 60px #172c2225}dialog::backdrop{background:#132a2285;backdrop-filter:blur(3px)}.dialog-inner{padding:clamp(22px,4vw,35px)}.dialog-head{display:flex;align-items:start;justify-content:space-between;gap:10px}.dialog-head h2{font:600 28px/1.4 var(--serif);letter-spacing:-.035em}.close{background:transparent;border:0;min-width:44px;min-height:44px;font-size:24px;line-height:1;color:var(--muted)}.facts{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;border-block:1px solid var(--line);padding:16px 0;margin:18px 0;font-size:14px}.facts dt{color:var(--muted)}.facts dd{margin:0}.detail-intro{line-height:1.9}.note{font-size:13px;color:var(--muted);line-height:1.8;margin-top:13px}.dialog-footer{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:22px}.plan-item{padding:18px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.plan-item strong{display:block;font:600 18px/1.6 var(--serif)}.plan-item small{display:block;color:var(--muted)}.plan-item button{white-space:nowrap}.empty{font-size:15px;margin:20px 0;color:var(--muted)}.feedback{position:fixed;z-index:9;left:50%;bottom:18px;transform:translateX(-50%);color:white;background:#214537;padding:10px 17px;border-radius:4px;font-size:14px;box-shadow:0 4px 16px #23362820;max-width:90vw}.feedback:empty{display:none}.sr{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
+@media(max-width:850px){.hero{grid-template-columns:.85fr 1.15fr;gap:22px}.print figcaption{font-size:10px}h1{font-size:65px}.session{gap:15px}.session h3{font-size:20px}.date-tabs{gap:4px}.day{padding:8px 10px}.intro{font-size:14px}}
+@media(max-width:660px){.container{width:calc(100% - 36px)}.masthead .container{min-height:60px;gap:10px}.brand{font-size:15px}.nav{gap:8px}.nav>a{display:none}.plan-open{font-size:13px;padding:6px 11px}.hero{display:flex;flex-direction:column;align-items:stretch;gap:23px;padding:29px 0 23px}.kicker{font-size:12px}h1{font-size:clamp(43px,11vw,60px);margin:13px 0 15px;letter-spacing:-.065em}h1 span{display:inline}.hero .lead{font-size:15px;line-height:1.8}.date-line{margin:15px 0 16px;gap:11px}.date-line time{font-size:15px}.print svg{max-height:none}.print figcaption span:last-child{display:none}.schedule{padding:23px 0 28px}.schedule-head{display:block;margin-bottom:12px}.schedule-head p{font-size:13px}.date-tabs{margin-top:15px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.day{padding:8px 3px;font-size:13px}.session{grid-template-columns:61px 1fr;gap:3px 14px;align-items:start;padding:16px 0}.time{font-size:17px;grid-row:span 3;line-height:1.45}.time small{font-size:11px}.session h3{font-size:20px}.session p{font-size:13px}.venue{grid-column:2;display:flex;gap:10px;align-items:center;font-size:12px}.session .flat{grid-column:2;justify-self:start}.visit{display:block;padding:23px 0 30px}.visit dl{margin:18px 0 0;gap:12px 13px;font-size:14px}.dialog-head h2{font-size:24px}footer .container{display:block}footer span{display:block}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+</style></head>
+<body>
+<a class="skip" href="#schedule">跳到活动场次</a>
+<header class="masthead"><div class="container"><a class="brand" href="#top" aria-label="阅川图书馆，返回页首"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4c3-1 6 0 9 2 3-2 6-3 9-2v15c-3-1-6 0-9 2-3-2-6-3-9-2zM12 6v15M6 8l3 1M6 12l3 1M15 9l3-1M15 13l3-1"/></svg>阅川图书馆</a><nav class="nav" aria-label="活动导航"><a href="#schedule">活动日程</a><a href="#visit">参与须知</a><button class="plan-open" id="open-plan">我的计划 <span class="plan-count" id="plan-count">0</span></button></nav></div></header>
+<main id="top" class="container">
+<section class="hero" aria-labelledby="hero-title">
+<div><p class="kicker">阅川图书馆 · 秋季公共文化活动</p><h1 id="hero-title"><span>沿江</span><span>阅读季</span></h1><p class="intro lead">沿江堤走读，翻阅老渡口的口述档案，或亲手刻一枚河流藏书票。</p><div class="date-line"><time datetime="2026-11-13">11.13 — 11.15</time><span>2026 年 · 虚构活动演示</span></div><a class="cta" href="#schedule">挑选活动场次 <span aria-hidden="true">↓</span></a></div>
+<figure class="print">
+<svg viewBox="0 0 720 485" role="img" aria-labelledby="print-title print-desc">
+<title id="print-title">江岸阅读地图</title><desc id="print-desc">原创双色印刷风格示意图。弯曲的河流贯穿林带、老渡口和图书馆，橘色虚线串起三个活动地点。</desc>
+<defs>
+<pattern id="paper-hatch" width="7" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-24)"><path d="M1 0v9" stroke="#607d67" stroke-opacity=".20" stroke-width=".8"/></pattern>
+<pattern id="ripples" width="65" height="16" patternUnits="userSpaceOnUse"><path d="M-18 9c10-5 20 3 33-1s20 2 34-2 27 1 37-2" fill="none" stroke="#8fae98" stroke-width="1.6" opacity=".64"/></pattern>
+<pattern id="trees" width="26" height="27" patternUnits="userSpaceOnUse" patternTransform="rotate(8)"><path d="m9 2-8 11h5l-4 8h15l-4-8h4z" fill="#375a44"/><path d="M9 17v7" stroke="#375a44" stroke-width="2"/></pattern>
+<pattern id="blocks" width="53" height="49" patternUnits="userSpaceOnUse" patternTransform="rotate(-25)"><path d="M3 3h15v11H3zM24 7h21v10H24zM12 26h14v13H12zM32 28h12v8H32z" fill="#819079"/><path d="M0 20h54M48 0v50" stroke="#eeeadd" stroke-width="4"/></pattern>
+<clipPath id="river"><path d="M-30 405C108 393 173 394 232 328S279 243 357 210 493 170 543 101 620 25 749-1L755 93C647 102 657 135 609 193S511 259 434 288 358 337 304 393 149 481-30 490Z"/></clipPath>
+</defs>
+<path fill="#e2e5ce" d="M0 0h720v485H0z"/><path fill="url(#paper-hatch)" d="M0 0h720v485H0z"/>
+<path d="M-10 0H365Q345 28 300 40T231 96Q156 172 47 136L-10 160Z" fill="#b1c1a3"/><path d="M-10 0H365Q345 28 300 40T231 96Q156 172 47 136L-10 160Z" fill="url(#trees)"/>
+<g fill="none" stroke="#82957d" stroke-width="1.7" opacity=".87"><path d="M-12 169Q79 136 131 154T240 111 325 58 369-7"/><path d="M-7 182Q79 149 133 166T251 118 334 67 380-7"/><path d="M-12 196Q64 165 131 179T260 129 343 76 395-6"/><path d="M-12 212Q62 181 132 191T270 140 352 87 414-6"/></g>
+<path d="M-15 296 135 227 224 245 154 321 27 368-10 345Z" fill="url(#blocks)"/><path d="M426 461 470 362 623 266 731 254 733 481Z" fill="url(#blocks)"/>
+<path d="M464 481Q481 395 573 374T735 320L742 485Z" fill="#b5c5a6"/><path d="M464 481Q481 395 573 374T735 320L742 485Z" fill="url(#trees)"/>
+<g clip-path="url(#river)"><path fill="#205646" d="M0 0h720v485H0z"/><path fill="url(#ripples)" d="M0 0h720v485H0z"/><path d="M39 443Q131 439 186 417M270 334Q302 271 378 246M496 214Q566 175 596 119M638 80q34-24 76-28" fill="none" stroke="#d4ddc6" stroke-width="2.3" opacity=".72"/></g>
+<g fill="none" stroke="#78927c" stroke-width="2"><path d="M-5 390Q169 390 221 317T346 197 531 96 711-6"/><path d="M19 482Q179 475 260 421T391 320 526 261 631 184 727 110"/></g>
+<g fill="#ded6ab" stroke="#314f3c" stroke-width="2"><path d="m269 261 14-8 58 87-13 9z"/><path d="m273 254 67 95M279 251l65 94" fill="none" stroke="#f6efd8"/></g>
+<path d="M77 336Q143 315 205 298T278 259L330 334Q398 292 470 282T599 211" fill="none" stroke="#a9492c" stroke-width="3.5" stroke-dasharray="4 7" stroke-linecap="round"/>
+<g fill="#ae4a2c" stroke="#f7edcf" stroke-width="2.4"><circle cx="77" cy="336" r="7"/><circle cx="278" cy="259" r="7"/><circle cx="599" cy="211" r="7"/></g>
+<g fill="#f3efd9" stroke="#9ca994"><rect x="27" y="297" width="92" height="26" rx="2"/><rect x="220" y="213" width="101" height="26" rx="2"/><rect x="534" y="226" width="119" height="26" rx="2"/></g>
+<g fill="#294635" font-family="'Microsoft YaHei',sans-serif" font-size="15" text-anchor="middle"><text x="73" y="315">江堤步道</text><text x="270" y="231">老渡口</text><text x="594" y="244">阅川图书馆</text></g>
+<g transform="translate(33 27)"><rect x="0" y="0" width="162" height="52" fill="#f2edda" stroke="#3d5f46"/><text x="13" y="23" font-family="'SimSun',serif" font-size="17" fill="#244332">江岸走读图</text><text x="13" y="40" font-family="Georgia,serif" font-size="10" letter-spacing="1.5" fill="#61705a">RIVER READING MAP</text></g>
+<g transform="translate(649 399)" fill="#244332"><path d="m10 0 6 26-6-7-6 7z"/><text x="9" y="40" font-family="Georgia,serif" font-size="12" text-anchor="middle">N</text></g>
+</svg><figcaption><span>江岸走读图 · 原创活动版画</span><span>虚构路线示意</span></figcaption></figure>
+</section>
+<section class="schedule" id="schedule" aria-labelledby="schedule-title"><div class="schedule-head"><div><h2 class="section-title" id="schedule-title">选一场，沿江读下去。</h2><p>按日期查看活动。打开场次详情，可加入本地计划。</p></div><div class="date-tabs" id="date-tabs" role="group" aria-label="活动日期"></div></div><div class="listing" id="listing"></div><span id="schedule-status" class="sr" role="status"></span></section>
+<section class="visit" id="visit"><h2 class="section-title">参与须知</h2><dl><dt>活动形式</dt><dd>包含户外走读、室内共读和手作。每场详情列出地点、时长和准备事项。</dd><dt>出行准备</dt><dd>走读场次请穿舒适的鞋。室内活动均设在一层，提供无台阶入口。</dd><dt>本地计划</dt><dd>所选场次保存在当前浏览器，随时可移除。这里展示虚构活动流程，不生成报名凭证。</dd></dl></section>
+</main>
+<footer><div class="container"><span>阅川图书馆 · 公共文化活动演示</span><span>文案、场次与地图均为本地设计样例</span></div></footer>
+<dialog id="detail" aria-labelledby="detail-title"><div class="dialog-inner"><div class="dialog-head"><h2 id="detail-title"></h2><button class="close" aria-label="关闭活动详情" data-close>×</button></div><dl class="facts" id="facts"></dl><p id="detail-intro" class="detail-intro"></p><p class="note" id="detail-prep"></p><div class="dialog-footer"><button class="cta" id="toggle-plan"></button><span id="detail-status" class="note" role="status"></span></div></div></dialog>
+<dialog id="plan" aria-labelledby="plan-title"><div class="dialog-inner"><div class="dialog-head"><h2 id="plan-title">我的活动计划</h2><button class="close" aria-label="关闭我的计划" data-close>×</button></div><p class="note">这里仅记录本机计划，可随时移除。</p><div id="plan-list"></div><p class="note" role="status" id="plan-status"></p></div></dialog>
+<p class="feedback" role="status" id="feedback"></p>
+<script>
+const dates = [
+  { id: '13', label: '11.13 周五' }, { id: '14', label: '11.14 周六' }, { id: '15', label: '11.15 周日' }
+];
+const sessions = [
+  {id:'riverwalk', day:'13', start:'09:30', end:'10:45', kind:'江岸走读', title:'走读老渡口', venue:'江堤步道集合点', teaser:'跟着旧地图，寻找老渡口曾经连接的街巷。', description:'沿一段平缓江堤慢行，比较旧地图上的渡口、栈桥与街巷，停下记录一处仍能辨认的地名。', prep:'路线约 1.2 公里，含短坡。请穿便于步行的鞋，可自备饮用水。'},
+  {id:'oral', day:'13', start:'14:00', end:'15:20', kind:'档案共读', title:'河岸上的口述档案', venue:'一层 · 地方文献室', teaser:'从三则口述片段，读出河岸生活的不同面貌。', description:'围坐共读三段虚构的渡运、集市与江边居住记录。参与者可从一张地名卡出发，补写自己的地方记忆。', prep:'无需预读。现场演示设大字材料与无台阶入口。'},
+  {id:'folio', day:'14', start:'10:00', end:'11:15', kind:'书页共读', title:'一本地方志的江岸章节', venue:'一层 · 公共阅览室', teaser:'用目录、图例和索引，寻找一条河的记录。', description:'从虚构地方志的目录查起，辨读一段岸线变化，再用图例和索引把文字与地图连接起来。', prep:'适合初次阅读地方文献的读者。提供纸质资料。'},
+  {id:'exlibris', day:'14', start:'14:30', end:'16:00', kind:'版画手作', title:'刻一枚河流藏书票', venue:'一层 · 工坊', teaser:'把水纹、石阶与桥影，刻进一枚小小的藏书票。', description:'先在软版上画出一组岸线纹样，再完成拓印。将作品署名后，放入自己喜爱的书里。', prep:'提供软版、滚墨工具与纸张。建议穿便于清洁的衣物。'},
+  {id:'walknotes', day:'15', start:'09:30', end:'10:40', kind:'观察笔记', title:'江堤上的五感采集', venue:'江堤步道集合点', teaser:'记下潮声、树影和石阶的触感，拼成一页观察笔记。', description:'在三个观察点分别记录声音、颜色与材质，把微小线索写进一张折页，形成自己的岸线笔记。', prep:'路线约 800 米，含短坡。可携带常用的书写工具。'},
+  {id:'voices', day:'15', start:'14:00', end:'15:10', kind:'开放分享', title:'把沿江故事读给彼此', venue:'一层 · 公共阅览室', teaser:'从一段朗读、一张折页或一枚藏书票开始分享。', description:'选择一份活动材料或一段自己写下的文字，进行简短分享。也欢迎只听不读，留下自己的阅读清单。', prep:'无需提前参加其他场次。现场演示设无台阶入口。'}
+];
+const projectPath=location.protocol==='file:'?'/':new URL('.',location.href).pathname;
+const key = 'yuechuan-reading-plan-v1'+(projectPath==='/'?'':':'+projectPath);
+const allowedIds = new Set(sessions.map(item => item.id));
+const get = id => document.getElementById(id);
+let activeDay = dates[0].id;
+let activeSession = null;
+let trigger = null;
+let memoryPlan = [];
+let storageAvailable = true;
+function readPlan() {
+  if (!storageAvailable) return [...memoryPlan];
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || '[]');
+    if (!Array.isArray(value)) return [];
+    return [...new Set(value.filter(id => typeof id === 'string' && allowedIds.has(id)))];
+  } catch { storageAvailable = false; return memoryPlan; }
+}
+let plan = readPlan();
+function savePlan() {
+  memoryPlan = [...plan];
+  try { localStorage.setItem(key, JSON.stringify(plan)); storageAvailable = true; }
+  catch { storageAvailable = false; }
+}
+function make(tag, value, className) {
+  const node = document.createElement(tag);
+  if (value !== undefined) node.textContent = value;
+  if (className) node.className = className;
+  return node;
+}
+function updateCount() { get('plan-count').textContent = plan.length; }
+function updateSessionButtons() {
+  for (const b of document.querySelectorAll('[data-session]')) {
+    const saved = plan.includes(b.dataset.session);
+    b.textContent = saved ? '已加入 · 查看详情 ↗' : '查看详情 ↗';
+    b.classList.toggle('added', saved);
+  }
+}
+function renderListing() {
+  const list = get('listing');
+  list.replaceChildren();
+  for (const item of sessions.filter(s => s.day === activeDay)) {
+    const row = make('article', undefined, 'session');
+    row.dataset.reviewId = 'session-' + item.id;
+    const time = make('div', item.start, 'time');
+    time.append(make('small', '至 ' + item.end));
+    const content = make('div');
+    content.append(make('h3', item.title), make('p', item.teaser));
+    const venue = make('div', undefined, 'venue');
+    venue.append(make('span', item.kind, 'type'), make('span', item.venue));
+    const open = make('button', '', 'flat');
+    open.dataset.session = item.id;
+    open.dataset.reviewId = 'session-detail-' + item.id;
+    open.setAttribute('aria-label', '查看场次详情：' + item.title);
+    open.onclick = () => openDetails(item, open);
+    row.append(time, content, venue, open);
+    list.append(row);
+  }
+  updateSessionButtons();
+}
+function renderDays() {
+  for (const day of dates) {
+    const b = make('button', day.label, 'day');
+    b.dataset.day = day.id;
+    b.dataset.reviewId = 'reading-day-' + day.id;
+    b.setAttribute('aria-pressed', String(day.id === activeDay));
+    b.onclick = () => {
+      activeDay = day.id;
+      for (const tab of get('date-tabs').children) tab.setAttribute('aria-pressed', String(tab === b));
+      renderListing();
+      get('schedule-status').textContent = day.label + '，共 2 场活动';
+    };
+    get('date-tabs').append(b);
+  }
+}
+function openDialog(id, origin) {
+  trigger = origin;
+  get(id).showModal();
+  get(id).querySelector('[data-close]').focus();
+}
+function openDetails(item, origin) {
+  activeSession = item;
+  get('detail').dataset.reviewId = 'details-' + item.id;
+  get('detail-title').dataset.reviewId = 'details-title-' + item.id;
+  get('toggle-plan').dataset.reviewId = 'plan-toggle-' + item.id;
+  get('detail-title').textContent = item.title;
+  const facts = get('facts');
+  facts.replaceChildren();
+  for (const [name, value] of [['日期', '2026 年 11 月 ' + item.day + ' 日'], ['时间', item.start + ' — ' + item.end], ['地点', item.venue], ['形式', item.kind]]) {
+    facts.append(make('dt', name), make('dd', value));
+  }
+  get('detail-intro').textContent = item.description;
+  get('detail-prep').textContent = item.prep;
+  get('detail-status').textContent = '';
+  renderPlanButton();
+  openDialog('detail', origin);
+}
+function renderPlanButton() {
+  if (!activeSession) return;
+  const added = plan.includes(activeSession.id);
+  get('toggle-plan').textContent = added ? '从我的计划移除' : '加入我的计划';
+  get('toggle-plan').setAttribute('aria-pressed', String(added));
+}
+function renderPlan() {
+  const list = get('plan-list');
+  list.replaceChildren();
+  const saved = sessions.filter(s => plan.includes(s.id));
+  if (!saved.length) list.append(make('p', '计划中还没有场次。打开活动日程，从一场感兴趣的活动开始。', 'empty'));
+  for (const item of saved) {
+    const row = make('div', undefined, 'plan-item');
+    row.dataset.reviewId = 'plan-item-' + item.id;
+    const text = make('div');
+    text.append(make('strong', item.title), make('small', '11 月 '+item.day+' 日 · '+item.start+'–'+item.end+' · '+item.venue));
+    const remove = make('button', '移除', 'flat');
+    remove.dataset.reviewId = 'plan-remove-' + item.id;
+    remove.setAttribute('aria-label', '移除场次：' + item.title);
+    remove.onclick = () => {
+      plan = readPlan().filter(id => id !== item.id);
+      savePlan(); renderPlan(); updateSessionButtons(); updateCount();
+      get('plan-status').textContent = '已移除「'+item.title+'」。' + (storageAvailable ? '' : '本次更改只保留到关闭页面。');
+      (list.querySelector('button') || get('plan').querySelector('[data-close]')).focus();
+    };
+    row.append(text, remove); list.append(row);
+  }
+}
+get('toggle-plan').onclick = () => {
+  plan = readPlan();
+  const id = activeSession.id;
+  const added = !plan.includes(id);
+  plan = added ? [...plan, id] : plan.filter(other => other !== id);
+  savePlan(); renderPlanButton(); updateCount(); updateSessionButtons();
+  get('detail-status').textContent = (added ? '已加入计划。' : '已移除。') + (storageAvailable ? '已保存在当前浏览器。' : '本次更改只保留到关闭页面。');
+};
+get('open-plan').onclick = () => {
+  plan = readPlan(); updateCount(); renderPlan();
+  get('plan-status').textContent = '';
+  openDialog('plan', get('open-plan'));
+};
+for (const b of document.querySelectorAll('[data-close]')) b.onclick = () => b.closest('dialog').close();
+for (const dialog of document.querySelectorAll('dialog')) dialog.addEventListener('close', () => {
+  if (trigger?.isConnected) trigger.focus({preventScroll:true});
+  trigger = null;
+});
+window.addEventListener('storage', event => {
+  if (event.key !== key && event.key !== null) return;
+  plan = readPlan(); updateCount(); updateSessionButtons(); renderPlanButton();
+  if (get('plan').open) renderPlan();
+});
+renderDays(); renderListing(); updateCount();
+</script></body></html>

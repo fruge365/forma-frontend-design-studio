@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>仓位 · 库区作业板</title>
+<style>
+:root {
+  color-scheme: light;
+  --ink:#17251f; --muted:#526258; --line:#bfc7b9; --paper:#f3f4eb;
+  --panel:#fffef7; --action:#254832; --lime:#d7f767; --focus:#005cd0; --warn:#774600;
+  --mono:"IBM Plex Mono","Cascadia Mono",Consolas,monospace;
+  font-family:"Inter","Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+  color:var(--ink); background:var(--paper);
+}
+* {box-sizing:border-box}
+body {margin:0}
+button,input,select {font:inherit;color:inherit}
+button,select {cursor:pointer}
+button {touch-action:manipulation}
+:focus-visible {outline:3px solid var(--focus);outline-offset:3px}
+[tabindex="-1"]:focus {outline-offset:4px}
+[hidden] {display:none!important}
+h1,h2,h3,p,dl,dd {margin:0}
+.wrap {width:min(1504px,100%);margin:auto;padding-inline:clamp(14px,3.5vw,58px)}
+.top {background:var(--ink);color:#f5f5e8}
+.top .wrap,.brand,.top-actions,.intro,.summary,.panel-head,.view-switch,.tools,.plan-key,.detail-head,.stamp,.note-card,.dialog-head,.fact,.floor-meta,.panel-foot,.rack-row,.dock-line,.dock,.brand-name,.side-foot {display:flex;align-items:center}
+.top .wrap {min-height:54px;justify-content:space-between}
+.brand {gap:10px}
+.brand-logo {display:inline-flex;gap:3px;align-items:center;transform:skewX(-17deg);padding-inline:3px}
+.brand-logo i {background:var(--lime);height:21px;width:5px}
+.brand-logo i:nth-child(2) {height:13px}
+.brand-name {gap:10px;font-size:19px;font-weight:740}
+.brand-en {font:600 11px var(--mono);letter-spacing:.12em;color:#bfcdc0;border-left:1px solid #657468;padding-left:11px}
+.top-actions {gap:20px}
+.local {font-size:12px;color:#d7e0d2;display:flex;align-items:center;gap:7px}
+.local::before {content:"";background:var(--lime);width:7px;height:7px;border-radius:100%}
+.history {color:#fff;background:transparent;border:1px solid #7c8a7f;border-radius:4px;min-height:34px;padding:4px 11px;font-size:13px}
+.history:hover {background:#37473b}
+.intro {margin-block:25px 19px;align-items:flex-end;justify-content:space-between;gap:12px}
+.bread {color:var(--muted);font-size:13px;margin-bottom:4px}
+.bread span {padding-inline:5px;color:#778375}
+h1 {font-size:clamp(29px,3.4vw,47px);letter-spacing:-.055em;line-height:1.14}
+.summary {padding-bottom:2px;gap:25px}
+.summary div {padding-left:16px;border-left:1px solid var(--line)}
+.summary dt {font-size:12px;color:var(--muted)}
+.summary dd {margin-top:1px;font:600 27px/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.tools {gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.search {position:relative}
+.search:before {content:"";width:10px;height:10px;border:2px solid #55655a;border-radius:50%;position:absolute;top:12px;left:13px;pointer-events:none}
+.search:after {content:"";width:7px;border-top:2px solid #55655a;transform:rotate(45deg);position:absolute;top:25px;left:23px;pointer-events:none}
+.search input,.filter select {background:var(--panel);border:1px solid #9faa9a;border-radius:4px;min-height:40px;font-size:14px}
+.search input {padding:8px 10px 8px 36px;width:clamp(185px,27vw,344px)}
+.filter {display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}
+.filter select {padding-inline:9px;max-width:100%}
+.result {font-size:13px;color:var(--muted);margin-left:auto}
+.workspace {display:grid;grid-template-columns:minmax(0,1fr) clamp(270px,25vw,358px);gap:14px;align-items:start}
+.panel,.detail {background:var(--panel);border:1px solid #a5b09f;border-radius:6px;overflow:hidden;min-width:0}
+.panel-head,.detail-head,.dialog-head {justify-content:space-between;gap:10px}
+.panel-head {padding:13px 17px;border-bottom:1px solid var(--line)}
+.panel-head h2,.detail-head h2,.dialog-head h2 {font-size:18px;letter-spacing:-.035em}
+.view-switch {background:#e8ebe0;border:1px solid #bcc5b7;padding:2px;border-radius:4px}
+.view-switch button {font-size:13px;min-height:32px;padding:3px 12px;border:1px solid transparent;border-radius:2px;color:#45564b;background:transparent}
+.view-switch button[aria-pressed="true"] {background:var(--panel);border-color:#aab4a6;color:var(--ink);font-weight:650;box-shadow:0 1px 2px #15221a18}
+.view-switch button:hover {color:var(--ink)}
+.plan-scene {position:relative;padding:14px 18px 12px;background-color:#eaeee2;background-image:radial-gradient(#b4beaa .7px,transparent .8px);background-size:10px 10px}
+.floor-meta {justify-content:space-between;margin:0 1px 8px;color:#465949;font-size:12px}
+.floor-meta strong {font:700 14px var(--mono);color:var(--ink)}
+.floor-meta .north {font:700 13px var(--mono);display:flex;align-items:center;gap:5px}
+.north b {font-size:20px}
+.floor {border:3px solid #536254;background:#f4f5ed;position:relative}
+.dock-line {justify-content:space-between;gap:6px;min-height:39px;padding:4px 14px;background:repeating-linear-gradient(135deg,#dae0cf 0 2px,#e7ebdf 2px 8px);border-bottom:1px solid #a2ae9b}
+.dock-line.south {border-bottom:0;border-top:1px solid #a2ae9b}
+.dock-name {font-weight:680;font-size:12px;white-space:nowrap;background:#e9ecdf;padding:2px 5px}
+.dock-name b {font:650 14px var(--mono)}
+.dock-set {display:flex;gap:clamp(3px,1.6vw,25px)}
+.dock {gap:5px;position:relative;background:#eef0e5;border:1px solid #8f9c8a;padding:2px 5px;font:600 11px var(--mono)}
+.shutter {width:21px;height:12px;border:1px solid #677765;background:repeating-linear-gradient(0deg,#e7ecde 0 2px,#74846e 2px 3px)}
+.racks {padding:8px clamp(8px,2.1vw,34px) 9px 9px;position:relative}
+.racks:after {content:"";position:absolute;top:0;bottom:0;right:1.05vw;border-right:1px dashed #9faa9b}
+.axes,.rack-inner {display:grid;grid-template-columns:1fr 1fr clamp(10px,3vw,52px) 1fr 1fr;gap:6px}
+.axes {margin-left:36px}
+.axes b {font:500 11px var(--mono);color:#59695b;text-align:center;padding-bottom:4px}
+.axes b:nth-child(3),.bin:nth-child(3) {grid-column:4}
+.rack-row {position:relative}
+.rack-letter {flex:none;width:36px;font:700 clamp(19px,2vw,30px) var(--mono);color:#485b4d;text-align:center}
+.rack-inner {width:100%}
+.bin {position:relative;min-width:0;min-height:44px;border:1px solid #728571;border-left:5px solid #748970;box-shadow:inset 0 3px #d7dfca,inset 0 -3px #d7dfca;background:#e3e9d8;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:2px}
+.address {font:650 clamp(13px,1.25vw,19px) var(--mono);white-space:nowrap;letter-spacing:-.03em}
+.symbol {display:inline-block;font:700 14px var(--mono);line-height:1}
+.bin[data-state="low"] {background:repeating-linear-gradient(135deg,#e9e2c7 0 2px,#f8f2df 2px 7px);border-color:#8b794c;box-shadow:inset 0 3px #e6dcbb,inset 0 -3px #e6dcbb}
+.bin[data-state="empty"] {background:#f4f5ec;border:1px dashed #839080;box-shadow:none}
+.bin[aria-pressed="true"] {background:var(--lime);border:2px solid var(--ink);box-shadow:inset 0 0 0 2px var(--lime),inset 0 0 0 3px var(--ink);color:#17251f}
+.bin[aria-pressed="true"]::after {content:"";position:absolute;top:0;right:0;width:0;height:0;border-top:8px solid var(--ink);border-left:8px solid transparent}
+.bin:not(:disabled):hover {outline:2px solid #536852;outline-offset:-2px}
+.bin:disabled {opacity:.32;cursor:default}
+.aisle {margin:2px 1px 2px 38px;display:flex;gap:7px;align-items:center;justify-content:center;color:#586957;font:600 10px var(--mono);letter-spacing:.09em;height:17px;white-space:nowrap}
+.aisle:before,.aisle:after {content:"";width:25%;border-top:1px dashed #a3ae9d}
+.aisle.major {background:#e4e9dc;margin-block:4px;height:22px;letter-spacing:.06em;color:#425443}
+.plan-key {padding:10px 16px;gap:12px 17px;flex-wrap:wrap;min-height:41px;border-top:1px solid var(--line);font-size:12px;color:#48594e}
+.item-key {display:inline-flex;align-items:center;gap:5px}
+.sel-glyph {width:14px;height:12px;border:2px solid var(--ink);background:var(--lime);display:inline-block}
+.panel-foot,.side-foot {padding:10px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);justify-content:space-between;gap:8px}
+.detail-head {background:#263e31;color:white;padding:15px 17px;border-bottom:4px solid var(--lime)}
+.detail-head .stamp {font:600 12px var(--mono);letter-spacing:.06em;color:#d8e8d4}
+.ticket {padding:19px 18px 13px;position:relative;border-bottom:1px dashed #a9b39f}
+.ticket-top {display:flex;align-items:start;justify-content:space-between;gap:6px}
+.slot-label {font-size:12px;color:var(--muted)}
+.big-address {font:650 clamp(36px,3.9vw,59px)/1.06 var(--mono);letter-spacing:-.075em;margin:4px 0 6px}
+.ticket .product {font-size:16px;font-weight:650;margin-top:6px;line-height:1.45}
+.state-tag {display:inline-flex;align-items:center;gap:5px;font-size:13px}
+.pallet {width:73px;height:72px;margin:0;flex:none}
+.facts {padding:5px 18px 9px}
+.fact {justify-content:space-between;gap:5px;padding:8px 0;border-bottom:1px solid #e3e7dc;font-size:14px}
+.fact:last-child {border:none}
+.fact dt {color:var(--muted)}
+.fact dd {text-align:right}
+.quantity {font:650 23px/1 var(--mono)}
+.act {padding:3px 18px 14px}
+.primary,.secondary {min-height:42px;border-radius:4px;padding:6px 14px;font-weight:610}
+.primary {background:var(--action);color:#fff;border:1px solid var(--action)}
+.primary:hover {background:#183b26}
+.act .primary {width:100%;display:flex;justify-content:space-between;align-items:center}
+.secondary {background:var(--panel);border:1px solid #94a18e}
+.secondary:hover {background:#e9edde}
+.panel-foot b,.side-foot b {font-family:var(--mono)}
+.link {color:var(--action);background:none;border:0;font-weight:640;text-decoration:underline;text-underline-offset:3px;padding:6px 0}
+.return {display:none}
+.empty {padding:14px 17px;background:#f3f0da;border-bottom:1px solid #c1bc96}
+.empty p,.prompt p {font-size:14px;line-height:1.55}
+.prompt {padding:23px 17px;color:var(--muted)}
+.list {width:100%;border-collapse:collapse;font-size:14px}
+.list th,.list td {padding:6px 10px;text-align:left;border-bottom:1px solid #d6ddcf}
+.list th {font-size:12px;color:var(--muted);background:#edf0e5}
+.list tr[aria-current="true"] {background:#eaf4ca}
+.row-btn {min-height:38px;min-width:54px;padding:3px 7px;background:transparent;border:1px solid #95a38b;border-radius:3px;text-align:center;color:var(--action);font:650 15px var(--mono)}
+.row-btn[aria-pressed="true"] {border:2px solid var(--action);background:var(--lime)}
+.list .state-text {white-space:nowrap}
+.page-note {margin:15px 0 22px;font-size:12px;color:var(--muted);line-height:1.6}
+.live {position:absolute;clip-path:inset(50%);height:1px;width:1px;overflow:hidden;white-space:nowrap}
+dialog {width:min(460px,calc(100% - 26px));max-height:90dvh;border:1px solid #75856f;background:var(--panel);color:var(--ink);padding:0;border-radius:6px;box-shadow:0 18px 75px #13201940}
+dialog::backdrop {background:#17251f77}
+.dialog-head {padding:15px 18px;background:#263e31;color:#fff;border-bottom:3px solid var(--lime)}
+.close {font-size:13px;background:transparent;border:1px solid #9fae9d;color:#fff;border-radius:3px;padding:6px 10px;min-height:34px}
+.dialog-body {padding:18px}
+.dialog-body p,.dialog-body label {font-size:14px;line-height:1.6}
+.note-card {justify-content:space-between;background:#edf0e4;padding:10px 12px;gap:8px;margin:12px 0}
+.note-card b {font-family:var(--mono)}
+.dialog-body label {display:block;font-weight:650}
+.dialog-body input {width:100%;margin-top:5px;padding:9px 10px;border:1px solid #8e9b87;border-radius:4px;background:#fff;font:18px var(--mono)}
+.dialog-foot {margin-top:16px;display:flex;justify-content:flex-end;gap:9px}
+.dialog-body p.sub,.dialog-body p.preview {font-size:13px;color:var(--muted);margin-top:8px}
+.records {list-style:none;padding:0;margin:12px 0 0}
+.records li {padding:11px 2px;border-top:1px solid var(--line);font-size:14px;line-height:1.65}
+.records li strong {font:700 16px var(--mono);margin-right:8px}
+.records time {font:12px var(--mono);color:var(--muted);display:block}
+.storage-hint {display:block}
+@media(min-width:1510px){.bin{min-height:56px}.aisle{height:24px}.aisle.major{height:28px}.dock-line{min-height:47px}}
+@media(max-width:900px){.workspace{grid-template-columns:minmax(0,1fr) 249px;gap:9px}.wrap{padding-inline:14px}.panel-head{padding:10px}.plan-scene{padding:10px}.rack-letter{width:23px}.axes{margin-left:23px}.rack-inner,.axes{gap:4px}.racks{padding:6px 10px 6px 0}.racks:after{right:4px}.bin{gap:4px}.aisle{margin-left:24px}.dock-line{padding:4px 6px}.ticket,.detail-head,.act,.facts{padding-inline:13px}.pallet{width:57px;height:58px}}
+@media(max-width:760px){.workspace{grid-template-columns:minmax(0,1fr)}.intro{margin-block:20px 15px}.summary{gap:10px}.summary div{padding-left:9px}.summary dd{font-size:22px}.view-switch button{min-height:36px}.return{display:block}.detail-head,.ticket,.act,.facts{padding-inline:16px}.pallet{width:73px;height:68px}.side-foot{display:flex;flex-wrap:wrap}.tools{margin-bottom:10px}.bin{min-height:44px}.dock-line{min-height:33px}.rack-inner,.axes{grid-template-columns:1fr 1fr 8px 1fr 1fr;gap:3px}.racks:after{display:none}.floor{border-width:2px}.axes b{font-size:10px}.rack-letter{font-size:17px}.address{font-size:14px}.aisle,.aisle.major{height:15px;font-size:9px}.plan-key{gap:8px 14px;padding:8px 10px}.panel-foot{padding:8px 10px}.list th,.list td{padding-inline:6px}.row-btn{min-height:44px}.history{min-height:39px}.detail{scroll-margin-top:8px}}
+@media(max-width:560px){.brand-en{display:none}.intro{align-items:center}.summary div:first-child{display:none}.filter span{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}.tools{display:grid;grid-template-columns:minmax(0,1fr) auto}.search,.search input{width:100%;min-width:0}.result{margin:0;grid-column:1/-1;font-size:12px}.top-actions{gap:9px}.plan-scene{padding:8px}.symbol{font-size:12px}.bin{gap:3px}.panel-head h2{font-size:16px}.view-switch button{padding-inline:9px}.list td{font-size:13px}.list th,.list td{padding-inline:4px}.dock-set{gap:4px}.dock{gap:3px;padding-inline:3px}.shutter{width:15px}.panel-foot{flex-wrap:wrap}.key-tail{display:none}}
+@media(max-width:370px){.wrap{padding-inline:8px}.local{font-size:11px}.dock-line{gap:3px}.rack-letter{width:17px}.axes{margin-left:17px}.racks{padding-right:4px}.bin{gap:2px}.address{font-size:12px}.dock{font-size:10px}.dock-name{font-size:11px}.rack-inner,.axes{gap:2px;grid-template-columns:1fr 1fr 4px 1fr 1fr}.aisle{margin-left:18px}}
+@media(forced-colors:active){.bin[aria-pressed="true"],.row-btn[aria-pressed="true"],.view-switch button[aria-pressed="true"]{outline:3px double Highlight;outline-offset:-4px}.bin:disabled{color:GrayText;opacity:1}.bin:focus-visible,.row-btn:focus-visible{outline:3px solid Highlight;outline-offset:1px}}
+</style>
+</head>
+<body data-review-context="plan">
+<header class="top"><div class="wrap">
+  <div class="brand"><span aria-hidden="true" class="brand-logo"><i></i><i></i><i></i></span><span class="brand-name">仓位<span lang="en" class="brand-en">DEPOT WORKS</span></span></div>
+  <div class="top-actions"><span class="local">本机演示</span><button class="history" id="open-log" data-review-id="depot-open-log">盘点记录 <span id="log-count">0</span></button></div>
+</div></header>
+<main class="wrap">
+  <div class="intro">
+    <div><p class="bread">东港配送中心 <span>/</span> 03 号常温仓</p><h1 data-review-id="depot-heading">库区作业板</h1></div>
+    <dl class="summary" aria-label="全仓概况"><div><dt>货位总数</dt><dd>16</dd></div><div><dt>空置货位</dt><dd id="vacant">—</dd></div></dl>
+  </div>
+  <div class="tools" role="search" aria-label="查找货位">
+    <label class="search"><span class="live">按货位地址或品名查找</span><input type="search" id="query" data-review-id="depot-query" placeholder="查找货位地址或品名" autocomplete="off"></label>
+    <label class="filter"><span>库存状态</span><select id="state-filter" data-review-id="depot-state-filter"><option value="">全部状态</option><option value="stock">有货</option><option value="low">低量</option><option value="empty">空位</option></select></label>
+    <p id="result" class="result" role="status" aria-atomic="true"></p>
+  </div>
+  <div class="workspace">
+    <section class="panel" aria-labelledby="work-title">
+      <div class="panel-head"><h2 id="work-title">货位分布</h2><div class="view-switch" role="group" aria-label="货位视图"><button id="show-plan" aria-pressed="true" data-review-id="depot-show-plan">平面图</button><button id="show-list" aria-pressed="false" data-review-id="depot-show-list">地址列表</button></div></div>
+      <div class="empty" id="empty" hidden><p>没有匹配的货位。清除条件可查看全仓。</p><button class="link" id="clear" data-review-id="depot-clear">清除全部条件</button></div>
+      <div id="plan">
+        <div class="plan-scene" data-review-id="depot-plan">
+          <div class="floor-meta"><span><strong>WH–03</strong>　库区平面</span><span class="north"><b aria-hidden="true">↑</b> N 北</span></div>
+          <div class="floor">
+            <div class="dock-line"><span class="dock-name"><b aria-hidden="true">↓</b> 北侧收货月台</span><div class="dock-set" aria-label="收货门 01 至 03"><i class="dock"><i class="shutter"></i>01</i><i class="dock"><i class="shutter"></i>02</i><i class="dock"><i class="shutter"></i>03</i></div></div>
+            <div class="racks"><div class="axes" aria-hidden="true"><b>01</b><b>02</b><b>03</b><b>04</b></div><div id="rack-bays"></div></div>
+            <div class="dock-line south"><span class="dock-name"><b aria-hidden="true">↓</b> 南侧发运月台</span><div class="dock-set" aria-label="发运门 04 至 05"><i class="dock"><i class="shutter"></i>04</i><i class="dock"><i class="shutter"></i>05</i></div></div>
+          </div>
+        </div>
+        <div class="plan-key" aria-label="图例"><span class="item-key"><i class="sel-glyph"></i> 已选货位</span><span class="item-key"><b>■</b> 有货</span><span class="item-key"><b>▲</b> 低量</span><span class="item-key"><b>◇</b> 空位</span></div>
+      </div>
+      <div id="list-view" hidden><table class="list"><caption class="live">货位地址、品名、库存状态及账面件数</caption><thead><tr><th scope="col">货位</th><th scope="col">品名</th><th scope="col">状态</th><th scope="col">账面件数</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <div class="panel-foot"><span>A—D 排 <span class="key-tail">·</span> 01—04 列</span><span>低量 1–5 件 · 空位 0 件</span></div>
+    </section>
+    <aside class="detail" aria-labelledby="detail-heading" id="detail-section">
+      <div class="detail-head"><h2 id="detail-heading">货位详情</h2><span class="stamp">WH–03</span></div>
+      <div class="prompt" id="selection-prompt" hidden><p>请选择一个匹配的货位，查看账面库存并登记盘点。</p></div>
+      <div id="selected-detail">
+        <div class="ticket"><div class="ticket-top"><div><p class="slot-label">已选货位</p><h3 class="big-address" id="detail-id" tabindex="-1"></h3><span id="detail-state" class="state-tag"></span></div><canvas width="240" height="200" class="pallet" id="pallet" aria-hidden="true"></canvas></div><p class="product" id="detail-product"></p></div>
+        <dl class="facts"><div class="fact"><dt>账面库存</dt><dd><span class="quantity" id="detail-qty"></span> 件</dd></div><div class="fact"><dt>拣货巷道</dt><dd id="detail-aisle"></dd></div><div class="fact"><dt>最近盘点</dt><dd id="last-count"></dd></div></dl>
+        <div class="act"><button class="primary" id="open-count"><span id="count-label"></span><b aria-hidden="true">→</b></button></div>
+        <div class="side-foot"><span>盘点范围 <b id="scope"></b> 单个货位</span><button class="link return" id="back-to-slot">返回货位</button></div>
+      </div>
+    </aside>
+  </div>
+  <p class="page-note" id="storage-note">账面库存为演示快照。盘点结果仅保存在当前浏览器的本仓记录。</p>
+</main>
+<p class="live" id="announce" role="status" aria-live="polite"></p>
+<dialog id="count-dialog" aria-labelledby="count-title"><header class="dialog-head"><h2 id="count-title">登记盘点</h2><button class="close" id="close-count">关闭</button></header>
+  <form id="count-form" class="dialog-body"><p id="count-object"></p><div class="note-card"><span>账面库存</span><span><b id="count-book"></b> 件</span></div>
+    <label for="actual">实盘件数</label><input id="actual" type="number" min="0" max="9999" step="1" inputmode="numeric" required aria-describedby="delta">
+    <p class="preview" id="delta" role="status">请输入 0 到 9999 的整数。</p><p class="sub">保存一条该货位的盘点记录，账面库存沿用演示快照。</p>
+    <div class="dialog-foot"><button type="button" class="secondary" id="cancel-count">取消</button><button type="submit" id="save-count" class="primary">保存盘点记录</button></div></form>
+</dialog>
+<dialog id="log-dialog" aria-labelledby="log-title"><header class="dialog-head"><h2 id="log-title" tabindex="-1" data-review-id="depot-log-title">盘点记录</h2><button id="close-log" class="close">关闭</button></header><div class="dialog-body"><p>03 号常温仓 · 本机盘点</p><p id="log-empty" class="sub">暂无记录。选定货位后可登记实盘件数。</p><ol class="records" id="records"></ol></div></dialog>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const rows = [
+  [['牛皮纸胶带',28],['通用转接头',12],['咖色气泡袋',4],['',0]],
+  [['白色周转箱',32],['防滑手套',3],['手持扫码器',18],['热敏标签纸',26]],
+  [['标准托盘',8],['',0],['牛皮缓冲纸',5],['封箱胶带',46]],
+  [['',0],['尼龙扎带',64],['安全警示贴',21],['电池充电座',4]]
+];
+const aisles = ['北一巷','北一巷','南一巷','南一巷'];
+const bins = rows.flatMap((places,i) => places.map(([product,book],j) => ({
+  id:String.fromCharCode(65+i)+'-0'+(j+1), product:product||'未分配品名', book,
+  aisle:aisles[i], state:book===0?'empty':book<=5?'low':'stock'
+})));
+const states = {stock:['■','有货'],low:['▲','低量'],empty:['◇','空位']};
+const byId = new Map(bins.map(bin => [bin.id,bin]));
+const planButtons = new Map(), rowButtons = new Map();
+const prefix = 'forma-depot-count-v1:'+location.pathname.replace(/[^/]*$/,'')+'WH03:';
+const records = new Map();
+let selected='B-03', view='plan', countTarget=null, durable=true;
+const small = matchMedia('(max-width:760px)');
+
+function el(tag,cls,content) {
+  const node = document.createElement(tag);
+  if(cls) node.className=cls;
+  if(content!==undefined) node.textContent=content;
+  return node;
+}
+function describe(bin) {
+  return bin.id+'，'+bin.product+'，'+states[bin.state][1]+'，账面 '+bin.book+' 件，'+bin.aisle;
+}
+function selectBin(bin,moveFocus) {
+  selected=bin.id;
+  render();
+  $('announce').textContent='已选择货位 '+describe(bin);
+  if(moveFocus && small.matches) $('detail-id').focus();
+}
+function createBins() {
+  const laneNames=['北一巷','中央运输主通道','南一巷'];
+  rows.forEach((_,idx) => {
+    const letter=String.fromCharCode(65+idx);
+    const rack=el('div','rack-row');
+    const label=el('span','rack-letter',letter);
+    label.setAttribute('aria-hidden','true');
+    const body=el('div','rack-inner'); body.setAttribute('role','group'); body.setAttribute('aria-label',letter+' 排货位');
+    for(const bin of bins.filter(item=>item.id.startsWith(letter))) {
+      const button=el('button','bin');
+      button.dataset.reviewId='depot-map-'+bin.id; button.dataset.state=bin.state;
+      button.setAttribute('aria-label',describe(bin)); button.title=describe(bin);
+      const symbol=el('span','symbol',states[bin.state][0]); symbol.setAttribute('aria-hidden','true');
+      button.append(symbol,el('span','address',bin.id));
+      button.addEventListener('click',()=>selectBin(bin,true)); body.append(button);
+      planButtons.set(bin.id,button);
+      const tr=el('tr'), addressCell=el('td'), rowButton=el('button','row-btn',bin.id);
+      rowButton.dataset.reviewId='depot-row-'+bin.id; rowButton.setAttribute('aria-label',describe(bin));
+      rowButton.addEventListener('click',()=>selectBin(bin,true)); addressCell.append(rowButton);
+      tr.append(addressCell,el('td','',bin.product),el('td','state-text',states[bin.state].join(' ')),el('td','',bin.book));
+      $('rows').append(tr); rowButtons.set(bin.id,rowButton);
+    }
+    rack.append(label,body); $('rack-bays').append(rack);
+    if(idx < laneNames.length) $('rack-bays').append(el('div','aisle'+(idx===1?' major':''),'←　'+laneNames[idx]+'　→'));
+  });
+  $('vacant').textContent=String(bins.filter(bin=>bin.state==='empty').length).padStart(2,'0');
+}
+function matchesQuery(bin) {
+  const term=$('query').value.trim().toLocaleLowerCase().replace(/－/g,'-');
+  return bin.id.toLowerCase().includes(term)||bin.id.toLowerCase().replace('-','').includes(term)||bin.product.includes(term);
+}
+function matchesState(bin) {
+  const status=$('state-filter').value;
+  return !status||status===bin.state;
+}
+function matches(bin) {
+  return matchesState(bin)&&matchesQuery(bin);
+}
+function setView(next) {
+  view=next;
+  $('plan').hidden=view!=='plan'; $('list-view').hidden=view!=='list';
+  $('show-plan').setAttribute('aria-pressed',String(view==='plan'));
+  $('show-list').setAttribute('aria-pressed',String(view==='list'));
+  updateContext();
+}
+function updateContext() {
+  document.body.dataset.reviewContext=$('count-dialog').open?'count':$('log-dialog').open?'log':view;
+  if($('count-dialog').open && countTarget) document.body.dataset.reviewObject=countTarget;
+  else delete document.body.dataset.reviewObject;
+}
+function drawPallet(bin) {
+  const ctx=$('pallet').getContext('2d'); if(!ctx) return;
+  ctx.clearRect(0,0,240,200); ctx.lineWidth=2.8; ctx.strokeStyle='#3b5742'; ctx.lineJoin='round';
+  function face(points,color) {
+    ctx.beginPath(); ctx.moveTo(...points[0]); points.slice(1).forEach(p=>ctx.lineTo(...p));
+    ctx.closePath(); ctx.fillStyle=color; ctx.fill(); ctx.stroke();
+  }
+  function box(x,y,w,d,h,colors) {
+    const a=[x,y], b=[x+w,y-w/2], c=[x+w+d,y-w/2+d/2], e=[x+d,y+d/2];
+    face([e,c,[c[0],c[1]+h],[e[0],e[1]+h]],colors[2]);
+    face([a,e,[e[0],e[1]+h],[a[0],a[1]+h]],colors[1]);
+    face([a,b,c,e],colors[0]);
+  }
+  for(let i=0;i<3;i++) box(14+i*35,111+i*17.5,95,23,13,['#e0e6ce','#a7b99b','#879f80']);
+  if(bin.book>0) {
+    box(26,81,79,66,45,['#e1ebbc','#bdcda1','#97ad8b']);
+    face([[54,95],[133,55.5],[145,61.5],[66,101]],'#f7f7df');
+    if(bin.book>5) box(35,57,43,40,29,['#ecefd5','#c5d1b3','#a7ba9b']);
+  }
+}
+function formatDelta(actual,book) {
+  const diff=actual-book;
+  return diff===0?'账实相符':(diff>0?'盘盈 '+diff:'盘亏 '+Math.abs(diff))+' 件';
+}
+function orderedRecords() {
+  return [...records.values()].sort((a,b)=>b.time-a.time || b.key.localeCompare(a.key));
+}
+function renderDetail() {
+  const bin=byId.get(selected);
+  $('selected-detail').hidden=!bin; $('selection-prompt').hidden=!!bin;
+  const anchors={'detail-id':'detail','detail-state':'state','detail-product':'product','detail-qty':'quantity','open-count':'begin','last-count':'latest','back-to-slot':'back'};
+  for(const [id,name] of Object.entries(anchors)) {
+    if(bin) $(id).dataset.reviewId='depot-'+name+'-'+bin.id;
+    else delete $(id).dataset.reviewId;
+  }
+  if(!bin) return;
+  $('detail-id').textContent=bin.id; $('detail-state').textContent=states[bin.state].join(' ');
+  $('detail-product').textContent=bin.product; $('detail-qty').textContent=bin.book;
+  $('detail-aisle').textContent=bin.aisle; $('scope').textContent=bin.id;
+  $('count-label').textContent='登记 '+bin.id+' 盘点';
+  const recent=orderedRecords().find(r=>r.bin===bin.id);
+  $('last-count').textContent=recent?'实盘 '+recent.actual+' 件':'尚未盘点';
+  drawPallet(bin);
+}
+function render() {
+  let count=0;
+  if(selected && !matches(byId.get(selected))) {
+    $('announce').textContent='原货位已超出当前条件，请从匹配项中选择货位。'; selected=null;
+  }
+  for(const bin of bins) {
+    const match=matches(bin), active=selected===bin.id, marker=planButtons.get(bin.id), row=rowButtons.get(bin.id);
+    if(match) count++;
+    marker.disabled=!match; marker.setAttribute('aria-pressed',String(active));
+    row.setAttribute('aria-pressed',String(active)); row.closest('tr').hidden=!match;
+    if(active) row.closest('tr').setAttribute('aria-current','true');
+    else row.closest('tr').removeAttribute('aria-current');
+  }
+  $('empty').hidden=count!==0;
+  $('result').textContent='匹配 '+count+' / '+bins.length+' 个货位';
+  $('log-count').textContent=records.size;
+  renderDetail();
+}
+function noteStorage() {
+  $('storage-note').textContent=durable?'账面库存为演示快照。盘点结果仅保存在当前浏览器的本仓记录。':'账面库存为演示快照。浏览器未允许保存，新盘点仅在当前页面有效。';
+}
+function readRecords() {
+  try {
+    for(let i=0;i<localStorage.length;i++) {
+      const name=localStorage.key(i);
+      if(!name||!name.startsWith(prefix)) continue;
+      try {
+        const item=JSON.parse(localStorage.getItem(name));
+        if(!item||typeof item.key!=='string'||name!==prefix+item.key||!byId.has(item.bin)) continue;
+        if(!Number.isSafeInteger(item.actual)||item.actual<0||item.actual>9999||!Number.isFinite(new Date(item.time).getTime())) continue;
+        records.set(item.key,item);
+      } catch { /* Isolate malformed records from other valid counts. */ }
+    }
+  } catch { durable=false; }
+  noteStorage();
+}
+function renderLog() {
+  const list=$('records'); list.replaceChildren(); $('log-empty').hidden=records.size>0;
+  for(const item of orderedRecords()) {
+    const bin=byId.get(item.bin), li=el('li');
+    li.dataset.reviewId='depot-record-'+item.key;
+    const stamp=el('time','',new Date(item.time).toLocaleString('zh-CN',{hour12:false}));
+    stamp.dateTime=new Date(item.time).toISOString();
+    li.append(el('strong','',bin.id),document.createTextNode(bin.product+' · '+formatDelta(item.actual,bin.book)),el('div','','实盘 '+item.actual+' 件 · 账面 '+bin.book+' 件'),stamp);
+    list.append(li);
+  }
+}
+function openCount() {
+  const bin=byId.get(selected); if(!bin||!matches(bin)) return;
+  countTarget=bin.id; $('count-form').reset(); $('count-object').textContent=bin.id+' · '+bin.product;
+  for(const [id,name] of [['count-title','count-title'],['actual','count-actual'],['save-count','count-save']]) $(id).dataset.reviewId='depot-'+name+'-'+bin.id;
+  $('count-book').textContent=bin.book; $('delta').textContent='请输入 0 到 9999 的整数。';
+  $('count-dialog').showModal(); updateContext(); $('actual').focus();
+}
+function saveCount(event) {
+  event.preventDefault();
+  if(!$('count-dialog').open||!byId.has(countTarget)||!$('actual').checkValidity()) return;
+  const bin=byId.get(countTarget), actual=$('actual').valueAsNumber;
+  if(!Number.isInteger(actual)||actual<0||actual>9999) return;
+  const time=Date.now();
+  const key=typeof crypto.randomUUID==='function'?crypto.randomUUID():time.toString(36)+'-'+Math.random().toString(36).slice(2);
+  const record={key,time,bin:bin.id,actual};
+  try {localStorage.setItem(prefix+key,JSON.stringify(record));} catch {durable=false;}
+  records.set(key,record); noteStorage(); render(); $('count-dialog').close(); updateContext();
+  $('announce').textContent='已记录 '+bin.id+' 实盘 '+actual+' 件。'+formatDelta(actual,bin.book)+'。';
+}
+window.formaRevealSpatial=function(reviewId) {
+  if($('count-dialog').open||$('log-dialog').open||typeof reviewId!=='string') return false;
+  const found=/^depot-(map|row|detail)-([A-D]-0[1-4])$/.exec(reviewId);
+  if(!found||!byId.has(found[2])) return false;
+  const [,target,address]=found, bin=byId.get(address);
+  if(!matchesQuery(bin)) $('query').value='';
+  if(!matchesState(bin)) $('state-filter').value='';
+  if(target==='map') setView('plan');
+  if(target==='row') setView('list');
+  selectBin(bin,false);
+  return true;
+};
+$('open-count').addEventListener('click',openCount);
+$('actual').addEventListener('input',()=>{
+  const input=$('actual'), bin=byId.get(countTarget);
+  $('delta').textContent=bin&&input.validity.valid?formatDelta(input.valueAsNumber,bin.book):'请输入 0 到 9999 的整数。';
+});
+$('count-form').addEventListener('submit',saveCount);
+for(const id of ['close-count','cancel-count']) $(id).addEventListener('click',()=>{$('count-dialog').close();updateContext();});
+$('count-dialog').addEventListener('close',()=>{if(!$('count-dialog').open) countTarget=null;updateContext();});
+$('open-log').addEventListener('click',()=>{readRecords();renderLog();$('log-dialog').showModal();updateContext();$('log-title').focus();});
+$('close-log').addEventListener('click',()=>{$('log-dialog').close();updateContext();});
+$('log-dialog').addEventListener('close',updateContext);
+$('show-plan').addEventListener('click',()=>setView('plan'));
+$('show-list').addEventListener('click',()=>setView('list'));
+$('query').addEventListener('input',render); $('state-filter').addEventListener('change',render);
+$('clear').addEventListener('click',()=>{$('query').value=''; $('state-filter').value='';render();$('query').focus();});
+$('back-to-slot').addEventListener('click',()=>(view==='plan'?planButtons:rowButtons).get(selected)?.focus());
+addEventListener('storage',event=>{
+  if(event.key!==null&&!event.key.startsWith(prefix)) return;
+  if(event.key===null && durable) records.clear();
+  else if(event.newValue===null) records.delete(event.key?.slice(prefix.length));
+  readRecords();render();if($('log-dialog').open) renderLog();
+});
+createBins();readRecords();setView('plan');render();
+</script>
+</body>
+</html>

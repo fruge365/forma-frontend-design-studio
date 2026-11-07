@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#202f31">
+<title>栖庭 · 现场巡检</title>
+<style>
+:root{--ink:#202f31;--muted:#526463;--green:#126858;--mint:#d8ebe1;--paper:#f7f7f1;--line:#cdd5cc;--white:#fffef9;font-family:Inter,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body{margin:0}button,select,textarea{font:inherit}button,a,select{-webkit-tap-highlight-color:transparent}button,a{touch-action:manipulation}a{color:inherit;text-decoration:none}button{color:inherit;cursor:pointer}button:focus-visible,a:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #a6531e;outline-offset:3px}[hidden]{display:none!important}h1,h2,h3,p,dl,dd,ol{margin:0}button{border:0}a:focus:not(:focus-visible),[tabindex="-1"]:focus{outline:none}
+.top{background:var(--ink);color:var(--paper);padding:0 max(22px,calc((100vw - 1110px)/2));height:62px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:inline-flex;align-items:center;gap:10px;font-size:18px;font-weight:750;letter-spacing:.02em}.mark{width:24px;height:24px;display:inline-block;border:3px solid #a4d9bf;border-radius:7px 7px 6px 0;position:relative}.mark:after{content:"";position:absolute;inset:5px 1px -3px 5px;border:2px solid #a4d9bf;border-bottom:0;border-right:0}.top small{color:#d6e1d9;font-size:13px}.wrap{max-width:1154px;padding:42px 22px max(32px,env(safe-area-inset-bottom));margin:auto}.heading{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:26px}.date,.mono{font-family:"IBM Plex Mono",Consolas,"Microsoft YaHei",monospace;font-variant-numeric:tabular-nums}.date{font-size:13px;color:var(--muted);margin-bottom:7px}.heading h1,.detail h1{font-size:clamp(34px,5vw,59px);letter-spacing:-.065em;line-height:1.12}.shift{font-size:13px;color:var(--muted);text-align:right}.layout{display:grid;grid-template-columns:minmax(255px,.86fr) minmax(0,1.5fr);gap:clamp(20px,4vw,52px);align-items:start}
+.next{background:var(--ink);color:var(--paper);padding:27px;border-radius:5px;position:relative;overflow:hidden;border-top:5px solid #70bc9b}.next:after{content:"";width:68px;height:9px;background:repeating-linear-gradient(122deg,transparent 0 7px,#52716b 7px 10px);position:absolute;right:20px;top:22px}.next .kicker{color:#c3d6c9;font-size:13px}.when{font-weight:650;line-height:1;margin:20px 0 14px;letter-spacing:-.08em;display:block;font-size:clamp(42px,6vw,64px);color:#bcdfc9}.next h2{font-size:clamp(23px,2.8vw,33px);line-height:1.3}.next .location{font-size:14px;color:#d4ded7;margin:9px 0 23px}.cta,.back,.tab,.secondary{display:inline-flex;align-items:center;min-height:44px;gap:12px;justify-content:center;font-weight:650}.cta{background:var(--green);color:white;border:1px solid var(--green);border-radius:4px;padding:10px 18px}.next .cta{background:#c7e5d5;color:#163b34;border-color:#c7e5d5}.arrow{font-size:19px;line-height:1}.shiftline{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:13px;margin:18px 0 8px}.meter{display:flex;gap:5px}.meter i{height:5px;background:var(--line);flex:1}.meter .filled{background:var(--green)}.subheading{font-size:22px;letter-spacing:-.03em}.tabs{display:flex;gap:4px;margin:12px 0 2px;border-bottom:1px solid var(--line);flex-wrap:wrap}.tab{background:transparent;padding:5px 11px;color:var(--muted);font-weight:500;border-bottom:3px solid transparent}.tab[aria-pressed=true]{border-color:var(--green);color:var(--green);font-weight:750}.list{padding:0;list-style:none}.job{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center;border-bottom:1px solid var(--line);min-height:86px;padding:13px 0}.job:hover{background:#eaf0e7}.time{font-size:18px;font-weight:650;letter-spacing:-.07em}.job h3{font-size:17px;font-weight:700;line-height:1.4}.job p{color:var(--muted);font-size:13px;margin-top:2px}.state{font-size:12px;color:var(--muted);white-space:nowrap}.state.draft{color:#884622}.state.done{color:var(--green)}.foot{margin-top:26px;font-size:12px;line-height:1.8;color:var(--muted)}.message{line-height:1.6;font-size:14px;color:var(--green);margin:15px 0}.message:empty{display:none}.empty{padding:24px 0;color:var(--muted)}
+.back{color:var(--green);background:transparent;padding:0;margin:0 0 16px}.detail{max-width:740px;margin:auto}.detail h1{font-size:clamp(32px,5vw,46px)}.meta{color:var(--muted);margin-top:9px}.facts{margin:24px 0 20px;border-block:1px solid var(--line);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px}.facts div{padding:13px 0}.facts dt{font-size:12px;color:var(--muted);margin-bottom:3px}.facts dd{font-weight:650}.instructions{line-height:1.7;color:#41514f;margin:8px 0 20px}.form{background:var(--white);border:1px solid var(--line);padding:20px;border-radius:5px}.form h2{font-size:21px}.form label{display:block;font-size:14px;font-weight:650;margin:16px 0 6px}textarea,select{width:100%;color:var(--ink);background:var(--white);border:1px solid #84948d;border-radius:3px;padding:10px 12px;min-height:44px;line-height:1.5}textarea{resize:vertical}.error{color:#a43524;font-size:14px;margin:8px 0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.secondary{border:1px solid #899a91;border-radius:4px;padding:8px 14px;background:var(--white)}.record{background:var(--mint);border-inline-start:3px solid var(--green);padding:15px;line-height:1.7;overflow-wrap:anywhere;white-space:pre-wrap}.record small{display:block}
+@media(max-width:720px){.top{height:51px;padding:0 18px}.wrap{padding:24px 18px max(24px,env(safe-area-inset-bottom))}.heading{margin-bottom:18px}.layout{grid-template-columns:1fr;gap:24px}.next{padding:17px 19px;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;align-items:center}.next:after{width:39px;height:6px;top:15px;right:15px}.next .kicker,.next .when,.next h2,.next .location{grid-column:1}.next .when{font-size:37px;margin:10px 0 3px}.next h2{font-size:22px}.next .location{margin:5px 0 0;font-size:13px}.next .cta{grid-column:2;grid-row:3/5;padding:8px 13px;font-size:14px;gap:7px}.shiftline{margin-top:12px}.subheading{font-size:21px}.job{gap:12px;min-height:74px}.time{font-size:16px}.job h3{font-size:16px}.form{padding:16px}}
+@media(max-width:355px){.top{padding:0 13px}.wrap{padding-inline:13px}.next{padding-inline:13px}.next .cta{font-size:13px;padding-inline:9px}.job{gap:9px}.shift{max-width:72px}.tab{padding-inline:8px}.form .actions>*{flex:1}}
+</style>
+</head><body>
+<header class="top"><span class="brand"><i class="mark" aria-hidden="true"></i>栖庭现场</span><small>东园运维组</small></header>
+<main class="wrap">
+<section id="home" aria-labelledby="home-title">
+  <header class="heading"><div><p class="date">2026.11.07 · 周六</p><h1 id="home-title" tabindex="-1">今日工单</h1></div><span class="shift">白班 · 08:00–16:00</span></header>
+  <div class="layout">
+    <aside><section class="next" data-review-id="field-next"><p class="kicker" id="next-label">下一处现场</p><strong class="when mono" id="next-time"></strong><h2 id="next-title"></h2><p class="location" id="next-location"></p><a class="cta" id="open-next" data-review-id="field-open-next">查看工单 <span class="arrow" aria-hidden="true">→</span></a></section>
+    <div class="shiftline"><span>班次进度</span><span id="progress"></span></div><div class="meter" id="meter" aria-hidden="true"></div></aside>
+    <section aria-labelledby="list-title" data-review-id="field-timeline"><h2 class="subheading" id="list-title">班次安排</h2><div class="tabs" role="group" aria-label="按工单状态筛选"><button class="tab" type="button" data-filter="all">全部</button><button class="tab" type="button" data-filter="open">待登记</button><button class="tab" type="button" data-filter="done">已登记</button></div><ol class="list" id="jobs"></ol></section>
+  </div>
+</section>
+<section id="detail" class="detail" hidden>
+  <a class="back" href="#home" id="return">← 今日工单</a>
+  <p class="date" id="ticket-no"></p><h1 id="job-title" tabindex="-1"></h1><p class="meta" id="job-address"></p>
+  <dl class="facts"><div><dt>计划到场</dt><dd class="mono" id="job-time"></dd></div><div><dt>工单状态</dt><dd id="job-state"></dd></div></dl>
+  <h2 class="subheading">现场要求</h2><p class="instructions" id="instructions"></p>
+  <div id="saved-record" class="record" hidden data-review-id="field-saved-record"></div>
+  <form class="form" id="job-form" novalidate data-review-id="field-register">
+    <h2>登记处理</h2><label for="result">处理结果（必选）</label><select id="result" required><option value="">选择结果</option><option>检查正常</option><option>已现场处理</option><option>需要复查</option></select>
+    <label for="note">现场备注（选填）</label><textarea id="note" maxlength="220" rows="2" placeholder="位置、处理措施或复查原因"></textarea>
+    <p class="foot">返回今日工单时，已填写内容会保存为本机草稿。</p><p id="form-error" class="error" role="alert" hidden></p>
+    <div class="actions"><button class="cta" type="submit" data-review-id="field-submit">完成登记</button><button class="secondary" type="button" id="save-draft">保存草稿并返回</button></div>
+  </form>
+</section>
+<p id="notice" class="message" role="status"></p><footer class="foot">演示班次 · 草稿与处理记录保存在当前浏览器。</footer>
+</main>
+<script>
+'use strict';
+const jobs=[
+  {id:'021',time:'08:00',title:'值班室交接',where:'服务中心 · 一层值班室',detail:'核对交接簿、巡检钥匙与当班工单。'},
+  {id:'022',time:'09:30',title:'通廊应急照明巡检',where:'东连廊 · C2 入口',detail:'按顺序检查入口两侧应急灯与疏散标识。记录不亮的灯号及处理结果。'},
+  {id:'023',time:'11:00',title:'生活泵房巡查',where:'设备楼 · 地下一层',detail:'核对两台泵的运行声音、压力表读数及地面渗水情况。'},
+  {id:'024',time:'14:00',title:'庭院排水口检查',where:'中庭 · 南侧步道',detail:'检查步道旁排水口，清除落叶并记录积水位置。'}
+];
+const choices=['检查正常','已现场处理','需要复查'];
+const storageKey='qiting-field-v1:'+new URL('.',location.href).pathname;
+const id=name=>document.getElementById(name);
+const initial={'021':{status:'done',result:'检查正常',note:'钥匙与交接簿已核对。'}};
+let state=readState(),filter='all',active=null,lastTrigger='',message='';
+function readState(){
+  try{
+    const data=JSON.parse(localStorage.getItem(storageKey)||'{}');
+    const clean={...initial};
+    for(const job of jobs){
+      const entry=data?.[job.id];
+      if(entry&&['draft','done'].includes(entry.status)&&typeof entry.note==='string'&&(choices.includes(entry.result)||(entry.status==='draft'&&entry.result===''))){
+        clean[job.id]={status:entry.status,result:entry.result,note:entry.note.slice(0,220)};
+      }
+    }
+    return clean;
+  }catch{return {...initial}}
+}
+function save(entry){
+  const next={...readState(),[active.id]:entry};
+  try{localStorage.setItem(storageKey,JSON.stringify(next));state=next;return true}
+  catch{id('form-error').hidden=false;id('form-error').textContent='保存失败。请检查浏览器存储后重试，已填写的内容仍在此处。';return false}
+}
+function node(tag,cls,label){const el=document.createElement(tag);if(cls)el.className=cls;if(label!==undefined)el.textContent=label;return el}
+function stateLabel(job){const status=state[job.id]?.status;return status==='done'?'已登记':status==='draft'?'有草稿':'待登记'}
+function drawList(){
+  const completed=jobs.filter(job=>state[job.id]?.status==='done').length;
+  const next=jobs.find(job=>state[job.id]?.status!=='done');
+  id('next-label').textContent=next?'下一处现场':'今日现场';id('next-time').textContent=next?next.time:'✓';
+  id('next-title').textContent=next?next.title:'本班已全部登记';id('next-location').textContent=next?next.where:'可在班次安排查看已保存的处理记录。';
+  id('open-next').hidden=!next;if(next)id('open-next').href='#job-'+next.id;
+  id('progress').textContent='已登记 '+completed+' / '+jobs.length+' 项';id('meter').replaceChildren(...jobs.map((_,i)=>node('i',i<completed?'filled':'')));
+  document.querySelectorAll('[data-filter]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.filter===filter)));
+  const list=id('jobs');list.replaceChildren();
+  for(const job of jobs){
+    const done=state[job.id]?.status==='done';if((filter==='open'&&done)||(filter==='done'&&!done))continue;
+    const link=node('a','job');link.href='#job-'+job.id;link.id='open-'+job.id;link.dataset.reviewId='field-job-'+job.id;
+    const info=node('div');info.append(node('h3','',job.title),node('p','',job.where));
+    link.append(node('span','time mono',job.time),info,node('span','state '+(state[job.id]?.status||''),stateLabel(job)+' ›'));
+    const row=node('li');row.append(link);list.append(row);
+  }
+  if(!list.children.length)list.append(node('li','empty','这个状态下暂无工单。'));
+}
+function drawDetail(job){
+  const entry=state[job.id],done=entry?.status==='done';
+  id('ticket-no').textContent='巡检工单 · QT-'+job.id;id('job-title').textContent=job.title;id('job-address').textContent=job.where;
+  id('job-time').textContent=job.time;id('job-state').textContent=stateLabel(job);id('instructions').textContent=job.detail;
+  id('job-form').hidden=done;id('saved-record').hidden=!done;
+  if(done){id('saved-record').replaceChildren(node('strong','',entry.result),node('small','',entry.note||'无补充备注'))}
+  id('result').value=entry?.result||'';id('note').value=entry?.note||'';id('form-error').hidden=true;id('result').removeAttribute('aria-invalid');
+}
+function route(){
+  const previous=active,next=jobs.find(job=>location.hash==='#job-'+job.id)||null;
+  if(previous!==next&&previous&&!id('job-form').hidden&&state[previous.id]?.status!=='done'){
+    const draft={status:'draft',result:id('result').value,note:id('note').value.trim()};
+    const stored=state[previous.id];
+    if(draft.result!==(stored?.result||'')||draft.note!==(stored?.note||'')){
+      if(!save(draft)){history.replaceState(null,'','#job-'+previous.id);return}
+      message='已在本机保存草稿。';
+    }
+  }
+  active=next;
+  id('home').hidden=!!active;id('detail').hidden=!active;id('notice').textContent=message;message='';
+  if(active){drawDetail(active);id('job-title').focus()}
+  else{drawList();if(previous){const trigger=id(lastTrigger);(trigger&&!trigger.hidden?trigger:id('home-title')).focus()}}
+  if(!active&&!previous)window.scrollTo(0,0);
+}
+document.querySelector('.tabs').addEventListener('click',event=>{const button=event.target.closest('[data-filter]');if(button){filter=button.dataset.filter;drawList()}});
+id('home').addEventListener('click',event=>{const link=event.target.closest('a[href^="#job-"]');if(link)lastTrigger=link.id});
+id('result').addEventListener('change',()=>{id('form-error').hidden=true;id('result').removeAttribute('aria-invalid')});
+id('save-draft').addEventListener('click',()=>{
+  if(save({status:'draft',result:id('result').value,note:id('note').value.trim()})){message='已在本机保存草稿。';location.hash='home'}
+});
+id('job-form').addEventListener('submit',event=>{
+  event.preventDefault();
+  if(!choices.includes(id('result').value)){id('form-error').hidden=false;id('form-error').textContent='请选择处理结果后再登记。';id('result').setAttribute('aria-invalid','true');id('result').focus();return}
+  if(save({status:'done',result:id('result').value,note:id('note').value.trim()})){message='处理记录已保存到本机。';location.hash='home'}
+});
+window.addEventListener('hashchange',route);
+route();
+</script></body></html>

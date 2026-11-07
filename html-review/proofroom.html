@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f5ef">
+<title>字样 · 海报校样室</title>
+<style>
+:root {
+  --ink:#20213c; --muted:#626259; --line:#cecec3; --paper:#f5f5ef;
+  --ground:#e6e7e0; --sand:#eee4cb; --red:#bc3826; --navy:#242645;
+  --sans:Inter,"Microsoft YaHei","PingFang SC",sans-serif;
+  --serif:"DM Serif Text","Noto Serif CJK SC",SimSun,serif;
+  --mono:"IBM Plex Mono",Consolas,monospace;
+  color:var(--ink); background:var(--paper); font:15px/1.5 var(--sans);
+}
+*{box-sizing:border-box}
+body,h1,h2,h3,p,figure,ul,dl,dt,dd{margin:0}
+button,input{font:inherit;color:inherit;accent-color:var(--navy)}
+button{cursor:pointer}
+:focus-visible{outline:3px solid #236099;outline-offset:3px}
+[hidden]{display:none!important}
+.sr,.skip:not(:focus){position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden;white-space:nowrap}
+.skip:focus{position:fixed;top:4px;left:4px;background:#fff;padding:8px;z-index:10}
+.mast{border-bottom:1px solid var(--line)}
+.shell{width:min(1480px,calc(100% - clamp(32px,7vw,108px)));margin-inline:auto}
+.mast .shell{height:59px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-size:22px;letter-spacing:.03em;font-weight:800;display:flex;align-items:center;gap:12px}
+.stamp{width:25px;height:27px;position:relative;display:block}
+.stamp::before,.stamp::after{content:"";position:absolute;width:15px;height:20px;border:2px solid var(--ink);transform:skewY(-12deg)}
+.stamp::before{top:5px;left:2px;background:var(--paper)}.stamp::after{top:0;left:8px;background:linear-gradient(to bottom,var(--paper) 0 36%,var(--ink) 36% 48%,var(--paper) 48% 61%,var(--ink) 61% 72%,var(--paper) 72%)}
+.mast p,.eyebrow,.caption,.subtle{color:var(--muted);font-size:13px}
+.intro{padding:clamp(20px,2.8vw,40px) 0 clamp(18px,2vw,28px);display:flex;align-items:flex-end;justify-content:space-between;gap:18px}
+.eyebrow{margin-bottom:5px}.intro h1{font:750 clamp(34px,4.2vw,58px)/1.18 var(--serif);letter-spacing:.025em}
+.mode{display:flex;align-items:center;gap:3px;border:1px solid #a9a99d;padding:3px;border-radius:4px}
+.mode button{border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:6px 13px;border-radius:2px;font-weight:650;font-size:14px}
+.mode button[aria-pressed=true],.preset[aria-pressed=true]{background:var(--ink);color:white}
+.switch-icon{width:18px;height:14px;border:1.5px solid currentColor;background:linear-gradient(90deg,transparent 43%,currentColor 43% 56%,transparent 56%);display:inline-block}
+.switch-icon.overlay{background:linear-gradient(90deg,currentColor 50%,transparent 50%)}
+.workbench{display:grid;grid-template-columns:minmax(0,1fr) minmax(238px,26%);border-block:1px solid var(--line);align-items:stretch;margin-bottom:28px}
+.workspace{min-width:0;background:var(--ground);padding:clamp(17px,2vw,32px)}
+.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,2.2vw,34px);align-items:start}
+.proof{width:100%;min-width:0}
+.proof-head,.overlay-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;font-size:13px;font-weight:700}
+.version{display:inline-flex;align-items:center;gap:7px}
+.letter{font:700 13px/1.3 var(--mono);border:1px solid currentColor;padding:2px 5px;display:inline-block}
+.caption{font-size:11px;font-weight:400}
+.canvas{container-type:inline-size;position:relative;width:100%;aspect-ratio:4/5;box-shadow:0 8px 14px -8px #2525354d}
+.poster{position:absolute;inset:0;isolation:isolate;overflow:hidden;background:var(--sand);color:var(--navy)}
+.poster *{margin:0}
+.poster::before{content:"";position:absolute;inset:0;z-index:2;opacity:.035;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 2px,#473a24 2px 3px)}
+.imprint{position:absolute;top:5.8%;left:6%;right:6%;display:flex;justify-content:space-between;gap:2%;font:700 2.6cqw/1.2 var(--sans);border-top:.45cqw solid currentColor;padding-top:1.7cqw}
+.poster-title{position:absolute;font:900 23.5cqw/.91 var(--serif);letter-spacing:-1.3cqw;z-index:1}
+.poster-title span{display:block}.version-a .poster-title{top:18%;left:5%}
+.tidal{position:absolute;aspect-ratio:1;border-radius:50%;pointer-events:none}
+.version-a .tidal{width:110%;top:31%;left:21%;transform:rotate(-23deg) scaleY(.66);background:repeating-radial-gradient(circle at 49% 45%,var(--red) 0 1.3%,var(--sand) 1.6% 2.8%)}
+.version-a .tidal::after{content:"";position:absolute;inset:25% 30%;border-radius:50%;background:var(--red)}
+.poster-foot{position:absolute;z-index:3;bottom:0;left:0;right:0;padding:0 6% 5.2%;background:var(--sand)}
+.poster-foot::before{content:"";display:block;border-top:.48cqw solid currentColor;margin-bottom:1.55cqw}
+.version-b .poster-foot{background:var(--navy)}
+.dates{font:700 7.3cqw/1.05 var(--mono);letter-spacing:-.36cqw;font-variant-numeric:tabular-nums}
+.venue{margin-top:1.4cqw;font:700 3.2cqw/1.3 var(--sans)}
+.version-b{color:var(--sand);background:var(--navy)}.version-b::before{background:repeating-linear-gradient(0deg,transparent 0 2px,#e7dfca 2px 3px)}
+.version-b .poster-title{left:5%;top:15%;font-size:20.5cqw;letter-spacing:-.8cqw}
+.version-b .tidal{width:114%;left:23%;top:26%;transform:rotate(-44deg) scaleY(.55);background:repeating-radial-gradient(circle at 49% 45%,#ea583d 0 1.4%,var(--navy) 1.6% 3%)}
+.version-b .tidal::after{content:"";position:absolute;inset:25% 30%;border-radius:50%;background:#ea583d}
+.meta{font-size:12px;color:var(--muted);margin-top:12px}
+.changes{padding:clamp(18px,2.1vw,32px);background:#fbfbf6;border-left:1px solid var(--line)}
+.changes-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding-bottom:13px;border-bottom:2px solid var(--ink)}
+.changes h2{font-size:21px;letter-spacing:.03em}.changes-head small{font:13px var(--mono);color:var(--muted)}
+.change{padding:clamp(12px,1.2vw,18px) 0;border-bottom:1px solid var(--line)}.change:last-child{border:0}
+.change dt{font-size:13px;font-weight:750;margin-bottom:7px}
+.value{display:grid;grid-template-columns:20px 1fr;align-items:baseline;gap:8px;margin-top:3px;font-size:14px;overflow-wrap:anywhere}
+.value i{font:600 11px/1.4 var(--mono);font-style:normal;text-align:center;border:1px solid #aaa99e;align-self:start;margin-top:3px;color:#585852}
+.value.new i{background:var(--navy);border-color:var(--navy);color:var(--sand)}
+.overlay-view{margin-inline:auto;max-width:470px}
+.overlay-canvas{cursor:ew-resize;touch-action:pan-y}
+.overlay-canvas .version-a{z-index:1;clip-path:inset(0 calc(100% - var(--wipe,50%)) 0 0)}
+.divider{position:absolute;left:var(--wipe,50%);top:0;bottom:0;z-index:4;width:2px;background:#fff;border-left:1px solid #242645;pointer-events:none;transform:translateX(-50%)}
+.divider::after{content:"↔";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:700 17px/26px var(--sans);text-align:center;width:32px;color:var(--ink);background:#fff;border:1px solid var(--ink);border-radius:3px}
+.overlay-canvas[data-endpoint=true] .divider{display:none}
+.controls{padding-top:14px;display:grid;gap:9px}
+.range-line,.presets{display:flex;align-items:center;justify-content:space-between;gap:9px}.range-line label,.range-line output{font-size:13px}
+#wipe-position{width:100%;margin:0;height:34px;cursor:ew-resize}
+.presets{justify-content:flex-start;flex-wrap:wrap}.preset{min-height:36px;border:1px solid #aaaba2;background:#fafaf5;border-radius:3px;padding:5px 11px;font-size:13px}
+.mobile-label{display:none}
+@media(max-width:1050px){
+ .workbench{grid-template-columns:minmax(0,1fr) minmax(212px,26%)}.shell{width:calc(100% - 38px)}
+ .workspace,.changes{padding:16px}.split{gap:14px}.value{font-size:13px}
+}
+@media(max-width:820px){
+ .workbench{grid-template-columns:1fr}.changes{border-left:0;border-top:1px solid var(--line)}.change-list{display:grid;grid-template-columns:1fr 1fr;column-gap:20px}
+ .change:nth-last-child(2){border-bottom:0}.workspace,.changes{padding:20px}
+ .overlay-view{max-width:420px}
+}
+@media(max-width:560px){
+ .shell{width:calc(100% - 28px)}.mast .shell{height:47px}.brand{font-size:19px}
+ .mast p,.eyebrow{font-size:12px}.intro{align-items:flex-start;flex-direction:column;gap:15px;padding:21px 0 16px}
+ .mode button{min-height:42px}.workspace,.changes{padding:14px}.split{grid-template-columns:1fr;gap:24px}
+ .split .proof{max-width:400px;margin-inline:auto}.proof-head,.overlay-head{margin-bottom:8px}.meta{margin-top:7px}
+ .desktop-label{display:none}.mobile-label{display:inline}.change-list{grid-template-columns:1fr}.change:nth-last-child(2){border-bottom:1px solid var(--line)}.changes h2{font-size:19px}
+ .preset{min-height:42px}.range-line{flex-wrap:wrap}.caption{font-size:10px}
+}
+@media(forced-colors:active){.poster{forced-color-adjust:none}.mode button[aria-pressed=true],.preset[aria-pressed=true]{outline:2px solid SelectedItem}}
+</style>
+</head>
+<body data-review-context="split" data-review-pair="proofroom-A1-B1" data-review-position="50">
+<a class="skip" href="#comparison-title">跳到校样对照</a>
+<header class="mast"><div class="shell"><div class="brand"><span class="stamp" aria-hidden="true"></span>字样</div><p>汐岸美术馆 · 视觉设计组</p></div></header>
+<main class="shell">
+ <div class="intro">
+  <div><p class="eyebrow">2026 秋季展览 / 主视觉</p><h1 id="comparison-title" tabindex="-1" data-review-id="proofroom-title">海报校样室</h1></div>
+  <div class="mode" role="group" aria-label="校样对照方式">
+   <button type="button" id="mode-split" aria-pressed="true" aria-controls="split-view" data-review-id="proofroom-mode-split"><i class="switch-icon" aria-hidden="true"></i><span class="desktop-label">并排对照</span><span class="mobile-label">上下对照</span></button>
+   <button type="button" id="mode-overlay" aria-pressed="false" aria-controls="overlay-view" data-review-id="proofroom-mode-overlay"><i class="switch-icon overlay" aria-hidden="true"></i>叠合对照</button>
+  </div>
+ </div>
+ <div class="workbench">
+  <section class="workspace" aria-label="校样画布">
+   <div class="split" id="split-view"></div>
+   <section id="overlay-view" class="overlay-view" aria-label="同画幅叠合对照" hidden>
+    <header class="overlay-head"><span class="version"><b class="letter">A</b> 左侧 · 初稿</span><span class="version">右侧 · 修订稿 <b class="letter">B</b></span></header>
+    <div class="canvas overlay-canvas" id="wipe-canvas" data-review-id="proofroom-wipe-canvas" role="img" aria-label="在同一画幅上对齐的两版海报，左为初稿，右为修订稿">
+     <i class="divider" aria-hidden="true"></i>
+    </div>
+    <div class="controls">
+     <div class="range-line"><label for="wipe-position">初稿 A 可见宽度</label><output for="wipe-position" id="wipe-value">50%</output></div>
+     <input type="range" min="0" max="100" step="1" value="50" id="wipe-position" data-review-id="proofroom-position">
+     <div class="presets" role="group" aria-label="对照位置">
+      <button class="preset" type="button" id="show-a">只看 A</button>
+      <button class="preset" type="button" id="show-both">居中对照</button>
+      <button class="preset" type="button" id="show-b">只看 B</button>
+     </div>
+    </div>
+   </section>
+  </section>
+  <aside class="changes" aria-labelledby="change-title">
+   <div class="changes-head"><h2 id="change-title" data-review-id="proofroom-changes">版本变更</h2><small>4 项</small></div>
+   <dl class="change-list" id="change-list"></dl>
+  </aside>
+ </div>
+</main>
+<script>
+'use strict';
+const versions = {
+  A:{label:'初稿',date:'09.02',title:['潮间'],dates:'10.18—11.15',hall:'北馆 · 一层展厅',layout:'暖砂底，横排展名'},
+  B:{label:'修订稿',date:'09.09',title:['潮间','字形'],dates:'10.24—11.22',hall:'东馆 · 二号展厅',layout:'深靛底，双行展名'}
+};
+const byId = id => document.getElementById(id);
+function element(tag, className, text) {
+  const node=document.createElement(tag);
+  if(className) node.className=className;
+  if(text!==undefined) node.textContent=text;
+  return node;
+}
+function makePoster(key) {
+  const record=versions[key];
+  const art=element('div','poster version-'+key.toLowerCase());
+  art.setAttribute('aria-hidden','true');
+  const imprint=element('div','imprint');
+  imprint.append(element('span','','汐岸美术馆'),element('span','','字体设计展'));
+  const title=element('div','poster-title');
+  for(const line of record.title) title.append(element('span','',line));
+  const foot=element('div','poster-foot');
+  foot.append(element('div','dates',record.dates),element('div','venue',record.hall));
+  art.append(imprint,title,element('div','tidal'),foot);
+  return art;
+}
+for(const [key,record] of Object.entries(versions)) {
+  const figure=element('figure','proof');
+  const caption=element('figcaption','proof-head');
+  const version=element('span','version');
+  version.append(element('b','letter',key),document.createTextNode(record.label));
+  caption.append(version,element('span','caption',record.date+' 校样'));
+  const canvas=element('div','canvas');
+  canvas.dataset.reviewId='proofroom-poster-'+key;
+  canvas.setAttribute('role','img');
+  canvas.setAttribute('aria-label',record.label+'，'+record.title.join('')+'，'+record.dates+'，'+record.hall+'，'+record.layout);
+  canvas.append(makePoster(key));figure.append(caption,canvas);byId('split-view').append(figure);
+  byId('wipe-canvas').append(makePoster(key));
+}
+const diffs=[
+  ['name','展览标题',record=>record.title.join('')],
+  ['dates','展期',record=>record.dates.replace('—',' 至 ')],
+  ['venue','展厅',record=>record.hall],
+  ['layout','版式',record=>record.layout]
+];
+for(const [id,label,read] of diffs) {
+  const section=element('div','change');
+  section.dataset.reviewId='proofroom-diff-'+id;
+  section.append(element('dt','',label));
+  for(const [key,record] of Object.entries(versions)) {
+    const value=element('dd','value'+(key==='B'?' new':''));
+    const letter=element('i','',key);
+    letter.setAttribute('aria-label',key+' '+record.label);
+    value.append(letter,element('span','',read(record)));section.append(value);
+  }
+  byId('change-list').append(section);
+}
+const slider=byId('wipe-position');
+const canvas=byId('wipe-canvas');
+function setPosition(raw) {
+  const percent=Math.max(0,Math.min(100,Math.round(raw)));
+  slider.value=String(percent);
+  document.body.dataset.reviewPosition=String(percent);
+  byId('wipe-value').value=percent+'%';
+  canvas.style.setProperty('--wipe',percent+'%');
+  canvas.dataset.endpoint=String(percent===0||percent===100);
+  for(const [id,value] of [['show-a',100],['show-both',50],['show-b',0]]) {
+    byId(id).setAttribute('aria-pressed',String(percent===value));
+  }
+  slider.setAttribute('aria-valuetext','初稿 A '+percent+'%，修订稿 B '+(100-percent)+'%');
+}
+function setMode(mode) {
+  document.body.dataset.reviewContext=mode;
+  for(const panel of ['split','overlay']){
+    byId(panel+'-view').hidden=panel!==mode;
+    byId('mode-'+panel).setAttribute('aria-pressed',String(panel===mode));
+  }
+}
+byId('mode-split').addEventListener('click',()=>setMode('split'));
+byId('mode-overlay').addEventListener('click',()=>setMode('overlay'));
+byId('show-a').addEventListener('click',()=>setPosition(100));
+byId('show-both').addEventListener('click',()=>setPosition(50));
+byId('show-b').addEventListener('click',()=>setPosition(0));
+slider.addEventListener('input',()=>setPosition(Number(slider.value)));
+slider.addEventListener('pointerdown',event=>{
+  if(document.body.dataset.formaMode==='annotate')event.preventDefault();
+});
+function moveDivider(event){
+  const box=canvas.getBoundingClientRect();
+  setPosition(100*(event.clientX-box.left)/box.width);
+}
+canvas.addEventListener('pointerdown',event=>{
+  if(document.body.dataset.formaMode==='annotate'||!event.isPrimary||event.button!==0)return;
+  canvas.setPointerCapture(event.pointerId);
+  moveDivider(event);
+});
+canvas.addEventListener('pointermove',event=>{
+  if(canvas.hasPointerCapture(event.pointerId))moveDivider(event);
+});
+canvas.addEventListener('pointerup',event=>{
+  if(canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+});
+window.formaCompareView=Object.freeze({
+  read(){return {mode:document.body.dataset.reviewContext,position:Number(slider.value)};},
+  restore(view){
+    if(!view||!['split','overlay'].includes(view.mode))return false;
+    if(!Number.isInteger(view.position)||view.position<0||view.position>100)return false;
+    setPosition(view.position);
+    setMode(view.mode);
+    return true;
+  }
+});
+setPosition(50);
+</script>
+</body>
+</html>

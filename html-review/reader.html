@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>折页 · 活字印刷札记</title>
+<style>
+:root{color-scheme:light;--paper:#f7f3e9;--panel:#fffdf6;--ink:#25231e;--soft:#635d50;--rule:#bfb6a3;--red:#8e3020;--wash:#f3e0ce;--block:#37332b;--typeface:#e2c7a0;--body-size:19px;--leading:1.95;--serif:"Baskervville","Songti SC",SimSun,Georgia,serif;--sans:Inter,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+:root[data-scheme=dark]{color-scheme:dark;--paper:#20231f;--panel:#292c26;--ink:#ebe6d8;--soft:#bdb9a9;--rule:#6e7165;--red:#ffad91;--wash:#4b3530;--block:#37332b;--typeface:#e2c7a0}
+@media(prefers-color-scheme:dark){:root:not([data-scheme]){color-scheme:dark;--paper:#20231f;--panel:#292c26;--ink:#ebe6d8;--soft:#bdb9a9;--rule:#6e7165;--red:#ffad91;--wash:#4b3530}}
+:root[data-size=small]{--body-size:17px}:root[data-size=large]{--body-size:23px}:root[data-leading=loose]{--leading:2.22}
+*{box-sizing:border-box}
+html{overflow-anchor:none;scroll-padding-top:80px}
+body{margin:0;padding-top:68px;font:16px/1.5 var(--sans);color:var(--ink);background:var(--paper)}
+button,select,input{font:inherit;color:inherit}
+button,select{cursor:pointer}
+a{color:var(--red)}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.bar{position:fixed;z-index:4;inset:0 0 auto;background:var(--paper);border-block:4px solid var(--ink);border-bottom-width:1px}
+.barin{width:min(1248px,100%);margin:auto;min-height:63px;padding:5px clamp(16px,4vw,55px);display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{display:flex;align-items:center;gap:10px;font:700 24px/1.1 var(--serif);letter-spacing:.06em}
+.brand-mark{width:19px;height:25px;border:1px solid var(--red);border-left-width:5px;background:linear-gradient(115deg,transparent 55%,var(--red) 56% 61%,transparent 62%)}
+.actions{display:flex;align-items:center;gap:10px}
+.quiet{border:1px solid var(--rule);border-radius:3px;background:var(--panel);min-height:42px;padding:6px 13px;font-size:14px}
+.quiet:hover,.quiet:focus-visible{border-color:var(--red)}
+.mobile-toc{display:none}
+.shell{width:min(1248px,100%);margin:auto;padding:0 clamp(16px,4vw,55px)}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:clamp(20px,4vw,70px);padding:clamp(32px,5vw,73px) 0 clamp(26px,4vw,58px);border-bottom:2px solid var(--ink)}
+.hero h1{margin:7px 0 15px;font:600 clamp(42px,5.2vw,80px)/1.12 var(--serif);letter-spacing:-.055em}
+.kicker{margin:0;color:var(--red);font-size:14px;font-weight:650;letter-spacing:.15em}
+.standfirst{max-width:28em;margin:0;font:400 clamp(17px,1.45vw,22px)/1.7 var(--serif);color:var(--ink)}
+.byline{margin:20px 0 0;color:var(--soft);font-size:13px}
+.proof{margin:0;min-width:0}
+.proof-art{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule)}
+.glyph{min-width:0;aspect-ratio:1.17;display:grid;place-items:center;font:700 clamp(52px,8.6vw,132px)/1 var(--serif)}
+.matrix{color:var(--typeface);background:var(--block);box-shadow:inset 0 0 0 7px var(--block),inset 0 0 0 8px #797260}
+.matrix span{transform:scaleX(-1)}
+.impression{color:#933522;background:#eee0c7;box-shadow:inset 0 0 0 7px #eee0c7,inset 0 0 0 8px #c5ad8f}
+.proof figcaption{display:flex;justify-content:space-between;gap:10px;margin-top:7px;font-size:12px;color:var(--soft)}
+.body-grid{display:grid;grid-template-columns:minmax(130px,185px) minmax(0,37em);justify-content:start;gap:clamp(35px,7vw,105px);padding-block:clamp(28px,3vw,46px) 64px}
+.contents{align-self:start;position:sticky;top:97px}
+.contents h2{font:650 14px var(--sans);margin:0 0 12px;color:var(--soft)}
+.contents ol{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.contents a{display:flex;align-items:center;gap:13px;min-height:46px;padding:7px 4px;border-bottom:1px solid var(--rule);color:var(--ink);text-decoration:none;font-size:15px}
+.contents a small{font:12px Georgia,serif;color:var(--soft)}
+.contents a[aria-current]{font-weight:700;color:var(--red)}
+.contents a[aria-current] small{color:var(--red);text-decoration:underline;text-underline-offset:4px}
+.story{min-width:0}
+.chapter{margin:0 0 35px}
+.chapter+.chapter{padding-top:25px;border-top:1px solid var(--rule)}
+.chapter h2{margin:0 0 12px;font:600 clamp(28px,3vw,41px)/1.4 var(--serif);letter-spacing:-.035em}
+.chapter h2 span{font:italic 400 .64em Georgia,serif;color:var(--red);margin-right:10px}
+.story p{font:400 var(--body-size)/var(--leading) var(--serif);margin:0 0 .92em;overflow-wrap:anywhere}
+.end{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:18px;border-top:2px solid var(--ink);color:var(--soft);font-size:13px}
+.end a{padding-block:8px}
+dialog{width:min(410px,calc(100vw - 28px));max-height:85vh;overflow:auto;padding:0;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:5px;box-shadow:0 18px 80px #15140e42}
+dialog::backdrop{background:#14151075}
+.settings-inner{padding:clamp(18px,3vw,30px)}
+.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.dialog-head h2{font:600 26px var(--serif);margin:0}
+fieldset{min-width:0;margin:0;padding:13px 0;border:0;border-top:1px solid var(--rule)}
+legend{padding:0 8px 0 0;color:var(--soft);font-size:13px;font-weight:600}
+.choices{display:flex;flex-wrap:wrap;gap:6px}
+.choices label{display:flex;align-items:center;gap:5px;cursor:pointer;min-height:44px;padding:5px 10px;border:1px solid var(--rule);border-radius:3px}
+.choices label:has(input:checked){background:var(--wash);color:var(--red);border-color:var(--red);font-weight:600}
+.choices input{margin:0;accent-color:var(--red)}
+.choices label:has(input:focus-visible){outline:3px solid var(--red);outline-offset:2px}
+.storenote{margin:9px 0 0;font-size:13px;color:var(--soft)}
+@media(max-width:750px){
+ body{padding-top:59px}
+ .barin{min-height:54px}.brand{font-size:21px}.actions{gap:6px}.quiet,.mobile-toc{font-size:13px;min-height:44px;padding:5px 10px}
+ .mobile-toc{display:block;max-width:104px;background:var(--paper);border:1px solid var(--rule);border-radius:3px}
+ .contents{display:none}.body-grid{display:block;padding-top:22px}.story{max-width:37em;margin:auto}
+ .hero{grid-template-columns:minmax(0,1fr) minmax(120px,.6fr);gap:16px}.hero h1{font-size:clamp(36px,6vw,48px)}
+ .byline{margin-top:10px}.proof figcaption{display:block}.proof figcaption span{display:block}
+}
+@media(max-width:550px){
+ .hero{display:block;padding-top:23px}.hero h1{margin:7px 0 9px}.proof{margin-top:15px}
+ .proof-art{max-width:340px}.glyph{aspect-ratio:auto;height:clamp(84px,25vw,118px);font-size:clamp(58px,16vw,85px)}
+ .proof figcaption{display:flex;justify-content:flex-start;gap:10px}.proof figcaption span{display:inline}
+ .standfirst{font-size:17px}.story p{margin-bottom:.8em}
+ dialog{margin:auto auto 0;width:min(100%,460px);border-radius:8px 8px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+}
+@media(max-width:350px){.barin{gap:5px}.actions{gap:3px}.quiet,.mobile-toc{padding-inline:6px}.brand{gap:5px}}
+</style>
+</head>
+<body data-review-context="reading">
+<header class="bar"><div class="barin">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span>折页</div>
+  <div class="actions">
+    <select id="mobile-chapter" class="mobile-toc" aria-label="跳至章节"><option value="c1">一 · 拣字</option><option value="c2">二 · 排行</option><option value="c3">三 · 试印</option><option value="c4">四 · 折页</option></select>
+    <button type="button" class="quiet" id="reader-settings" data-review-id="reader-settings">阅读设置</button>
+  </div>
+</div></header>
+<main class="shell">
+  <header class="hero" id="start" data-anchor data-review-id="reader-hero">
+    <div><p class="kicker">工艺手记</p><h1>活字印刷札记</h1><p class="standfirst">从拣字到折页，记一次工作室试印。</p><p class="byline">折页编辑室　撰文</p></div>
+    <figure class="proof" data-review-id="reader-proof">
+      <div class="proof-art" aria-hidden="true"><div class="glyph matrix"><span>印</span></div><div class="glyph impression">印</div></div>
+      <figcaption><span>图一 · 字面与纸面</span><span>左为反字，右为印迹</span></figcaption>
+    </figure>
+  </header>
+  <div class="body-grid">
+    <nav class="contents" aria-label="文章目录"><h2>本篇目录</h2><ol>
+      <li><a href="#c1" data-jump="c1"><small>01</small>拣字</a></li><li><a href="#c2" data-jump="c2"><small>02</small>排行</a></li>
+      <li><a href="#c3" data-jump="c3"><small>03</small>试印</a></li><li><a href="#c4" data-jump="c4"><small>04</small>折页</a></li>
+    </ol></nav>
+    <article class="story" aria-label="札记正文">
+      <section class="chapter" aria-labelledby="c1"><h2 id="c1" tabindex="-1" data-anchor data-review-id="reader-chapter-1"><span aria-hidden="true">01</span>拣字</h2>
+        <p id="p1-1" data-anchor>推开工作间的门，最先听见抽屉里的碰响。师傅把浅浅一盘铅字推到桌边，给我们一张只有六个字的纸条：“风从河面吹来。”这便是今天要排的头一行。</p>
+        <p id="p1-2" data-anchor>我顺手拿起一个看似眼熟的字。它在指尖是倒着的，举到小镜子前才肯露出本相。那个“河”字左边的三点水缩在阴影里，摸起来只是一串细小而硬的起伏。</p>
+        <p id="p1-3" data-anchor>字盘的格子比我想象的深。常用字藏在手边，生僻字要向上一层找。别人拣字时觉得顺手的安排，到了我这里却变成反复确认的地图。师傅只说，先看字脚，再读字脸。</p>
+        <p id="p1-4" data-anchor>六枚字在小托盘里排成一列，远看像六块灰色碎石。把台灯挪低一点，侧光扫过笔画，每一枚才有了自己的方向。我在纸条背面画了个箭头，记住从哪边开始。</p>
+      </section>
+      <section class="chapter" aria-labelledby="c2"><h2 id="c2" tabindex="-1" data-anchor data-review-id="reader-chapter-2"><span aria-hidden="true">02</span>排行</h2>
+        <p id="p2-1" data-anchor>最费工夫的地方在字与字之间。一条不起墨的薄片插进两枚字脚，行就长了一点。把空白捏在指尖时才明白，纸上的一段距离，在这里真的占着位置。</p>
+        <p id="p2-2" data-anchor>我们原想把短句摆在纸面正中，可一合上版框，末尾的句号显得比河风还重。于是把整行往左移，右边多留一指宽，河面忽然就从那片空纸上伸展开了。</p>
+        <p id="p2-3" data-anchor>锁版以前要轻轻试一试。字脚稍微松动，印出来的直行就可能出现歪斜。师傅用指腹压住行尾，我从另一端补进一枚小空铅。第一声金属碰响至此才安静下来。</p>
+        <p id="p2-4" data-anchor>桌旁的校样上留着铅笔线。有人在相同的一行旁记了三次距离，最后圈住最短的那个数。那些数字没有进成品，却替一行字找到了落脚的地方。</p>
+      </section>
+      <section class="chapter" aria-labelledby="c3"><h2 id="c3" tabindex="-1" data-anchor data-review-id="reader-chapter-3"><span aria-hidden="true">03</span>试印</h2>
+        <p id="p3-1" data-anchor>墨辊先在平板上来回几趟。最初的声音黏，后来变轻，像拉开一张慢慢放松的胶布。师傅带着我们把刚刚铺匀的墨送上字面，只走一遍，再抬起手。</p>
+        <p id="p3-2" data-anchor>第一张纸揭开时，那个“风”字缺了一小角。我原以为要补墨，师傅却让我换一张薄点的垫纸再试。两张校样并排，字边的毛刺这才成了一条看得懂的线索。</p>
+        <p id="p3-3" data-anchor>接着试一枚朱色的“印”字。字面朝左，纸上朝右，反转之间的关系和头一张小镜子完全一样。红字比灰铅热闹得多，晾在绳上时，整个工作间仿佛多了一盏窄灯。</p>
+        <p id="p3-4" data-anchor>我们把三次试样按次序排好，没有挑最浓的那张。纸纤维间有一处淡淡的空隙，正好让细横画留出呼吸。师傅把日期写在背后，再给那张纸压上一片干净的平板。</p>
+      </section>
+      <section class="chapter" aria-labelledby="c4"><h2 id="c4" tabindex="-1" data-anchor data-review-id="reader-chapter-4"><span aria-hidden="true">04</span>折页</h2>
+        <p id="p4-1" data-anchor>傍晚再摸纸，墨已经收住了。师傅用指甲在样纸背后轻轻顶出两个点，我们顺着这两点压折线。平摊的文字于是有了先后，抬手掀页才看到河风。</p>
+        <p id="p4-2" data-anchor>原来排在一张大纸两端的字，折起来恰好面对面。桌上那支铅笔从纸头走到纸尾，画了一条弯路，我才弄懂册子合上之后，第一页究竟去了哪里。</p>
+        <p id="p4-3" data-anchor>打扫前还要把字还回去。碰到那个“河”字时我已经不用镜子了。它被放回原来的格口，又变成字盘里不起眼的一块灰色，只剩手上微微一股纸墨的味道。</p>
+        <p id="p4-4" data-anchor>我把折好的小册带出门，在街口才读完那一句。风从河面吹来。书页在手里自己翻了一次，正好停在晾过的那枚红印上。</p>
+      </section>
+      <footer class="end"><span>《折页》工艺手记</span><a href="#start" data-jump="start">回到篇首 ↑</a></footer>
+    </article>
+  </div>
+</main>
+<dialog id="settings" aria-labelledby="settings-title"><div class="settings-inner">
+  <div class="dialog-head"><h2 id="settings-title" data-review-id="reader-settings-title">阅读设置</h2><button type="button" id="settings-close" class="quiet" data-review-id="reader-settings-close">完成</button></div>
+  <fieldset><legend>外观</legend><div class="choices"><label><input type="radio" id="theme-system" name="theme" value="system">跟随系统</label><label><input type="radio" id="theme-light" name="theme" value="light">明亮</label><label><input type="radio" id="theme-dark" name="theme" value="dark">暗色</label></div></fieldset>
+  <fieldset><legend>正文字号</legend><div class="choices"><label><input type="radio" id="size-small" name="size" value="small">小</label><label><input type="radio" id="size-normal" name="size" value="normal">标准</label><label><input type="radio" id="size-large" name="size" value="large">大</label></div></fieldset>
+  <fieldset><legend>正文行距</legend><div class="choices"><label><input type="radio" id="leading-normal" name="leading" value="normal">标准</label><label><input type="radio" id="leading-loose" name="leading" value="loose">宽松</label></div></fieldset>
+  <p class="storenote" id="storage-note">此浏览器会记住阅读位置与设置。</p>
+</div></dialog>
+<script>
+'use strict';
+const first={theme:'system',size:'normal',leading:'normal'};
+const choices={theme:['system','light','dark'],size:['small','normal','large'],leading:['normal','loose']};
+const base=new URL('.',location.href).pathname;
+const key='forma-reader-v1:'+base;
+const appearance={...first};
+const root=document.documentElement;
+const dialog=document.querySelector('#settings');
+const bar=document.querySelector('.bar');
+const anchors=[...document.querySelectorAll('[data-anchor]')];
+const byId=new Map(anchors.map(el=>[el.id,el]));
+const systemDark=matchMedia('(prefers-color-scheme:dark)');
+let storedMark=null,enabled=true,saveTimer=0,scrollFrame=0,ready=false,heldMark=null;
+function validMark(mark){
+  return mark && byId.has(mark.id) && Number.isFinite(mark.part)&&mark.part>=0&&mark.part<=1 &&
+    Number.isFinite(mark.gap)&&mark.gap>=0&&mark.gap<=2000 &&
+    typeof mark.hash==='string' ? mark : null;
+}
+try{
+  const stored=JSON.parse(localStorage.getItem(key)||'null');
+  if(stored&&typeof stored==='object'){
+    for(const name of Object.keys(choices))if(choices[name].includes(stored[name]))appearance[name]=stored[name];
+    storedMark=validMark(stored.mark);
+  }
+}catch{enabled=false}
+function showStorage(){
+  document.querySelector('#storage-note').textContent=enabled?'此浏览器会记住阅读位置与设置。':'存储不可用，阅读设置仅在此页生效。';
+}
+function resolved(){return appearance.theme==='system'?(systemDark.matches?'dark':'light'):appearance.theme}
+function paint(){
+  root.dataset.scheme=resolved();root.dataset.size=appearance.size;root.dataset.leading=appearance.leading;
+  for(const [name,value] of Object.entries(appearance))document.getElementById(name+'-'+value).checked=true;
+}
+function line(){return Math.round(bar.getBoundingClientRect().bottom+18)}
+function capture(){
+  const y=line();
+  const node=anchors.find(el=>el.getBoundingClientRect().bottom>y)||anchors.at(-1);
+  const rect=node.getBoundingClientRect();
+  return {id:node.id,part:Math.max(0,Math.min(1,(y-rect.top)/rect.height)),gap:Math.max(0,rect.top-y),hash:location.hash};
+}
+function restore(mark){
+  if(!validMark(mark))return;
+  const rect=byId.get(mark.id).getBoundingClientRect();
+  window.scrollTo({top:scrollY+rect.top+rect.height*mark.part-line()-mark.gap,behavior:'instant'});
+}
+function remember(){
+  if(!ready)return;
+  const mark=dialog.open&&heldMark?heldMark:capture();
+  try{history.replaceState({...history.state,readerMark:mark},'')}catch{}
+  if(enabled){
+    try{localStorage.setItem(key,JSON.stringify({...appearance,mark}))}
+    catch{enabled=false;showStorage()}
+  }
+}
+function updateChapter(){
+  const node=byId.get(capture().id);
+  const chapter=node.closest('.chapter')?.querySelector('h2').id||'c1';
+  for(const link of document.querySelectorAll('.contents a')){
+    if(link.dataset.jump===chapter)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');
+  }
+  document.querySelector('#mobile-chapter').value=chapter;
+}
+function fromLocation(){
+  const id=location.hash.slice(1);
+  const entry=validMark(history.state?.readerMark);
+  if(entry && entry.hash===location.hash)return entry;
+  if(byId.has(id))return {id,part:0,gap:0,hash:location.hash};
+  if(!id && storedMark)return {...storedMark,hash:''};
+  return {id:'start',part:0,gap:0,hash:location.hash};
+}
+function jump(id){
+  const node=byId.get(id);if(!node)return;
+  remember();
+  const mark={id,part:0,gap:0,hash:'#'+id};
+  if(location.hash!==mark.hash)history.pushState({readerMark:mark},'',mark.hash);
+  restore(mark);if(node.matches('[tabindex]'))node.focus({preventScroll:true});updateChapter();remember();
+}
+for(const a of document.querySelectorAll('[data-jump]'))a.addEventListener('click',e=>{e.preventDefault();jump(a.dataset.jump)});
+document.querySelector('#mobile-chapter').addEventListener('change',e=>jump(e.target.value));
+document.querySelector('#reader-settings').addEventListener('click',()=>{
+  heldMark=capture();document.body.dataset.reviewContext='settings';dialog.showModal();document.querySelector('input[name="theme"]:checked').focus({preventScroll:true});
+});
+document.querySelector('#settings-close').addEventListener('click',()=>dialog.close());
+dialog.addEventListener('close',()=>{
+  document.body.dataset.reviewContext='reading';
+  document.querySelector('#reader-settings').focus({preventScroll:true});
+  if(heldMark)restore(heldMark);
+  heldMark=null;updateChapter();remember();
+});
+dialog.addEventListener('change',e=>{
+  const {name,value}=e.target;if(!Object.hasOwn(choices,name)||!choices[name].includes(value))return;
+  const mark=heldMark||capture();appearance[name]=value;paint();restore(mark);updateChapter();remember();
+});
+systemDark.addEventListener('change',()=>{if(appearance.theme==='system')paint()});
+window.formaAppearance={read:()=>({...appearance,resolved:resolved()})};
+for(const el of document.querySelectorAll('.story p[data-anchor]'))el.dataset.reviewId='reader-'+el.id;
+if('scrollRestoration'in history)history.scrollRestoration='manual';
+window.addEventListener('scroll',()=>{
+  if(!ready||dialog.open)return;
+  if(!scrollFrame)scrollFrame=requestAnimationFrame(()=>{scrollFrame=0;updateChapter()});
+  clearTimeout(saveTimer);saveTimer=setTimeout(remember,160);
+},{passive:true});
+window.addEventListener('pagehide',remember);
+window.addEventListener('popstate',()=>{restore(fromLocation());updateChapter()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)remember()});
+paint();showStorage();
+const initialMark=fromLocation();
+window.addEventListener('pageshow',event=>{
+  if(event.persisted){updateChapter();return}
+  restore(initialMark);ready=true;updateChapter();
+});
+</script>
+</body></html>
