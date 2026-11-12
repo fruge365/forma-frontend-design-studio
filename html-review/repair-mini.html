@@ -19,27 +19,27 @@ main{max-width:976px;margin:auto;padding:40px 26px max(26px,env(safe-area-inset-
 <main>
 <section class="compose" id="compose">
   <div><h1 class="title" id="compose-title" tabindex="-1">园区报修</h1><p class="lead">公共区域设施问题，可在这里登记。</p>
-    <section class="place" aria-label="报修地点" data-review-id="mini-scan-location"><div><small>演示扫码点位</small><h2 id="place-name"></h2><p id="place-zone"></p></div><strong class="plate" id="place-code"></strong></section>
+    <section class="place" aria-label="报修地点" data-review-id="mini-scan-location"><div><small>模拟扫码点位</small><h2 id="place-name"></h2><p id="place-zone"></p></div><strong class="plate" id="place-code"></strong></section>
   </div>
   <form id="request-form" class="form-panel" novalidate>
     <fieldset id="problem-list" data-review-id="mini-issue"><legend>遇到了什么问题？<span class="small">必选</span></legend><div class="options" id="options"></div></fieldset>
     <p class="error" id="type-error" role="alert" hidden></p>
     <label class="label" for="details">补充描述 <small>选填</small></label><textarea class="note" id="details" rows="3" maxlength="200" placeholder="例如：入口左侧第二盏灯不亮"></textarea>
     <div class="actions"><button class="primary advance" type="submit" data-review-id="mini-review">核对报修 <span aria-hidden="true">→</span></button></div>
-    <p class="foot">本机演示 · 回执仅保存在当前浏览器。</p>
+    <p class="foot">本机预览 · 回执仅保存在当前浏览器。</p>
   </form>
 </section>
 <section class="single" id="review" hidden>
   <a class="back" href="#compose">← 返回填写</a><h1 class="title" id="review-title" tabindex="-1">核对报修</h1><dl class="receipt" id="review-facts" data-review-id="mini-confirm-facts"></dl>
-  <p class="quiet">确认后将在本机生成演示回执。</p><p class="error" id="save-error" role="alert" hidden></p>
+  <p class="quiet">确认后将在本机生成模拟回执。</p><p class="error" id="save-error" role="alert" hidden></p>
   <div class="actions"><button type="button" class="primary" id="confirm" data-review-id="mini-confirm">确认登记</button><a class="secondary" href="#compose">修改内容</a></div>
 </section>
 <section class="single" id="receipt" hidden><div class="success-mark" aria-hidden="true">✓</div><h1 class="title" id="receipt-title" tabindex="-1">回执已保存在本机</h1><dl class="receipt" id="receipt-facts"></dl>
   <div class="actions"><a class="primary" id="track-link">查看进度</a><a class="secondary" href="#compose">继续报修</a></div>
 </section>
-<section class="single" id="tickets" hidden><a class="back" href="#compose">← 返回报修</a><h1 class="title" id="tickets-title" tabindex="-1">我的报修</h1><p class="foot">当前浏览器保存的演示记录</p><ol class="records" id="records"></ol><p id="empty" class="empty">还没有报修回执。</p></section>
+<section class="single" id="tickets" hidden><a class="back" href="#compose">← 返回报修</a><h1 class="title" id="tickets-title" tabindex="-1">我的报修</h1><p class="foot">当前浏览器保存的模拟记录</p><ol class="records" id="records"></ol><p id="empty" class="empty">还没有报修回执。</p></section>
 <section class="single" id="tracking" hidden><a class="back" href="#tickets">← 我的报修</a><h1 class="title" id="tracking-title" tabindex="-1">报修进度</h1><dl class="receipt" id="tracking-facts"></dl>
-  <ol class="track" data-review-id="mini-progress"><li><strong>已在本机登记</strong><p id="registered-at"></p></li><li><strong>待园区受理</strong><p>本页演示到回执生成，园区受理进度须由服务台提供。</p></li></ol><a class="secondary" href="#compose">继续报修</a>
+  <ol class="track" data-review-id="mini-progress"><li><strong>已在本机登记</strong><p id="registered-at"></p></li><li><strong>待园区受理</strong><p>本页模拟到回执生成为止，园区受理进度须由服务台提供。</p></li></ol><a class="secondary" href="#compose">继续报修</a>
 </section>
 </main>
 <script>
@@ -96,7 +96,7 @@ id('place-name').textContent=place?spots[place].name:'点位未识别';
 id('place-zone').textContent=place?spots[place].zone:'请重新进入有效点位。';
 id('place-code').textContent=place||'—';
 if(!place){
-  const change=element('a','打开 C2 演示点位');change.className='link';const corrected=new URL(location.href);corrected.searchParams.set('spot','C2');corrected.hash='compose';change.href=corrected.href;
+  const change=element('a','打开 C2 模拟点位');change.className='link';const corrected=new URL(location.href);corrected.searchParams.set('spot','C2');corrected.hash='compose';change.href=corrected.href;
   id('place-zone').append(document.createElement('br'),change);
 }
 for(const [index,issue] of issues.entries()){

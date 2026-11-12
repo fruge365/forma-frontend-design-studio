@@ -85,14 +85,14 @@ dialog::backdrop{background:#22282283}.dialog-head{display:flex;justify-content:
         <fieldset data-review-id="ed-method"><legend>取件方式</legend><div class="options" id="method-options"></div>
           <p id="pickup-hint" class="fine">店取点 · 汀印工作室</p>
           <div id="shipping" hidden>
-            <label class="address" for="address">演示收件地点 <span class="mini">必填</span></label>
+            <label class="address" for="address">模拟收件地点 <span class="mini">必填</span></label>
             <textarea id="address" maxlength="120" rows="2" aria-describedby="address-hint address-error"></textarea>
             <p class="fine" id="address-hint">可填写示例地点，如“东岸园区 2 号楼”。</p>
             <p class="error" id="address-error" hidden>请填写收件地点，或改选到店自取。</p>
           </div>
         </fieldset>
         <div class="summary" data-review-id="ed-config-total"><div><div class="mini">配置合计</div><div class="total" id="price" aria-live="polite"></div></div><button type="submit" class="primary" id="next" data-review-id="ed-next">核对清单 →</button></div>
-        <p class="fine" id="storage-hint">本机演示 · 清单只保存在当前浏览器。</p>
+        <p class="fine" id="storage-hint">本机预览 · 清单只保存在当前浏览器。</p>
       </form>
     </section>
     <section id="check" class="step" hidden aria-labelledby="check-title">
@@ -154,7 +154,7 @@ try{
 function saveDraft(){
   try{localStorage.setItem(prefix+'draft',JSON.stringify({id:planId,choice:snapshot(choice)}));storageFailed=false}
   catch{storageFailed=true}
-  $('storage-hint').textContent=storageFailed?'浏览器未能保存草稿，离开页面可能丢失本次选择。':'本机演示 · 清单只保存在当前浏览器。';
+  $('storage-hint').textContent=storageFailed?'浏览器未能保存草稿，离开页面可能丢失本次选择。':'本机预览 · 清单只保存在当前浏览器。';
 }
 function count(){
   try{$('count').textContent=readList().length}

@@ -19,7 +19,7 @@ dialog{border:1px solid var(--line);border-radius:7px;background:#fbf9ef;color:v
 <header class="masthead"><div class="container"><a class="brand" href="#top" aria-label="阅川图书馆，返回页首"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4c3-1 6 0 9 2 3-2 6-3 9-2v15c-3-1-6 0-9 2-3-2-6-3-9-2zM12 6v15M6 8l3 1M6 12l3 1M15 9l3-1M15 13l3-1"/></svg>阅川图书馆</a><nav class="nav" aria-label="活动导航"><a href="#schedule">活动日程</a><a href="#visit">参与须知</a><button class="plan-open" id="open-plan">我的计划 <span class="plan-count" id="plan-count">0</span></button></nav></div></header>
 <main id="top" class="container">
 <section class="hero" aria-labelledby="hero-title">
-<div><p class="kicker">阅川图书馆 · 秋季公共文化活动</p><h1 id="hero-title"><span>沿江</span><span>阅读季</span></h1><p class="intro lead">沿江堤走读，翻阅老渡口的口述档案，或亲手刻一枚河流藏书票。</p><div class="date-line"><time datetime="2026-11-13">11.13 — 11.15</time><span>2026 年 · 虚构活动演示</span></div><a class="cta" href="#schedule">挑选活动场次 <span aria-hidden="true">↓</span></a></div>
+<div><p class="kicker">阅川图书馆 · 秋季公共文化活动</p><h1 id="hero-title"><span>沿江</span><span>阅读季</span></h1><p class="intro lead">沿江堤走读，翻阅老渡口的口述档案，或亲手刻一枚河流藏书票。</p><div class="date-line"><time datetime="2026-11-13">11.13 — 11.15</time><span>2026 年 · 虚构活动样稿</span></div><a class="cta" href="#schedule">挑选活动场次 <span aria-hidden="true">↓</span></a></div>
 <figure class="print">
 <svg viewBox="0 0 720 485" role="img" aria-labelledby="print-title print-desc">
 <title id="print-title">江岸阅读地图</title><desc id="print-desc">原创双色印刷风格示意图。弯曲的河流贯穿林带、老渡口和图书馆，橘色虚线串起三个活动地点。</desc>
@@ -49,7 +49,7 @@ dialog{border:1px solid var(--line);border-radius:7px;background:#fbf9ef;color:v
 <section class="schedule" id="schedule" aria-labelledby="schedule-title"><div class="schedule-head"><div><h2 class="section-title" id="schedule-title">选一场，沿江读下去。</h2><p>按日期查看活动。打开场次详情，可加入本地计划。</p></div><div class="date-tabs" id="date-tabs" role="group" aria-label="活动日期"></div></div><div class="listing" id="listing"></div><span id="schedule-status" class="sr" role="status"></span></section>
 <section class="visit" id="visit"><h2 class="section-title">参与须知</h2><dl><dt>活动形式</dt><dd>包含户外走读、室内共读和手作。每场详情列出地点、时长和准备事项。</dd><dt>出行准备</dt><dd>走读场次请穿舒适的鞋。室内活动均设在一层，提供无台阶入口。</dd><dt>本地计划</dt><dd>所选场次保存在当前浏览器，随时可移除。这里展示虚构活动流程，不生成报名凭证。</dd></dl></section>
 </main>
-<footer><div class="container"><span>阅川图书馆 · 公共文化活动演示</span><span>文案、场次与地图均为本地设计样例</span></div></footer>
+<footer><div class="container"><span>阅川图书馆 · 公共文化活动样稿</span><span>文案、场次与地图均为本地设计样例</span></div></footer>
 <dialog id="detail" aria-labelledby="detail-title"><div class="dialog-inner"><div class="dialog-head"><h2 id="detail-title"></h2><button class="close" aria-label="关闭活动详情" data-close>×</button></div><dl class="facts" id="facts"></dl><p id="detail-intro" class="detail-intro"></p><p class="note" id="detail-prep"></p><div class="dialog-footer"><button class="cta" id="toggle-plan"></button><span id="detail-status" class="note" role="status"></span></div></div></dialog>
 <dialog id="plan" aria-labelledby="plan-title"><div class="dialog-inner"><div class="dialog-head"><h2 id="plan-title">我的活动计划</h2><button class="close" aria-label="关闭我的计划" data-close>×</button></div><p class="note">这里仅记录本机计划，可随时移除。</p><div id="plan-list"></div><p class="note" role="status" id="plan-status"></p></div></dialog>
 <p class="feedback" role="status" id="feedback"></p>
@@ -59,11 +59,11 @@ const dates = [
 ];
 const sessions = [
   {id:'riverwalk', day:'13', start:'09:30', end:'10:45', kind:'江岸走读', title:'走读老渡口', venue:'江堤步道集合点', teaser:'跟着旧地图，寻找老渡口曾经连接的街巷。', description:'沿一段平缓江堤慢行，比较旧地图上的渡口、栈桥与街巷，停下记录一处仍能辨认的地名。', prep:'路线约 1.2 公里，含短坡。请穿便于步行的鞋，可自备饮用水。'},
-  {id:'oral', day:'13', start:'14:00', end:'15:20', kind:'档案共读', title:'河岸上的口述档案', venue:'一层 · 地方文献室', teaser:'从三则口述片段，读出河岸生活的不同面貌。', description:'围坐共读三段虚构的渡运、集市与江边居住记录。参与者可从一张地名卡出发，补写自己的地方记忆。', prep:'无需预读。现场演示设大字材料与无台阶入口。'},
+  {id:'oral', day:'13', start:'14:00', end:'15:20', kind:'档案共读', title:'河岸上的口述档案', venue:'一层 · 地方文献室', teaser:'从三则口述片段，读出河岸生活的不同面貌。', description:'围坐共读三段虚构的渡运、集市与江边居住记录。参与者可从一张地名卡出发，补写自己的地方记忆。', prep:'无需预读。现场示范设大字材料与无台阶入口。'},
   {id:'folio', day:'14', start:'10:00', end:'11:15', kind:'书页共读', title:'一本地方志的江岸章节', venue:'一层 · 公共阅览室', teaser:'用目录、图例和索引，寻找一条河的记录。', description:'从虚构地方志的目录查起，辨读一段岸线变化，再用图例和索引把文字与地图连接起来。', prep:'适合初次阅读地方文献的读者。提供纸质资料。'},
   {id:'exlibris', day:'14', start:'14:30', end:'16:00', kind:'版画手作', title:'刻一枚河流藏书票', venue:'一层 · 工坊', teaser:'把水纹、石阶与桥影，刻进一枚小小的藏书票。', description:'先在软版上画出一组岸线纹样，再完成拓印。将作品署名后，放入自己喜爱的书里。', prep:'提供软版、滚墨工具与纸张。建议穿便于清洁的衣物。'},
   {id:'walknotes', day:'15', start:'09:30', end:'10:40', kind:'观察笔记', title:'江堤上的五感采集', venue:'江堤步道集合点', teaser:'记下潮声、树影和石阶的触感，拼成一页观察笔记。', description:'在三个观察点分别记录声音、颜色与材质，把微小线索写进一张折页，形成自己的岸线笔记。', prep:'路线约 800 米，含短坡。可携带常用的书写工具。'},
-  {id:'voices', day:'15', start:'14:00', end:'15:10', kind:'开放分享', title:'把沿江故事读给彼此', venue:'一层 · 公共阅览室', teaser:'从一段朗读、一张折页或一枚藏书票开始分享。', description:'选择一份活动材料或一段自己写下的文字，进行简短分享。也欢迎只听不读，留下自己的阅读清单。', prep:'无需提前参加其他场次。现场演示设无台阶入口。'}
+  {id:'voices', day:'15', start:'14:00', end:'15:10', kind:'开放分享', title:'把沿江故事读给彼此', venue:'一层 · 公共阅览室', teaser:'从一段朗读、一张折页或一枚藏书票开始分享。', description:'选择一份活动材料或一段自己写下的文字，进行简短分享。也欢迎只听不读，留下自己的阅读清单。', prep:'无需提前参加其他场次。现场示范设无台阶入口。'}
 ];
 const projectPath=location.protocol==='file:'?'/':new URL('.',location.href).pathname;
 const key = 'yuechuan-reading-plan-v1'+(projectPath==='/'?'':':'+projectPath);

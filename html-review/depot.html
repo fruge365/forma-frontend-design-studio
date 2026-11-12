@@ -166,7 +166,7 @@ dialog::backdrop {background:#17251f77}
 <body data-review-context="plan">
 <header class="top"><div class="wrap">
   <div class="brand"><span aria-hidden="true" class="brand-logo"><i></i><i></i><i></i></span><span class="brand-name">仓位<span lang="en" class="brand-en">DEPOT WORKS</span></span></div>
-  <div class="top-actions"><span class="local">本机演示</span><button class="history" id="open-log" data-review-id="depot-open-log">盘点记录 <span id="log-count">0</span></button></div>
+  <div class="top-actions"><span class="local">本机预览</span><button class="history" id="open-log" data-review-id="depot-open-log">盘点记录 <span id="log-count">0</span></button></div>
 </div></header>
 <main class="wrap">
   <div class="intro">
@@ -207,13 +207,13 @@ dialog::backdrop {background:#17251f77}
       </div>
     </aside>
   </div>
-  <p class="page-note" id="storage-note">账面库存为演示快照。盘点结果仅保存在当前浏览器的本仓记录。</p>
+  <p class="page-note" id="storage-note">账面库存为模拟快照。盘点结果仅保存在当前浏览器的本仓记录。</p>
 </main>
 <p class="live" id="announce" role="status" aria-live="polite"></p>
 <dialog id="count-dialog" aria-labelledby="count-title"><header class="dialog-head"><h2 id="count-title">登记盘点</h2><button class="close" id="close-count">关闭</button></header>
   <form id="count-form" class="dialog-body"><p id="count-object"></p><div class="note-card"><span>账面库存</span><span><b id="count-book"></b> 件</span></div>
     <label for="actual">实盘件数</label><input id="actual" type="number" min="0" max="9999" step="1" inputmode="numeric" required aria-describedby="delta">
-    <p class="preview" id="delta" role="status">请输入 0 到 9999 的整数。</p><p class="sub">保存一条该货位的盘点记录，账面库存沿用演示快照。</p>
+    <p class="preview" id="delta" role="status">请输入 0 到 9999 的整数。</p><p class="sub">保存一条该货位的盘点记录，账面库存沿用模拟快照。</p>
     <div class="dialog-foot"><button type="button" class="secondary" id="cancel-count">取消</button><button type="submit" id="save-count" class="primary">保存盘点记录</button></div></form>
 </dialog>
 <dialog id="log-dialog" aria-labelledby="log-title"><header class="dialog-head"><h2 id="log-title" tabindex="-1" data-review-id="depot-log-title">盘点记录</h2><button id="close-log" class="close">关闭</button></header><div class="dialog-body"><p>03 号常温仓 · 本机盘点</p><p id="log-empty" class="sub">暂无记录。选定货位后可登记实盘件数。</p><ol class="records" id="records"></ol></div></dialog>
@@ -367,7 +367,7 @@ function render() {
   renderDetail();
 }
 function noteStorage() {
-  $('storage-note').textContent=durable?'账面库存为演示快照。盘点结果仅保存在当前浏览器的本仓记录。':'账面库存为演示快照。浏览器未允许保存，新盘点仅在当前页面有效。';
+  $('storage-note').textContent=durable?'账面库存为模拟快照。盘点结果仅保存在当前浏览器的本仓记录。':'账面库存为模拟快照。浏览器未允许保存，新盘点仅在当前页面有效。';
 }
 function readRecords() {
   try {

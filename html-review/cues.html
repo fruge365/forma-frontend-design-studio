@@ -115,7 +115,7 @@ h2{font-size:18px;line-height:1.3}.section-heading small,.info-head small{color:
   </div>
 </section>
 <section class="pane log" id="log" aria-labelledby="log-title" hidden><div class="section-heading"><h2 id="log-title" tabindex="-1" data-review-id="cues-log-title">操作记录</h2><small id="log-count"></small></div><ol id="log-list" class="log-list"></ol></section>
-<footer class="foot"><div class="nav-links"><button class="link" id="undo" data-review-id="cues-undo" disabled>撤销最近操作</button><span id="message" class="message" role="status"></span></div><span class="local" id="local-note">本机演示 · 记录仅保存在当前浏览器</span></footer>
+<footer class="foot"><div class="nav-links"><button class="link" id="undo" data-review-id="cues-undo" disabled>撤销最近操作</button><span id="message" class="message" role="status"></span></div><span class="local" id="local-note">本机预览 · 记录仅保存在当前浏览器</span></footer>
 </main>
 <script>
 'use strict';
@@ -145,7 +145,7 @@ syncTheme();
 palette.addEventListener('change',syncTheme);
 $('theme').addEventListener('change',()=>{
   theme=$('theme').value;syncTheme();
-  try{localStorage.setItem(themeKey,theme)}catch{$('local-note').textContent='本机演示 · 外观仅在本次打开期间生效'}
+  try{localStorage.setItem(themeKey,theme)}catch{$('local-note').textContent='本机预览 · 外观仅在本次打开期间生效'}
 });
 const getCue=id=>cues.find(c=>c.id===id);
 const indexOf=id=>cues.findIndex(c=>c.id===id);
@@ -209,7 +209,7 @@ function renderDesk(){
   $('arm').disabled=!future||pending;$('arm').textContent=pending?'已设为待发':('将 '+preview.id+' 设为待发');
   $('arm-hint').textContent=pending?'在待发区执行此条提示。':future?'设置待发后，当前提示保持不变。':'已走过的条目可在此核对内容。';
   const last=model.stack.at(-1);$('undo').disabled=!last;$('undo').textContent=last?'撤销'+last.title:'撤销最近操作';
-  if(!storeReady)$('local-note').textContent='本机演示 · 存储不可用，操作仅在本次页面内保留';
+  if(!storeReady)$('local-note').textContent='本机预览 · 存储不可用，操作仅在本次页面内保留';
 }
 function renderLog(){
   $('log-count').textContent=model.log.length+' 次操作';
