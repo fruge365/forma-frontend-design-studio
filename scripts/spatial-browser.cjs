@@ -12,7 +12,7 @@ async function main() {
   let browser;
   try {
     browser = await chromium.launch({headless:true, chromiumSandbox:true,
-      ...(process.env.FORMA_CHROME ? {executablePath:process.env.FORMA_CHROME} : {})});
+      ...(process.env.UI_CRAFT_CHROME ? {executablePath:process.env.UI_CRAFT_CHROME} : {})});
     const page = await browser.newPage({ viewport:{width:1440,height:960},locale:'zh-CN' });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));

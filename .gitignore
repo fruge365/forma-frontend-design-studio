@@ -8,5 +8,5 @@ Thumbs.db
 !.env.example
 
 # Browser exports can contain private review notes.
-forma-review-*.json
-forma-review-*.md
+ui-craft-review-*.json
+ui-craft-review-*.md

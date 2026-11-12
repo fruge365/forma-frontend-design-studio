@@ -87,7 +87,7 @@ async function main() {
   let browser;
   try {
     const options={headless:true,chromiumSandbox:true};
-    if(process.env.FORMA_CHROME) options.executablePath=process.env.FORMA_CHROME;
+    if(process.env.UI_CRAFT_CHROME) options.executablePath=process.env.UI_CRAFT_CHROME;
     browser=await chromium.launch(options);
     const page=await browser.newPage({locale:'zh-CN',viewport:{width:1440,height:960}});
     page.setDefaultTimeout(7000);

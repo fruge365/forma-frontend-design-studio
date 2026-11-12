@@ -1,9 +1,9 @@
 ---
-name: forma-ui-ux-design
+name: ui-craft
 description: Design, implement, or review distinctive frontend UI/UX for command-center video walls, public displays, brand websites, business platforms, apps, and mini programs. 用于数据大屏、官网、后台及移动端的视觉设计、交互实现与界面评审。
 ---
 
-# FORMA UI/UX Design
+# UI-Craft · UI/UX 设计
 
 从真实内容和用户动作确定页面的视觉主次，把版式、交互状态、响应式布局一起落实到前端代码。
 
