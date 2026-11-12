@@ -33,7 +33,7 @@ h1,h2,h3,p,dl,dd{margin:0}
 .tabs button[aria-current="page"]{color:var(--ink)}
 .tabs button[aria-current="page"]::after{content:"";position:absolute;bottom:-1px;left:0;right:0;height:3px;background:var(--ink)}
 .tabs button:hover,.text-btn:hover,.toggle button:hover{color:#614601}
-.demo{margin:auto 0 auto auto;color:var(--muted);font-size:12px;white-space:nowrap}
+.sample{margin:auto 0 auto auto;color:var(--muted);font-size:12px;white-space:nowrap}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .hero{padding:43px 0 30px;border-bottom:2px solid var(--line-dark);display:flex;align-items:end;justify-content:space-between;gap:24px}
 .crumb{font-size:13px;color:var(--muted);margin-bottom:9px}
@@ -109,20 +109,20 @@ h2{font-size:23px;letter-spacing:-.035em;line-height:1.25}
 @media(max-width:780px){.columns{grid-template-columns:1fr;padding-block:24px 40px}.file{max-width:none}.hero{align-items:start;flex-direction:column;gap:18px}.revision{margin:0}.revision div{display:flex;align-items:center;gap:8px;padding:6px 10px;min-width:0}.revision strong{font-size:17px}.hero h1{font-size:clamp(35px,7vw,46px)}}
 @media(max-width:560px){
  .wrap{width:calc(100% - 32px)}.bar{gap:19px;min-height:54px}.tabs{gap:13px}.tabs button{font-size:12px}.brand{font-size:19px;gap:6px}.brand-icon{width:23px;height:25px}.brand-icon::before{width:7px}
- .demo{font-size:11px}.hero{padding:24px 0 19px}.hero h1{font-size:34px}.role-line{font-size:13px}.section-top{gap:8px}.section-top h2{font-size:21px}.toggle button{font-size:12px;min-height:36px;padding-inline:7px}.toggle{padding:2px}
+ .sample{font-size:11px}.hero{padding:24px 0 19px}.hero h1{font-size:34px}.role-line{font-size:13px}.section-top{gap:8px}.section-top h2{font-size:21px}.toggle button{font-size:12px;min-height:36px;padding-inline:7px}.toggle{padding:2px}
  .ledger,.ledger tbody{display:block}.ledger colgroup{display:none}.ledger thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.ledger tbody tr{display:grid;grid-template-columns:1fr 1fr;column-gap:10px;padding:12px 0;border-bottom:1px solid var(--rule)}
  .ledger td,.ledger tbody th{border:0;padding:0}.ledger tbody th{grid-area:1 / 1;align-self:start}.ledger .code{font-size:10px}
  .ledger .before{grid-area:2 / 1}.ledger .after{grid-area:2 / 2}.ledger .state{grid-area:1 / 2;text-align:right}.ledger .mobile-label{display:block;margin:10px 0 2px;color:var(--muted);font:12px/1.35 var(--sans)}
  .panel{padding:18px 14px}.list-lines li{grid-template-columns:1fr;gap:3px}.record-head{align-items:start;flex-direction:column}.legend-note{margin-top:10px}.file{margin-top:2px}
 }
-@media(max-width:350px){.bar{gap:11px}.tabs{gap:9px}.demo{font-size:10px}.hero h1{font-size:31px}.wrap{width:calc(100% - 24px)}}
+@media(max-width:350px){.bar{gap:11px}.tabs{gap:9px}.sample{font-size:10px}.hero h1{font-size:31px}.wrap{width:calc(100% - 24px)}}
 </style>
 </head>
 <body data-review-context="review" data-review-pair="CR-028-V2.4-V2.5">
 <header class="mast"><div class="wrap bar">
   <span class="brand"><i class="brand-icon" aria-hidden="true"></i>门册</span>
   <nav class="tabs" aria-label="权限管理"><button id="tab-review" aria-current="page">变更审阅</button><button id="tab-history">审阅记录</button></nav>
-  <span class="demo">本地演示</span>
+  <span class="sample">本地演示</span>
 </div></header>
 <main class="wrap">
   <section id="review">
